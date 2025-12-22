@@ -1588,6 +1588,7 @@ function Component({ config = {} }) {
 
   // Capture thumbnail of current canvas
   const [isCapturingThumbnail, setIsCapturingThumbnail] = useState(false);
+  const thumbnailUploadRef = useRef(null);
 
   const handleCaptureThumbnail = async () => {
     if (!canvasWrapperRef.current || !activeTab) {
@@ -1654,6 +1655,70 @@ function Component({ config = {} }) {
       showToast('Failed to capture thumbnail', 'error');
     } finally {
       setIsCapturingThumbnail(false);
+    }
+  };
+
+  // Upload thumbnail from file
+  const handleUploadThumbnail = async (event) => {
+    const file = event.target.files?.[0];
+    if (!file || !activeTab) {
+      return;
+    }
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      showToast('Please upload an image file', 'error');
+      event.target.value = '';
+      return;
+    }
+
+    // Validate file size (max 2MB)
+    if (file.size > 2 * 1024 * 1024) {
+      showToast('Image too large. Max 2MB', 'error');
+      event.target.value = '';
+      return;
+    }
+
+    try {
+      // Read file as data URL
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const thumbnailDataUrl = e.target.result;
+
+        // Update active tab with thumbnail
+        const newTabs = tabs.map(tab => 
+          tab.id === activeTabId 
+            ? { ...tab, thumbnail: thumbnailDataUrl }
+            : tab
+        );
+        
+        setTabs(newTabs);
+        addToHistory({ tabs: newTabs, activeTabId });
+
+        // Also save to library if it exists
+        const libraryComponents = JSON.parse(localStorage.getItem('componentLibrary') || '[]');
+        const updatedLibrary = libraryComponents.map(comp => {
+          if (comp.code === activeTab.code) {
+            return { ...comp, thumbnail: thumbnailDataUrl };
+          }
+          return comp;
+        });
+        localStorage.setItem('componentLibrary', JSON.stringify(updatedLibrary));
+
+        showToast('Thumbnail uploaded!', 'success');
+      };
+
+      reader.onerror = () => {
+        showToast('Failed to read image', 'error');
+      };
+
+      reader.readAsDataURL(file);
+    } catch (error) {
+      console.error('Thumbnail upload error:', error);
+      showToast('Failed to upload thumbnail', 'error');
+    } finally {
+      // Clear the input
+      event.target.value = '';
     }
   };
 
@@ -4039,6 +4104,53 @@ function Component({ config = {} }) {
                 <span className="tooltip-text">
                   {isCapturingThumbnail ? 'Capturing...' : 'Capture Thumbnail'}
                 </span>
+              </div>
+
+              {/* Upload Thumbnail Button */}
+              <div className="tooltip">
+                <input
+                  ref={thumbnailUploadRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleUploadThumbnail}
+                  style={{ display: 'none' }}
+                />
+                <button 
+                  onClick={() => thumbnailUploadRef.current?.click()}
+                  disabled={!activeTab?.code}
+                  title="Upload Thumbnail"
+                  style={{
+                    width: '40px',
+                    height: '40px',
+                    backgroundColor: 'transparent',
+                    border: `1px solid ${theme.border}`,
+                    color: !activeTab?.code ? theme.text3 : theme.text2,
+                    borderRadius: '8px',
+                    cursor: !activeTab?.code ? 'not-allowed' : 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    transition: 'all 150ms ease-out',
+                    position: 'relative',
+                    opacity: !activeTab?.code ? 0.5 : 1
+                  }}
+                  onMouseEnter={(e) => {
+                    if (activeTab?.code) {
+                      e.currentTarget.style.backgroundColor = theme.shade1;
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                  }}
+                >
+                  <svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
+                    <rect x="2" y="3" width="12" height="10" rx="1"/>
+                    <circle cx="8" cy="8" r="2"/>
+                    <path d="M8 10V6"/>
+                    <path d="M6 8h4"/>
+                  </svg>
+                </button>
+                <span className="tooltip-text">Upload Thumbnail</span>
               </div>
             </div>
           </div>
