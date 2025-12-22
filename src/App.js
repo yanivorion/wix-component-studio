@@ -2505,16 +2505,43 @@ function Component({ config = {} }) {
                         >
                           <div style={{
                             width: '100%',
-                            height: '100px',
+                            height: '120px',
                             backgroundColor: theme.shade1,
                             borderRadius: '6px',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
                             marginBottom: '12px',
-                            fontSize: '32px'
+                            overflow: 'hidden',
+                            position: 'relative',
+                            border: `1px solid ${theme.shade2}`
                           }}>
-                            📦
+                            {component.thumbnail ? (
+                              <img 
+                                src={component.thumbnail}
+                                alt={component.name}
+                                style={{
+                                  width: '100%',
+                                  height: '100%',
+                                  objectFit: 'cover',
+                                  objectPosition: 'top'
+                                }}
+                              />
+                            ) : (
+                              <div style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                gap: '8px',
+                                color: theme.text3
+                              }}>
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                                  <rect x="3" y="3" width="18" height="18" rx="2"/>
+                                  <path d="M9 9h.01M21 15l-5-5L5 21"/>
+                                </svg>
+                                <span style={{ fontSize: '11px' }}>No preview</span>
+                              </div>
+                            )}
                           </div>
                           <div style={{ 
                             fontSize: '13px', 
@@ -4159,6 +4186,7 @@ function Component({ config = {} }) {
               <div
                 key={tab.id}
                 onClick={() => handleTabSwitch(tab.id)}
+                className="tooltip"
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -4188,6 +4216,17 @@ function Component({ config = {} }) {
                       }
                 }}
               >
+                {/* Thumbnail indicator */}
+                {tab.thumbnail && (
+                  <div style={{
+                    width: '4px',
+                    height: '4px',
+                    borderRadius: '50%',
+                    backgroundColor: theme.accent1,
+                    flexShrink: 0
+                  }} />
+                )}
+                
                 {editingTabId === tab.id ? (
                   <input
                     type="text"
@@ -4249,6 +4288,33 @@ function Component({ config = {} }) {
                       <path d="M12 4L4 12M4 4l8 8"/>
                     </svg>
                   </button>
+                )}
+                
+                {/* Thumbnail preview tooltip */}
+                {tab.thumbnail && (
+                  <span className="tooltip-text" style={{
+                    padding: 0,
+                    backgroundColor: 'transparent',
+                    border: 'none',
+                    boxShadow: '0 8px 24px rgba(0,0,0,0.3)',
+                    borderRadius: '8px',
+                    overflow: 'hidden',
+                    minWidth: '200px',
+                    width: 'auto'
+                  }}>
+                    <img 
+                      src={tab.thumbnail}
+                      alt={`${tab.name} preview`}
+                      style={{
+                        width: '300px',
+                        height: 'auto',
+                        maxHeight: '200px',
+                        objectFit: 'cover',
+                        objectPosition: 'top',
+                        display: 'block'
+                      }}
+                    />
+                  </span>
                 )}
               </div>
             ))}
