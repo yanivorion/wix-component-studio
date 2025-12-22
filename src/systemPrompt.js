@@ -156,6 +156,54 @@ React.useEffect(() => {
 
 ---
 
+### Rule 2.6: GSAP DOM Animation Rules (CRITICAL)
+
+**✅ CORRECT - Always animate actual DOM elements via refs:**
+\`\`\`javascript
+function Component({ config = {} }) {
+  const [particles, setParticles] = React.useState([]);
+  const particleRefs = React.useRef([]);
+  
+  const createParticles = () => {
+    // 1. Create state array
+    const newParticles = Array.from({ length: 10 }, (_, i) => ({
+      id: Date.now() + i
+    }));
+    setParticles(newParticles);
+    
+    // 2. Animate after render using refs
+    setTimeout(() => {
+      particleRefs.current.forEach((el, i) => {
+        if (el) {
+          gsap.to(el, { x: 100, y: 100, duration: 1 });
+        }
+      });
+    }, 50);
+  };
+  
+  return (
+    <div>
+      {particles.map((particle, i) => (
+        <div 
+          key={particle.id}
+          ref={el => { particleRefs.current[i] = el; }}
+        />
+      ))}
+    </div>
+  );
+}
+\`\`\`
+
+**❌ WRONG - Never animate plain JavaScript objects:**
+\`\`\`javascript
+const particles = [{ x: 0, y: 0 }, { x: 0, y: 0 }];
+gsap.to(particles, { x: 100, y: 100 }); // ❌ Won't render on screen!
+\`\`\`
+
+**Why:** GSAP can animate objects, but those changes won't appear in the DOM. Always animate actual DOM elements via refs.
+
+---
+
 ### Rule 3: Hex Colors Must Be 6 Digits
 
 **✅ CORRECT - Full hex codes:**
@@ -178,7 +226,40 @@ defaultValue: "#CCC"     // INVALID
 
 ---
 
-### Rule 4: Valid Data Types ONLY
+### Rule 4: Unique IDs for SVG Filters and Definitions (MANDATORY)
+
+**✅ CORRECT - Generate unique IDs for each component instance:**
+\`\`\`javascript
+function Component({ config = {} }) {
+  // Generate unique ID using React.useId() or fallback
+  const filterId = 'filter-' + (React.useId?.() || Math.random().toString(36).substr(2, 9));
+  const gradientId = 'gradient-' + (React.useId?.() || Math.random().toString(36).substr(2, 9));
+  
+  return (
+    <div>
+      <svg>
+        <defs>
+          <filter id={filterId}>...</filter>
+          <linearGradient id={gradientId}>...</linearGradient>
+        </defs>
+      </svg>
+      <div style={{ filter: \\\`url(#\\\${filterId})\\\` }} />
+    </div>
+  );
+}
+\`\`\`
+
+**❌ WRONG - Hard-coded IDs cause conflicts:**
+\`\`\`javascript
+<filter id="myFilter">...</filter>  // ❌ Will conflict if multiple instances!
+<div style={{ filter: 'url(#myFilter)' }} />
+\`\`\`
+
+**Why:** Multiple component instances on the same page will share the same filter ID, causing visual glitches and wrong effects being applied.
+
+---
+
+### Rule 5: Valid Data Types ONLY
 
 **Supported data types:**
 - "color" - Color picker with hex input
@@ -198,7 +279,7 @@ dataType: "url"          // WRONG - use "text"
 
 ---
 
-### Rule 5: Config Access Pattern (MANDATORY)
+### Rule 6: Config Access Pattern (MANDATORY)
 
 **✅ CORRECT - Optional chaining + fallback:**
 \`\`\`javascript
