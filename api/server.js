@@ -1,10 +1,39 @@
 const express = require('express');
 const cors = require('cors');
 const Anthropic = require('@anthropic-ai/sdk');
+const { MongoClient, ObjectId } = require('mongodb');
 require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+
+// MongoDB Connection
+let db;
+let componentsCollection;
+let bulkSessionsCollection;
+
+async function connectToMongoDB() {
+  try {
+    const mongoUri = process.env.MONGODB_URI;
+    if (!mongoUri) {
+      console.warn('⚠️  MONGODB_URI not found in environment. Database features will be disabled.');
+      return;
+    }
+
+    const client = new MongoClient(mongoUri);
+    await client.connect();
+    
+    db = client.db();
+    componentsCollection = db.collection('components');
+    bulkSessionsCollection = db.collection('bulkSessions');
+    
+    console.log('✅ Connected to MongoDB successfully');
+    console.log(`📦 Database: ${db.databaseName}`);
+  } catch (error) {
+    console.error('❌ MongoDB connection error:', error.message);
+    console.warn('⚠️  Database features will be disabled.');
+  }
+}
 
 // Configure CORS to accept requests from GitHub Pages
 app.use(cors({
@@ -142,6 +171,25 @@ app.post('/api/claude/bulk-stream', async (req, res) => {
     const results = [];
     const errors = [];
     let totalTokensUsed = { input_tokens: 0, output_tokens: 0 };
+    
+    // Create bulk session in MongoDB
+    let bulkSessionId = null;
+    if (bulkSessionsCollection) {
+      try {
+        const sessionDoc = {
+          createdAt: new Date(),
+          totalRequested: requests.length,
+          totalGenerated: 0,
+          totalFailed: 0,
+          status: 'in_progress'
+        };
+        const sessionResult = await bulkSessionsCollection.insertOne(sessionDoc);
+        bulkSessionId = sessionResult.insertedId;
+        console.log('✅ Created bulk session:', bulkSessionId);
+      } catch (error) {
+        console.error('Failed to create bulk session:', error);
+      }
+    }
 
     // Send progress update function
     const sendProgress = (data) => {
@@ -205,6 +253,27 @@ app.post('/api/claude/bulk-stream', async (req, res) => {
         // Track token usage
         totalTokensUsed.input_tokens += message.usage.input_tokens;
         totalTokensUsed.output_tokens += message.usage.output_tokens;
+        
+        // 🔥 SAVE TO MONGODB IMMEDIATELY
+        if (componentsCollection) {
+          try {
+            const componentDoc = {
+              name: `Component ${i + 1}`,
+              description: request.prompt,
+              code: code,
+              userPrompt: request.prompt,
+              designBrief: request.designBrief || null,
+              projectName: request.projectName || null,
+              bulkSessionId: bulkSessionId,
+              createdAt: new Date(),
+              tokenUsage: message.usage
+            };
+            const saveResult = await componentsCollection.insertOne(componentDoc);
+            console.log(`✅ Saved component ${i + 1} to MongoDB:`, saveResult.insertedId);
+          } catch (error) {
+            console.error(`Failed to save component ${i + 1} to MongoDB:`, error);
+          }
+        }
 
         // Send success notification with generated code
         sendProgress({
@@ -236,6 +305,27 @@ app.post('/api/claude/bulk-stream', async (req, res) => {
         });
       }
     }
+    
+    // Update bulk session in MongoDB
+    if (bulkSessionsCollection && bulkSessionId) {
+      try {
+        await bulkSessionsCollection.updateOne(
+          { _id: bulkSessionId },
+          {
+            $set: {
+              completedAt: new Date(),
+              totalGenerated: results.length,
+              totalFailed: errors.length,
+              status: 'completed',
+              totalTokensUsed
+            }
+          }
+        );
+        console.log('✅ Updated bulk session:', bulkSessionId);
+      } catch (error) {
+        console.error('Failed to update bulk session:', error);
+      }
+    }
 
     // Send completion notification
     sendProgress({
@@ -245,7 +335,8 @@ app.post('/api/claude/bulk-stream', async (req, res) => {
       totalGenerated: results.length,
       totalFailed: errors.length,
       totalRequests: requests.length,
-      totalTokensUsed
+      totalTokensUsed,
+      bulkSessionId: bulkSessionId ? bulkSessionId.toString() : null
     });
 
     res.end();
@@ -390,17 +481,29 @@ IMPORTANT: Return ONLY the code without any markdown formatting, explanations, o
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`🚀 Claude API server running on http://localhost:${PORT}`);
-  console.log(`📝 Endpoints:`);
-  console.log(`   - POST http://localhost:${PORT}/api/claude (Single generation)`);
-  console.log(`   - POST http://localhost:${PORT}/api/claude/bulk (Bulk generation)`);
-  console.log(`   - GET  http://localhost:${PORT}/api/health (Health check)`);
-  
-  if (process.env.CLAUDE_API_KEY) {
-    console.log(`✅ Using server-side Claude API key`);
-  } else {
-    console.log(`⚠️  No server-side Claude API key found. Clients must provide their own.`);
-  }
+// Start server
+connectToMongoDB().then(() => {
+  app.listen(PORT, () => {
+    console.log(`🚀 Claude API server running on http://localhost:${PORT}`);
+    console.log(`📝 Endpoints:`);
+    console.log(`   - POST http://localhost:${PORT}/api/claude (Single generation)`);
+    console.log(`   - POST http://localhost:${PORT}/api/claude/bulk (Bulk generation)`);
+    console.log(`   - GET  http://localhost:${PORT}/api/health (Health check)`);
+    
+    if (process.env.CLAUDE_API_KEY) {
+      console.log(`✅ Using server-side Claude API key`);
+    } else {
+      console.log(`⚠️  No server-side Claude API key found. Clients must provide their own.`);
+    }
+    
+    if (db) {
+      console.log(`✅ MongoDB connected - components will be saved permanently`);
+    } else {
+      console.log(`⚠️  MongoDB not connected - components will only exist in memory`);
+    }
+  });
+}).catch(error => {
+  console.error('Failed to start server:', error);
+  process.exit(1);
 });
 
