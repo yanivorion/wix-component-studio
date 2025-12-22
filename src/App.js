@@ -66,7 +66,7 @@ function Toast({ message, type = 'info', onClose }) {
     success: { bg: theme.accent3, text: theme.base1 },
     error: { bg: '#DC2626', text: '#FFFFFF' }
   };
-
+  
   return (
     <div style={{
       position: 'fixed',
@@ -89,8 +89,309 @@ function Toast({ message, type = 'info', onClose }) {
       {type === 'error' && '✕'}
       {type === 'info' && 'ℹ'}
       {message}
+            </div>
+          );
+}
+
+// Error Modal Component
+function ErrorModal({ error, errorInfo, onRemove, onClose, componentName }) {
+  const { theme } = useTheme();
+  
+  const parseError = (error, errorInfo) => {
+    const stack = errorInfo?.componentStack || error?.stack || '';
+    const message = error?.message || error?.toString() || 'Unknown error';
+    
+    // Try to extract the actual error line
+    const lines = stack.split('\n');
+    const relevantLines = lines.slice(0, 5).join('\n');
+    
+    return {
+      message,
+      stack: relevantLines,
+      fullStack: stack
+    };
+  };
+  
+  const { message, stack, fullStack } = parseError(error, errorInfo);
+  const [showFullStack, setShowFullStack] = useState(false);
+  
+  return (
+    <div style={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: 'rgba(0,0,0,0.7)',
+      zIndex: 100000,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '20px',
+      backdropFilter: 'blur(4px)'
+    }}>
+      <div style={{
+        backgroundColor: theme.base1,
+        borderRadius: '12px',
+        boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
+        maxWidth: '700px',
+        width: '100%',
+        maxHeight: '80vh',
+      display: 'flex',
+      flexDirection: 'column',
+        overflow: 'hidden'
+      }}>
+        {/* Header */}
+        <div style={{
+          padding: '24px',
+          borderBottom: `1px solid ${theme.shade2}`,
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px'
+        }}>
+          <div style={{
+            width: '48px',
+            height: '48px',
+            borderRadius: '12px',
+            backgroundColor: '#FEE2E2',
+            display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+            fontSize: '24px'
+          }}>
+            ⚠️
+          </div>
+          <div style={{ flex: 1 }}>
+            <h2 style={{
+              margin: 0,
+              fontSize: '20px',
+              fontWeight: '500',
+              color: theme.text1,
+              marginBottom: '4px'
+            }}>
+              Component Error Detected
+            </h2>
+      <p style={{
+              margin: 0,
+              fontSize: '14px',
+              color: theme.text3
+            }}>
+              {componentName || 'This component'} encountered an error and cannot render
+            </p>
+          </div>
+        </div>
+        
+        {/* Error Details */}
+        <div style={{
+          flex: 1,
+          overflow: 'auto',
+          padding: '24px'
+        }}>
+          <div style={{
+            marginBottom: '16px'
+          }}>
+            <h3 style={{
+              margin: '0 0 8px 0',
+              fontSize: '14px',
+              fontWeight: '500',
+              color: theme.text2,
+              textTransform: 'uppercase',
+              letterSpacing: '0.05em'
+            }}>
+              Error Message
+            </h3>
+            <div style={{
+              padding: '12px',
+              backgroundColor: theme.shade1,
+        borderRadius: '6px',
+              borderLeft: `4px solid #DC2626`,
+              fontSize: '14px',
+              color: theme.text1,
+              fontFamily: 'monospace',
+              wordBreak: 'break-word'
+            }}>
+              {message}
+            </div>
+          </div>
+          
+          <div>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              marginBottom: '8px'
+            }}>
+              <h3 style={{
+                margin: 0,
+                fontSize: '14px',
+                fontWeight: '500',
+                color: theme.text2,
+                textTransform: 'uppercase',
+                letterSpacing: '0.05em'
+              }}>
+                Stack Trace
+              </h3>
+              <button
+                onClick={() => setShowFullStack(!showFullStack)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: theme.accent1,
+                  fontSize: '12px',
+        cursor: 'pointer',
+                  padding: '4px 8px',
+                  borderRadius: '4px',
+        fontWeight: '500'
+                }}
+              >
+                {showFullStack ? 'Show Less' : 'Show Full Stack'}
+      </button>
+    </div>
+            <div style={{
+              padding: '12px',
+              backgroundColor: theme.base2,
+              borderRadius: '6px',
+              fontSize: '12px',
+              color: theme.text2,
+              fontFamily: 'monospace',
+              whiteSpace: 'pre-wrap',
+              wordBreak: 'break-word',
+              maxHeight: showFullStack ? 'none' : '200px',
+              overflow: 'auto',
+              lineHeight: '1.6'
+            }}>
+              {showFullStack ? fullStack : stack}
+            </div>
+          </div>
+          
+          {/* Common Issues Help */}
+    <div style={{
+            marginTop: '16px',
+            padding: '12px',
+            backgroundColor: '#FEF3C7',
+            borderRadius: '6px',
+            fontSize: '13px',
+            color: '#92400E',
+            lineHeight: '1.6'
+          }}>
+            <strong>💡 Common Issues:</strong>
+            <ul style={{ margin: '8px 0 0 0', paddingLeft: '20px' }}>
+              <li>Missing <code>config = {'{}'}</code> default parameter</li>
+              <li>Using <code>config.property</code> instead of <code>config?.property</code></li>
+              <li>Invalid dataType in MANIFEST</li>
+              <li>Animating plain objects instead of DOM elements</li>
+              <li>Hard-coded SVG filter IDs causing conflicts</li>
+            </ul>
+          </div>
+        </div>
+        
+        {/* Footer Actions */}
+      <div style={{
+          padding: '20px 24px',
+          borderTop: `1px solid ${theme.shade2}`,
+          display: 'flex',
+          gap: '12px',
+          justifyContent: 'flex-end'
+        }}>
+          <button
+            onClick={onClose}
+            style={{
+              padding: '10px 20px',
+              borderRadius: '6px',
+              border: `1px solid ${theme.shade3}`,
+              backgroundColor: theme.base1,
+              color: theme.text2,
+              fontSize: '14px',
+              fontWeight: '500',
+              cursor: 'pointer',
+              transition: 'all 0.2s'
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.backgroundColor = theme.shade1;
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.backgroundColor = theme.base1;
+            }}
+          >
+            Keep Component
+          </button>
+          <button
+            onClick={onRemove}
+            style={{
+              padding: '10px 20px',
+              borderRadius: '6px',
+              border: 'none',
+              backgroundColor: '#DC2626',
+              color: '#FFFFFF',
+              fontSize: '14px',
+              fontWeight: '500',
+              cursor: 'pointer',
+              transition: 'all 0.2s'
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.backgroundColor = '#B91C1C';
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.backgroundColor = '#DC2626';
+            }}
+          >
+            Remove Component
+          </button>
+          </div>
+      </div>
     </div>
   );
+}
+
+// Error Boundary Component
+class ComponentErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      hasError: false,
+      error: null,
+      errorInfo: null
+    };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error('Component Error:', error, errorInfo);
+    this.setState({
+      error,
+      errorInfo
+    });
+  }
+
+  handleRemove = () => {
+    this.setState({ hasError: false, error: null, errorInfo: null });
+    if (this.props.onRemove) {
+      this.props.onRemove();
+    }
+  };
+
+  handleClose = () => {
+    this.setState({ hasError: false, error: null, errorInfo: null });
+  };
+
+  render() {
+    if (this.state.hasError) {
+  return (
+        <ErrorModal
+          error={this.state.error}
+          errorInfo={this.state.errorInfo}
+          onRemove={this.handleRemove}
+          onClose={this.handleClose}
+          componentName={this.props.componentName}
+        />
+      );
+    }
+
+    return this.props.children;
+  }
 }
 function CategoryBrowser() {
   const [library, setLibrary] = React.useState([]);
@@ -138,7 +439,7 @@ function CategoryBrowser() {
                       padding: '12px',
                       border: '1px solid #ddd',
                       borderRadius: '6px',
-                      fontSize: '14px',
+      fontSize: '14px',
                       cursor: 'pointer'
                     }}
                     onClick={() => {
@@ -1129,6 +1430,12 @@ function Component({ config = {} }) {
       setActiveTabId(newTabs[0].id);
     }
     addToHistory({ tabs: newTabs, activeTabId: newTabs[0].id });
+  };
+
+  // Handle component error - close the tab with broken component
+  const handleComponentError = (tabId) => {
+    handleCloseTab(tabId);
+    showToast('Broken component removed', 'success');
   };
 
   const handleTabSwitch = (tabId) => {
@@ -4208,6 +4515,9 @@ function Component({ config = {} }) {
                         canvasWrapperRef={canvasWrapperRef}
                         onOpenEditor={() => setShowEditor(true)}
                         theme={theme}
+                        onComponentError={handleComponentError}
+                        tabId={activeTab?.id}
+                        componentName={`${activeTab?.label || 'Component'} - Section ${index + 1}`}
                       />
                     ) : (
                       <div style={{
@@ -4243,6 +4553,9 @@ function Component({ config = {} }) {
               canvasWrapperRef={canvasWrapperRef}
               onOpenEditor={() => setShowEditor(true)}
               theme={theme}
+              onComponentError={handleComponentError}
+              tabId={activeTab?.id}
+              componentName={activeTab?.label || 'Component'}
             />
             )}
           </div>
@@ -4311,6 +4624,9 @@ function Component({ config = {} }) {
                         canvasWrapperRef={null}
                         onOpenEditor={() => setShowEditor(true)}
                         theme={theme}
+                        onComponentError={handleComponentError}
+                        tabId={activeTab?.id}
+                        componentName={`${activeTab?.label || 'Component'} - Section ${index + 1}`}
                       />
                     ) : (
                       <div style={{
@@ -4338,6 +4654,9 @@ function Component({ config = {} }) {
               canvasWrapperRef={null}
               onOpenEditor={() => setShowEditor(true)}
               theme={theme}
+              onComponentError={handleComponentError}
+              tabId={activeTab?.id}
+              componentName={activeTab?.label || 'Component'}
             />
             )}
           </div>
@@ -4585,7 +4904,7 @@ function Component({ config = {} }) {
 }
 
 // LiveComponent - renders the actual component code
-function LiveComponent({ code, config, responsiveMode, fixedSectionMode, canvasWidth, scrollPosition, canvasWrapperRef, onOpenEditor, theme }) {
+function LiveComponent({ code, config, responsiveMode, fixedSectionMode, canvasWidth, scrollPosition, canvasWrapperRef, onOpenEditor, theme, onComponentError, tabId, componentName }) {
   const [Component, setComponent] = useState(null);
   const [renderError, setRenderError] = useState(null);
   const [isBabelLoaded, setIsBabelLoaded] = useState(false);
@@ -4756,7 +5075,16 @@ function LiveComponent({ code, config, responsiveMode, fixedSectionMode, canvasW
       data-scroll-container="true"
       data-scroll-position={scrollPosition || 0}
     >
+      <ComponentErrorBoundary
+        onRemove={() => {
+          if (onComponentError) {
+            onComponentError(tabId);
+          }
+        }}
+        componentName={componentName}
+    >
       <Component config={config} />
+      </ComponentErrorBoundary>
     </div>
   );
 }
