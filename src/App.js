@@ -842,6 +842,7 @@ function Component({ config = {} }) {
       code: activeTab.code,
       manifest: activeTab.manifest,
       config: activeTab.config,
+      thumbnail: activeTab.thumbnail, // ← Include thumbnail!
       timestamp: new Date().toISOString(),
       projectName: activeTab.projectName,
       prompt: activeTab.prompt,
@@ -862,6 +863,7 @@ function Component({ config = {} }) {
       code: component.code,
       manifest: component.manifest,
       config: component.config,
+      thumbnail: component.thumbnail, // ← Include thumbnail!
       projectName: component.projectName,
       prompt: component.prompt,
       designBrief: component.designBrief
