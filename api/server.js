@@ -252,8 +252,7 @@ Your response must start with the exact text: const MANIFEST = {`,
         // Remove markdown code fences if present
         code = code.replace(/```(?:javascript|jsx|js)?\n?/g, '').replace(/```$/g, '').trim();
         
-        // 🔥 AGGRESSIVELY CLEAN - Remove ANY text before "const MANIFEST"
-        // Try multiple patterns Claude might use
+        // 🔥 CLEAN START - Remove ANY text before "const MANIFEST"
         const patterns = [
           'const MANIFEST',
           'const MANIFEST =',
@@ -273,7 +272,22 @@ Your response must start with the exact text: const MANIFEST = {`,
         }
         
         if (!cleaned) {
-          console.warn('⚠️ Could not find MANIFEST in code, sending as-is');
+          console.warn('⚠️ Could not find MANIFEST in code');
+        }
+        
+        // 🔥 CLEAN END - Remove ANY text after the final closing brace
+        // Find the last occurrence of "}\n" or just "}" that closes the component
+        const lastBraceIndex = code.lastIndexOf('\n}');
+        if (lastBraceIndex !== -1) {
+          // Cut everything after the final closing brace + newline
+          code = code.substring(0, lastBraceIndex + 2);
+          console.log(`✅ Cleaned text after final closing brace`);
+        } else {
+          // Fallback: just find last }
+          const simpleBraceIndex = code.lastIndexOf('}');
+          if (simpleBraceIndex !== -1) {
+            code = code.substring(0, simpleBraceIndex + 1);
+          }
         }
         
         // Extract component name from prompt (Category: X, Type: Y format)
