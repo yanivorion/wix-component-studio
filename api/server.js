@@ -239,13 +239,27 @@ app.post('/api/claude/bulk-stream', async (req, res) => {
         
         // Remove markdown code fences if present
         code = code.replace(/```(?:javascript|jsx|js)?\n?/g, '').replace(/```$/g, '').trim();
+        
+        // 🔥 AGGRESSIVELY CLEAN - Remove ANY text before "const MANIFEST"
+        const manifestIndex = code.indexOf('const MANIFEST');
+        if (manifestIndex > 0) {
+          code = code.substring(manifestIndex);
+        }
+        
+        // Extract component name from prompt (Category: X, Type: Y format)
+        let componentName = `Component ${i + 1}`;
+        const typeMatch = request.prompt.match(/Type:\s*([^-,]+)/i);
+        if (typeMatch) {
+          componentName = typeMatch[1].trim();
+        }
 
         const result = {
           index: i,
           prompt: request.prompt,
           code,
           usage: message.usage,
-          success: true
+          success: true,
+          name: componentName
         };
 
         results.push(result);
@@ -258,7 +272,7 @@ app.post('/api/claude/bulk-stream', async (req, res) => {
         if (componentsCollection) {
           try {
             const componentDoc = {
-              name: `Component ${i + 1}`,
+              name: componentName,
               description: request.prompt,
               code: code,
               userPrompt: request.prompt,
@@ -269,7 +283,7 @@ app.post('/api/claude/bulk-stream', async (req, res) => {
               tokenUsage: message.usage
             };
             const saveResult = await componentsCollection.insertOne(componentDoc);
-            console.log(`✅ Saved component ${i + 1} to MongoDB:`, saveResult.insertedId);
+            console.log(`✅ Saved component "${componentName}" to MongoDB:`, saveResult.insertedId);
           } catch (error) {
             console.error(`Failed to save component ${i + 1} to MongoDB:`, error);
           }

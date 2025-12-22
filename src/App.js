@@ -969,7 +969,7 @@ function Component({ config = {} }) {
               } else if (data.type === 'success') {
                 // Load each component immediately as it's generated
                 const result = data.result;
-                const componentName = `Generated ${result.index + 1}`;
+                const componentName = result.name || `Generated ${result.index + 1}`;
                 
                 const newTab = {
                   id: nextTabId,
@@ -1011,7 +1011,7 @@ function Component({ config = {} }) {
                   return updated;
                 });
                 
-                showToast(`${componentName} generated & saved to library!`, 'success');
+                showToast(`${componentName} generated & saved!`, 'success');
               } else if (data.type === 'complete') {
                 setBulkResults(data.results);
                 
