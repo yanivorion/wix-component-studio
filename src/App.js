@@ -966,6 +966,52 @@ function Component({ config = {} }) {
 
               if (data.type === 'progress') {
                 setBulkProgress({ current: data.current, total: data.total });
+              } else if (data.type === 'success') {
+                // Load each component immediately as it's generated
+                const result = data.result;
+                const componentName = `Generated ${result.index + 1}`;
+                
+                const newTab = {
+                  id: nextTabId,
+                  name: componentName,
+                  code: result.code,
+                  manifest: null,
+                  config: {},
+                  prompt: result.prompt,
+                  projectName: projectName,
+                  designBrief: designBrief,
+                  sections: [{ 
+                    id: `section-${Date.now()}-${result.index}`, 
+                    code: result.code, 
+                    config: {}, 
+                    padding: '0px' 
+                  }]
+                };
+                
+                setTabs(prev => [...prev, newTab]);
+                setActiveTabId(newTab.id);
+                setNextTabId(prev => prev + 1);
+                
+                // 🔥 AUTO-SAVE TO LIBRARY
+                const libraryComponent = {
+                  id: `component_${Date.now()}_${result.index}`,
+                  name: componentName,
+                  code: result.code,
+                  manifest: null,
+                  config: {},
+                  timestamp: new Date().toISOString(),
+                  projectName: projectName,
+                  prompt: result.prompt,
+                  designBrief: designBrief
+                };
+                
+                setSavedComponents(prev => {
+                  const updated = [libraryComponent, ...prev];
+                  localStorage.setItem('customComponents_library', JSON.stringify(updated));
+                  return updated;
+                });
+                
+                showToast(`${componentName} generated & saved to library!`, 'success');
               } else if (data.type === 'complete') {
                 setBulkResults(data.results);
                 
