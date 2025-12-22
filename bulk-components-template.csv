@@ -1,0 +1,11 @@
+Component Category,Component Type,User Request
+"Complex Slideshows & Carousels","Cinematic Ken Burns Gallery","Create a photo gallery with smooth Ken Burns zoom and pan animations on each image. Include navigation dots and autoplay controls."
+"Complex Slideshows & Carousels","3D Card Stack Slideshow","Create a 3D card stack carousel where cards stack behind each other with depth perspective. Swipe to navigate between cards."
+"Navigation","Mega Menu Dropdown","Create a mega menu that opens on hover and displays multiple columns of links with category headers and icons."
+"Hero Sections","Video Background Hero","Create a hero section with full-screen background video (autoplay, muted), overlay gradient, headline, subheading, and CTA button."
+"Interactive Elements","Animated Counter Stats","Create a statistics display with animated numbers that count up when scrolled into view. Show 4 key metrics with icons and labels."
+"Form Components","Multi-Step Form Wizard","Create a multi-step form with progress indicator, validation, back/next buttons, and smooth transitions between steps."
+"Content Display","Masonry Grid Gallery","Create a Pinterest-style masonry grid layout that displays images of varying heights in an optimal arrangement."
+"Interactive Elements","Comparison Slider","Create a before/after image comparison slider with draggable handle to reveal the difference between two images."
+"Charts & Data","Animated Donut Chart","Create an animated donut chart with percentage display in center, legend, and smooth animation on load."
+"Navigation","Breadcrumb Navigation","Create a breadcrumb navigation component with separators, home icon, and current page highlighting."
