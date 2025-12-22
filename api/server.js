@@ -225,7 +225,19 @@ app.post('/api/claude/bulk-stream', async (req, res) => {
           model: 'claude-3-opus-20240229',
           max_tokens: 4096,
           temperature: 1,
-          system: systemInstructions || `You are a React component generator. Create a complete React component with MANIFEST and Component function.`,
+          system: systemInstructions || `You are a React component generator. Create a complete React component with MANIFEST and Component function.
+
+CRITICAL: Return ONLY the code without ANY markdown formatting, explanations, descriptions, or comments before the code.
+
+Start your response IMMEDIATELY with: const MANIFEST = {
+
+Do NOT include:
+- Any introductory text like "Here is the component"
+- Any explanations before the code
+- Any markdown code fences
+- Any descriptions
+
+Your response must start with the exact text: const MANIFEST = {`,
           messages: [
             {
               role: 'user',
@@ -241,9 +253,27 @@ app.post('/api/claude/bulk-stream', async (req, res) => {
         code = code.replace(/```(?:javascript|jsx|js)?\n?/g, '').replace(/```$/g, '').trim();
         
         // 🔥 AGGRESSIVELY CLEAN - Remove ANY text before "const MANIFEST"
-        const manifestIndex = code.indexOf('const MANIFEST');
-        if (manifestIndex > 0) {
-          code = code.substring(manifestIndex);
+        // Try multiple patterns Claude might use
+        const patterns = [
+          'const MANIFEST',
+          'const MANIFEST =',
+          'const MANIFEST=',
+          'const\nMANIFEST'
+        ];
+        
+        let cleaned = false;
+        for (const pattern of patterns) {
+          const index = code.indexOf(pattern);
+          if (index > 0) {
+            code = code.substring(index);
+            cleaned = true;
+            console.log(`✅ Cleaned ${index} characters before MANIFEST`);
+            break;
+          }
+        }
+        
+        if (!cleaned) {
+          console.warn('⚠️ Could not find MANIFEST in code, sending as-is');
         }
         
         // Extract component name from prompt (Category: X, Type: Y format)
