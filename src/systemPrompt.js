@@ -204,6 +204,39 @@ gsap.to(particles, { x: 100, y: 100 }); // ❌ Won't render on screen!
 
 ---
 
+### Rule 2.7: Three.js Library Usage
+
+**IMPORTANT:** Three.js is available globally via CDN. Access it as \`THREE\` (global object).
+
+**✅ CORRECT - Use global THREE object:**
+\`\`\`javascript
+function Component({ config = {} }) {
+  React.useEffect(() => {
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer();
+    const geometry = new THREE.BoxGeometry(1, 1, 1);
+    const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+    const cube = new THREE.Mesh(geometry, material);
+    // ... Three.js setup
+  }, []);
+}
+\`\`\`
+
+**❌ WRONG - Don't try to import:**
+\`\`\`javascript
+import * as THREE from 'three'; // ❌ FAILS - use global THREE instead
+\`\`\`
+
+**Key Three.js Patterns:**
+- Always clean up renderer and geometry in useEffect cleanup
+- Use refs for scene, camera, renderer, and mesh objects
+- Call \`renderer.setSize()\` on mount and resize
+- Use \`requestAnimationFrame\` for animation loops
+- Dispose of geometries and materials on unmount
+
+---
+
 ### Rule 3: Hex Colors Must Be 6 Digits
 
 **✅ CORRECT - Full hex codes:**

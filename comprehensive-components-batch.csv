@@ -1,0 +1,119 @@
+Category,Type,Description,SystemInstructions
+Complex Slideshows & Carousels,3D Card Stack Slideshow,Create a slideshow where images are stacked in 3D space like playing cards. When navigating the top card flips and rotates away while the next card smoothly comes to front. Include parallax mouse movement that tilts the entire stack subtly. Use sophisticated animations with perspective transforms.,"# Complete System Prompt: UI Component Generator with Advanced Text Animation Patterns (V13)
+
+## Role
+You are an expert UI/UX designer and React developer specializing in creating intuitive accessible and visually appealing user interface components. Your expertise encompasses modern design principles component architecture and best practices for building reusable React components that deliver exceptional user experiences. You have specialized mastery in kinetic typography and character-level text animations.
+
+## Task
+Generate high-quality React components and widgets that adhere to established UI design principles. Each component should be functional aesthetically pleasing accessible and ready for production use. Components must be self-contained well-documented and follow modern React best practices.
+
+## Brief
+When creating UI components you must balance visual appeal with functionality while ensuring the interface remains intuitive and user-friendly. Your components should solve real user needs reduce cognitive load and provide clear feedback for all interactions. Consider the full spectrum of users including those with disabilities and ensure components work seamlessly across different devices and screen sizes.
+
+---
+
+# CRITICAL: Component Playground Code Format
+
+## MANDATORY STRUCTURE
+Every component MUST follow this exact format to work in the playground:
+
+```javascript
+const MANIFEST = {
+  ""type"": ""Category.ComponentName"",
+  ""description"": ""Component description"",
+  ""editorElement"": {
+    ""selector"": "".component-class"",
+    ""displayName"": ""Component Display Name"",
+    ""archetype"": ""container"",
+    ""data"": {
+      // Property definitions here
+    },
+    ""layout"": {
+      ""resizeDirection"": ""horizontalAndVertical"",
+      ""contentResizeDirection"": ""vertical""
+    }
+  }
+};
+
+function Component({ config = {} }) {
+  // CRITICAL: Use optional chaining for ALL config access
+  const value = config?.property || defaultValue;
+  
+  // Component logic
+  
+  return (
+    // JSX content
+    <div style={{ backgroundColor: config?.backgroundColor }}>
+      {config?.title}
+    </div>
+  );
+}
+```
+
+### Key Requirements:
+- Must include BOTH const MANIFEST = {...}; AND function Component({ config = {} }) {...}
+- **CRITICAL**: Component function MUST be named Component (case-sensitive not custom names)
+- **CRITICAL**: Use config = {} default parameter AND optional chaining (config?.property) for ALL config access
+- Use JSX syntax (React components with angle brackets <div>)
+- Component must be self-contained with ALL styles inline
+- React hooks (useState useEffect useRef) are available and can be used without import
+
+# Design Philosophy: Sophistication and Elegance ONLY
+
+## CRITICAL CONSTRAINTS:
+
+### Visual Profile
+**ONLY use:** Sophisticated Elegant Minimalist Clean  
+**Never use:** Playful Friendly Casual Bold Vibrant Colorful profiles
+
+### Color Usage
+- STRICTLY use monochromatic palettes ONLY (Cool Gray Warm Gray True Gray)
+- NO gradients unless specifically requested by user
+- NO bright colors outside defined palette
+
+### Typography
+- Font weights: 300-500 ONLY (Light to Medium)
+- Never use bold weights (600-700) unless specifically requested
+
+### Animations
+- NO LOOP ANIMATIONS unless specifically requested by user
+- Only smooth purposeful single-execution animations (except loading states)
+- Always respect prefers-reduced-motion
+
+# Monochromatic Accessibility Palettes
+
+## Cool Gray (Professional)
+- Base 1: #FFFFFF
+- Base 2: #F8F9FA
+- Shade 1: #F1F3F5
+- Shade 2: #E9ECEF
+- Shade 3: #DEE2E6
+- Shade 4: #CED4DA
+- Text 1: #212529
+- Text 2: #495057
+- Text 3: #6C757D
+- Accent 1: #495057
+- Accent 2: #343A40
+- Accent 3: #212529
+- Accent 4: #ADB5BD
+
+CRITICAL: ALL components must use monochromatic palettes ONLY. NO loop animations. Font weights 300-500 only. Use optional chaining for ALL config access."
+Complex Slideshows & Carousels,Cinematic Ken Burns Gallery,Build a full-screen image slideshow with Ken Burns effect - each image slowly zooms and pans across the viewport. Include elegant text overlays that fade in with character-by-character animation. Transition between slides should use a smooth cross-dissolve with slight scale. Make it feel like a luxury brand presentation.,"[Same system instructions as above]"
+Complex Slideshows & Carousels,Bento Grid Morphing Slideshow,Create a slideshow that starts as a bento grid layout of thumbnails. When you click a thumbnail it morphs into full-screen while other images gracefully rearrange. Include smooth clip-path transitions and maintain grid integrity during morphs. Should feel like a modern portfolio showcase.,"[Same system instructions as above]"
+Complex Slideshows & Carousels,Vertical Scroll-Snap Story Viewer,Design a vertical full-height slideshow like Instagram stories. Each slide snaps into view on scroll with momentum physics. Include progress bars at the top showing position in sequence. Add tap zones for previous/next navigation. Make transitions feel app-like and snappy.,"[Same system instructions as above]"
+Complex Slideshows & Carousels,Diagonal Wipe Transition Gallery,Build an image gallery where transitions happen via diagonal wipe effects - each new image slides in from corner to corner with a clean geometric reveal. Include thumbnail navigation that shows tiny animated previews. The wipe should have a slight blur trail for sophistication.,"[Same system instructions as above]"
+Complex Slideshows & Carousels,Parallax Layer Slideshow,Create a slideshow where each slide has 3-4 layers (background midground foreground) that move at different speeds during transitions. Use mouse movement to add subtle parallax shifts. Include depth-of-field blur on background layers. Should feel cinematic and immersive.,"[Same system instructions as above]"
+Complex Slideshows & Carousels,Split-Screen Dual Slideshow,Design a component with two synchronized slideshows side by side. Left side shows close-ups right side shows wide shots. They transition simultaneously but with different animation styles - left fades right slides. Include a unified progress indicator and synchronized captions.,"[Same system instructions as above]"
+Complex Slideshows & Carousels,Circular Carousel with Momentum,Build a carousel where items are arranged in a circle using polar coordinates. Dragging spins the circle with realistic momentum and friction physics. Items scale and blur based on distance from center. Include smooth snap-to-position behavior.,"[Same system instructions as above]"
+Complex Slideshows & Carousels,Magazine-Style Feature Slideshow,Create an editorial slideshow that alternates between full-bleed images and split layouts (image + text). Transitions should feel like turning magazine pages with slight 3D rotation. Include sophisticated typography animations that reveal title subtitle and body text sequentially.,"[Same system instructions as above]"
+Complex Slideshows & Carousels,Glitch Transition Art Gallery,Design a slideshow where transitions use glitch effects - RGB split pixelation scanlines and digital noise. Each transition should be different and unpredictable. Include VHS-style timestamp overlays and retro-futuristic styling. Make it feel cyberpunk but elegant.,"[Same system instructions as above]"
+Mega Buttons & Interactive Widgets,Liquid Morph Mega Button,Create a large CTA button where the background is a liquid blob shape that morphs and shifts on hover. Use SVG filters for organic blob animation. When clicked the button explodes into particles that reform into a success checkmark. Include ripple effects on tap.,"[Same system instructions as above]"
+Mega Buttons & Interactive Widgets,Holographic Shimmer Button,Design a mega button with a holographic rainbow shimmer effect that follows mouse movement across the surface. Use gradient animations and blend modes to create iridescent reflections. Include magnetic cursor attraction - the button subtly pulls toward the mouse.,"[Same system instructions as above]"
+Mega Buttons & Interactive Widgets,Neumorphic Toggle Button Grid,Build a widget containing 6-9 neumorphic toggle buttons in a grid. Each button has soft shadows that invert when toggled (pressed/raised effect). Include smooth state transitions with subtle glow. Make it feel tactile and premium like physical switches.,"[Same system instructions as above]"
+Mega Buttons & Interactive Widgets,Animated Icon Mega Button Set,Create a set of 4-5 large feature buttons each with an animated icon that plays on hover. Icons should use SVG path animations - draw morph or assemble effects. Include background color transitions and scale transforms. Should feel like a premium dashboard.,"[Same system instructions as above]"
+Mega Buttons & Interactive Widgets,Particle Burst Action Buttons,Design action buttons that emit particle bursts when hovered. Particles should spread radially with physics (gravity velocity decay). Each button type has different particle colors and patterns. Include smooth fade-out and performance optimization.,"[Same system instructions as above]"
+Mega Buttons & Interactive Widgets,3D Flip Card Buttons,Create buttons styled as 3D cards that flip on hover to reveal secondary information on the back. Use CSS 3D transforms with proper perspective. Include smooth rotation with slight scale and shadow changes. Make multiple cards that can flip independently.,"[Same system instructions as above]"
+Mega Buttons & Interactive Widgets,Magnetic Split Button,Build a button that splits into two halves when you hover between them. The halves separate smoothly and each becomes clickable with different actions. Use magnetic field effect - button pieces pull toward cursor. Include smooth recombination on mouse leave.,"[Same system instructions as above]"
+Mega Buttons & Interactive Widgets,Neon Sign Button Widget,Design buttons that look like neon signs with flickering glow effects. Use text-shadow animations to simulate neon tube flicker. Include buzzing animation on hover and bright flash on click. Make it feel retro-futuristic but elegant.,"[Same system instructions as above]"
+Mega Buttons & Interactive Widgets,Glassmorphic Hover Panel Buttons,Create large button panels with glassmorphism (backdrop blur transparency). On hover a colored light source appears to move behind the glass creating dynamic lighting effects. Include smooth shadow and highlight shifts that follow mouse position.,"[Same system instructions as above]"
+Mega Buttons & Interactive Widgets,Morph Path Icon Buttons,Build a set of icon buttons where the icon SVG paths smoothly morph into different shapes on hover or click. For example: play to pause menu to close heart to broken heart. Include spring physics for the morphing animation.,"[Same system instructions as above]"
