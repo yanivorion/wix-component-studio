@@ -31,7 +31,7 @@ Claude API doesn't support CORS (browser direct calls). We need a backend server
 2. Click **"Add Environment Variable"**
 3. Set:
    - **Key:** `CLAUDE_API_KEY`
-   - **Value:** `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`
+   - **Value:** `[YOUR_CLAUDE_API_KEY_HERE]`
 
 ### **Step 4: Deploy**
 1. Click **"Create Web Service"**
