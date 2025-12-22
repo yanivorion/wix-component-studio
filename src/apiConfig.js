@@ -1,7 +1,9 @@
 // API Configuration for different environments
 
+// For production (GitHub Pages), always use the deployed Render API
+// For development, use localhost
 export const API_URL = process.env.NODE_ENV === 'production'
-  ? process.env.REACT_APP_API_URL || 'http://localhost:3001' // Fallback to localhost
+  ? 'https://wix-component-studio.onrender.com' // Hardcoded production URL
   : 'http://localhost:3001';
 
 export const isProductionMode = () => process.env.NODE_ENV === 'production';

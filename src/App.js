@@ -4,6 +4,7 @@ import { useComponentLibrary } from './hooks/useComponentLibrary';
 import { ThemeProvider, useTheme } from './ThemeSwitcher';
 import { getApiEndpoint, API_ENDPOINTS, shouldUseClientSideAPI } from './apiConfig';
 import { generateSingleComponent, generateBulkComponents } from './claudeClient';
+import COMPREHENSIVE_SYSTEM_INSTRUCTIONS from './systemPrompt';
 
 // Scroll utilities for components
 const getScrollContainer = () => {
@@ -219,7 +220,8 @@ function AppContent() {
   const [isBulkGenerating, setIsBulkGenerating] = useState(false);
   const [bulkProgress, setBulkProgress] = useState({ current: 0, total: 0 });
   const [csvFileName, setCsvFileName] = useState('');
-  const [systemInstructions, setSystemInstructions] = useState('You are an expert UI/UX designer and React developer specializing in creating sophisticated, elegant, and accessible components. Create production-ready React components following these rules:\n\nMANDATORY STRUCTURE:\n- Every component MUST include both MANIFEST object and Component function\n- Use config = {} default parameter AND optional chaining (config?.property) for ALL config access\n- Component must be self-contained with inline styles only\n- React hooks available: useState, useEffect, useRef (no imports needed)\n\nDESIGN PHILOSOPHY:\n- Visual Profile: Sophisticated, Elegant, Minimalist, Clean ONLY\n- Colors: Monochromatic palettes only (Cool Gray, Warm Gray, True Gray)\n- Typography: Font weights 300-500 only (never bold unless requested)\n- Animations: Smooth, purposeful, NO loops unless requested\n- Always respect prefers-reduced-motion\n\nMANIFEST REQUIREMENTS:\n- Expose ALL customizable properties with proper dataTypes\n- Group properties: Content, Colors, Typography, Layout, Animation\n- Use dataType: "color" for all colors, "select" for dropdowns with options, "number" for font sizes\n- Every property needs displayName, defaultValue, and group\n\nReturn ONLY the code without markdown formatting or explanations. Start directly with const MANIFEST = ...');
+  const [systemInstructions, setSystemInstructions] = useState(COMPREHENSIVE_SYSTEM_INSTRUCTIONS);
+  const bulkCancelRef = useRef(false);
   
   const [hasError, setHasError] = useState(false);
   const [errorInfo, setErrorInfo] = useState(null);
@@ -849,6 +851,9 @@ function Component({ config = {} }) {
       return;
     }
 
+    // Reset cancel flag
+    bulkCancelRef.current = false;
+
     setIsBulkGenerating(true);
     setBulkProgress({ current: 0, total: prompts.length });
     setBulkResults([]);
@@ -870,6 +875,12 @@ function Component({ config = {} }) {
           systemInstructions,
           apiKey: claudeApiKey,
           onProgress: (progress) => {
+            // Check for cancel before processing progress
+            if (bulkCancelRef.current) {
+              showToast(`Cancelled. Kept ${progress.current - 1} generated components.`, 'info');
+              return 'cancel'; // Signal to stop generation
+            }
+            
             if (progress.status === 'generating' || progress.status === 'completed') {
               setBulkProgress({ current: progress.current, total: progress.total });
             }
@@ -933,6 +944,14 @@ function Component({ config = {} }) {
 
         while (true) {
           const { done, value } = await reader.read();
+          
+          // Check if user cancelled
+          if (bulkCancelRef.current) {
+            reader.cancel();
+            showToast(`Cancelled. Kept ${bulkProgress.current} generated components.`, 'info');
+            break;
+          }
+          
           if (done) break;
 
           buffer += decoder.decode(value, { stream: true });
@@ -2349,21 +2368,52 @@ function Component({ config = {} }) {
                 
                 {/* Progress Bar for Bulk */}
                 {isBulkGenerating && bulkProgress.total > 0 && (
-                  <div style={{
-                    width: '100%',
-                    height: '6px',
-                    backgroundColor: theme.shade2,
-                    borderRadius: '3px',
-                    overflow: 'hidden'
-                  }}>
+                  <>
                     <div style={{
-                      width: `${(bulkProgress.current / bulkProgress.total) * 100}%`,
-                      height: '100%',
-                      backgroundColor: theme.accent1,
-                      transition: 'width 500ms ease-out',
-                      borderRadius: '3px'
-                    }} />
-                  </div>
+                      width: '100%',
+                      height: '6px',
+                      backgroundColor: theme.shade2,
+                      borderRadius: '3px',
+                      overflow: 'hidden'
+                    }}>
+                      <div style={{
+                        width: `${(bulkProgress.current / bulkProgress.total) * 100}%`,
+                        height: '100%',
+                        backgroundColor: theme.accent1,
+                        transition: 'width 500ms ease-out',
+                        borderRadius: '3px'
+                      }} />
+                    </div>
+                    
+                    {/* Cancel Button */}
+                    <button
+                      onClick={() => {
+                        bulkCancelRef.current = true;
+                        showToast(`Cancelling... Keeping ${bulkProgress.current} generated components`, 'info');
+                      }}
+                      style={{
+                        padding: '10px 24px',
+                        backgroundColor: 'transparent',
+                        color: theme.text2,
+                        border: `1px solid ${theme.border}`,
+                        borderRadius: '6px',
+                        fontSize: '13px',
+                        fontWeight: '500',
+                        cursor: 'pointer',
+                        transition: 'all 150ms ease-out'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = theme.shade1;
+                        e.currentTarget.style.borderColor = theme.text3;
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = 'transparent';
+                        e.currentTarget.style.borderColor = theme.border;
+                      }}
+                    >
+                      Cancel Remaining
+                    </button>
+                  </>
                 )}
               </div>
             </div>
@@ -2818,6 +2868,36 @@ function Component({ config = {} }) {
                         onChange={(e) => setDesignBrief(e.target.value)}
                         placeholder="Optional: Shared design guidelines for all components..."
                         rows={4}
+                        style={{
+                          width: '100%',
+                          padding: '9px 12px',
+                          backgroundColor: theme.base1,
+                          border: `1px solid ${theme.border}`,
+                          borderRadius: '6px',
+                          fontSize: '13px',
+                          color: theme.text1,
+                          outline: 'none',
+                          fontFamily: 'inherit',
+                          resize: 'vertical',
+                          marginBottom: '20px'
+                        }}
+                      />
+
+                      {/* System Instructions (shared) */}
+                      <label style={{ 
+                        display: 'block', 
+                        fontSize: '12px', 
+                        fontWeight: '500',
+                        color: theme.text2,
+                        marginBottom: '8px'
+                      }}>
+                        System Instructions (applies to all)
+                      </label>
+                      <textarea
+                        value={systemInstructions}
+                        onChange={(e) => setSystemInstructions(e.target.value)}
+                        placeholder="Define how Claude should generate components..."
+                        rows={8}
                         style={{
                           width: '100%',
                           padding: '9px 12px',
