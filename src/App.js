@@ -95,7 +95,7 @@ function Toast({ message, type = 'info', onClose }) {
 }
 
 // Error Modal Component
-function ErrorModal({ error, errorInfo, onRemove, onClose, componentName }) {
+function ErrorModal({ error, errorInfo, onRemove, onClose, componentName, componentCode }) {
   const { theme } = useTheme();
   
   const parseError = (error, errorInfo) => {
@@ -115,6 +115,80 @@ function ErrorModal({ error, errorInfo, onRemove, onClose, componentName }) {
   
   const { message, stack, fullStack } = parseError(error, errorInfo);
   const [showFullStack, setShowFullStack] = useState(false);
+  
+  // Download error log with component code
+  const handleDownloadLog = () => {
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const filename = `error-log-${timestamp}.txt`;
+    
+    const logContent = `
+===========================================
+COMPONENT ERROR LOG
+===========================================
+Generated: ${new Date().toLocaleString()}
+Component: ${componentName || 'Unknown'}
+
+-------------------------------------------
+ERROR MESSAGE
+-------------------------------------------
+${message}
+
+-------------------------------------------
+FULL STACK TRACE
+-------------------------------------------
+${fullStack}
+
+-------------------------------------------
+COMPONENT CODE (BROKEN)
+-------------------------------------------
+${componentCode || 'No code available'}
+
+-------------------------------------------
+COMMON FIXES
+-------------------------------------------
+1. Check for missing config = {} default parameter
+   Fix: function Component({ config = {} })
+
+2. Check for unsafe config access
+   Fix: Use config?.property instead of config.property
+
+3. Check for invalid dataType in MANIFEST
+   Valid types: "color", "text", "select", "number", "booleanValue"
+
+4. Check for GSAP animating plain objects
+   Fix: Animate DOM elements via refs, not plain objects
+
+5. Check for hard-coded SVG filter IDs
+   Fix: Use unique IDs per instance with React.useId() or Math.random()
+
+6. Check for missing React. prefix on hooks
+   Fix: React.useState, React.useEffect, etc.
+
+-------------------------------------------
+DEBUGGING STEPS
+-------------------------------------------
+1. Copy the component code above
+2. Paste into an AI assistant (Claude, ChatGPT, etc.)
+3. Share the error message and ask for fixes
+4. Test the fixed code in the playground
+5. Re-capture thumbnail if needed
+
+===========================================
+END OF ERROR LOG
+===========================================
+`.trim();
+
+    // Create blob and download
+    const blob = new Blob([logContent], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
   
   return (
     <div style={{
@@ -292,8 +366,43 @@ function ErrorModal({ error, errorInfo, onRemove, onClose, componentName }) {
           borderTop: `1px solid ${theme.shade2}`,
           display: 'flex',
           gap: '12px',
-          justifyContent: 'flex-end'
+          justifyContent: 'space-between',
+          alignItems: 'center'
         }}>
+          {/* Download Log Button - Left side */}
+          <button
+            onClick={handleDownloadLog}
+            style={{
+              padding: '10px 20px',
+              borderRadius: '6px',
+              border: `1px solid ${theme.accent1}`,
+              backgroundColor: theme.base1,
+              color: theme.accent1,
+              fontSize: '14px',
+              fontWeight: '500',
+              cursor: 'pointer',
+              transition: 'all 0.2s',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px'
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.backgroundColor = theme.accent1;
+              e.target.style.color = theme.base1;
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.backgroundColor = theme.base1;
+              e.target.style.color = theme.accent1;
+            }}
+          >
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <path d="M14 10v2a2 2 0 01-2 2H4a2 2 0 01-2-2v-2M12 7l-4 4m0 0L4 7m4 4V1"/>
+            </svg>
+            Download Error Log
+          </button>
+
+          {/* Action Buttons - Right side */}
+          <div style={{ display: 'flex', gap: '12px' }}>
           <button
             onClick={onClose}
             style={{
@@ -339,6 +448,7 @@ function ErrorModal({ error, errorInfo, onRemove, onClose, componentName }) {
             Remove Component
           </button>
           </div>
+        </div>
       </div>
     </div>
   );
@@ -387,6 +497,7 @@ class ComponentErrorBoundary extends React.Component {
           onRemove={this.handleRemove}
           onClose={this.handleClose}
           componentName={this.props.componentName}
+          componentCode={this.props.componentCode}
         />
       );
     }
@@ -5270,6 +5381,7 @@ function LiveComponent({ code, config, responsiveMode, fixedSectionMode, canvasW
           }
         }}
         componentName={componentName}
+        componentCode={code}
     >
       <Component config={config} />
       </ComponentErrorBoundary>
