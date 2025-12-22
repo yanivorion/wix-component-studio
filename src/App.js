@@ -5,6 +5,7 @@ import { ThemeProvider, useTheme } from './ThemeSwitcher';
 import { getApiEndpoint, API_ENDPOINTS, shouldUseClientSideAPI } from './apiConfig';
 import { generateSingleComponent, generateBulkComponents } from './claudeClient';
 import COMPREHENSIVE_SYSTEM_INSTRUCTIONS from './systemPrompt';
+import html2canvas from 'html2canvas';
 
 // Scroll utilities for components
 const getScrollContainer = () => {
@@ -1468,8 +1469,79 @@ function Component({ config = {} }) {
       }
       return tab;
     });
-      setTabs(newTabs);
+    setTabs(newTabs);
     addToHistory({ tabs: newTabs, activeTabId });
+  };
+
+  // Capture thumbnail of current canvas
+  const [isCapturingThumbnail, setIsCapturingThumbnail] = useState(false);
+
+  const handleCaptureThumbnail = async () => {
+    if (!canvasWrapperRef.current || !activeTab) {
+      showToast('No component to capture', 'error');
+      return;
+    }
+
+    setIsCapturingThumbnail(true);
+    
+    try {
+      // Temporarily reset zoom for clean capture
+      const originalZoom = zoomLevel;
+      const zoomResetNeeded = zoomLevel !== 100;
+      
+      if (zoomResetNeeded) {
+        canvasWrapperRef.current.style.transform = 'scale(1)';
+      }
+
+      // Small delay to let the DOM update
+      await new Promise(resolve => setTimeout(resolve, 100));
+
+      // Capture the canvas
+      const canvas = await html2canvas(canvasWrapperRef.current, {
+        backgroundColor: theme.base1,
+        scale: 0.5, // Lower resolution for thumbnails (faster, smaller file)
+        logging: false,
+        useCORS: true,
+        allowTaint: true,
+        width: canvasSize.width,
+        height: Math.min(canvasWrapperRef.current.scrollHeight, 1200) // Limit height
+      });
+
+      // Restore zoom
+      if (zoomResetNeeded) {
+        canvasWrapperRef.current.style.transform = `scale(${originalZoom / 100})`;
+      }
+
+      // Convert to data URL
+      const thumbnailDataUrl = canvas.toDataURL('image/jpeg', 0.8);
+
+      // Update active tab with thumbnail
+      const newTabs = tabs.map(tab => 
+        tab.id === activeTabId 
+          ? { ...tab, thumbnail: thumbnailDataUrl }
+          : tab
+      );
+      
+      setTabs(newTabs);
+      addToHistory({ tabs: newTabs, activeTabId });
+
+      // Also save to library if it exists
+      const libraryComponents = JSON.parse(localStorage.getItem('componentLibrary') || '[]');
+      const updatedLibrary = libraryComponents.map(comp => {
+        if (comp.code === activeTab.code) {
+          return { ...comp, thumbnail: thumbnailDataUrl };
+        }
+        return comp;
+      });
+      localStorage.setItem('componentLibrary', JSON.stringify(updatedLibrary));
+
+      showToast('Thumbnail captured!', 'success');
+    } catch (error) {
+      console.error('Thumbnail capture error:', error);
+      showToast('Failed to capture thumbnail', 'error');
+    } finally {
+      setIsCapturingThumbnail(false);
+    }
   };
 
   const handleRenderComponent = () => {
@@ -3754,6 +3826,69 @@ function Component({ config = {} }) {
               </button>
                 <span className="tooltip-text">100vh: {fixedSectionMode ? 'ON' : 'OFF'}</span>
               </div>
+
+              {/* Capture Thumbnail Button */}
+              <div className="tooltip">
+              <button 
+                onClick={handleCaptureThumbnail}
+                disabled={isCapturingThumbnail || !activeTab?.code}
+                title="Capture Thumbnail"
+                style={{
+                    width: '40px',
+                    height: '40px',
+                  backgroundColor: 'transparent',
+                  border: `1px solid ${theme.border}`,
+                  color: isCapturingThumbnail ? theme.text3 : theme.text2,
+                    borderRadius: '8px',
+                    cursor: isCapturingThumbnail || !activeTab?.code ? 'not-allowed' : 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                    justifyContent: 'center',
+                    transition: 'all 150ms ease-out',
+                    position: 'relative',
+                    opacity: isCapturingThumbnail || !activeTab?.code ? 0.5 : 1
+                }}
+                onMouseEnter={(e) => {
+                  if (!isCapturingThumbnail && activeTab?.code) {
+                    e.currentTarget.style.backgroundColor = theme.shade1;
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isCapturingThumbnail) {
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                  }
+                }}
+              >
+                  <svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <rect x="2" y="3" width="12" height="10" rx="1"/>
+                  <circle cx="8" cy="8" r="2"/>
+                  <path d="M6 3l1-1h2l1 1"/>
+                </svg>
+                  {isCapturingThumbnail && (
+                    <div style={{
+                      position: 'absolute',
+                      inset: 0,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      backgroundColor: 'rgba(0,0,0,0.1)',
+                      borderRadius: '8px'
+                    }}>
+                      <div style={{
+                        width: '12px',
+                        height: '12px',
+                        border: `2px solid ${theme.text3}`,
+                        borderTopColor: 'transparent',
+                        borderRadius: '50%',
+                        animation: 'spin 0.6s linear infinite'
+                      }} />
+                    </div>
+                  )}
+              </button>
+                <span className="tooltip-text">
+                  {isCapturingThumbnail ? 'Capturing...' : 'Capture Thumbnail'}
+                </span>
+              </div>
             </div>
           </div>
           
@@ -4429,6 +4564,8 @@ function Component({ config = {} }) {
             ref={canvasWrapperRef}
             style={{
               width: `${canvasSize.width}px`,
+              minWidth: `${canvasSize.width}px`,  // Ensure canvas grows beyond 1280px
+              maxWidth: `${canvasSize.width}px`,  // Lock to exact width
             height: 'calc(100vh - 200px)',
             margin: '0 auto',
               transform: `scale(${zoomLevel / 100})`,
