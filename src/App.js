@@ -948,6 +948,8 @@ function Component({ config = {} }) {
           // Check if user cancelled
           if (bulkCancelRef.current) {
             reader.cancel();
+            setIsBulkGenerating(false);
+            setBulkProgress({ current: 0, total: 0 });
             showToast(`Cancelled. Kept ${bulkProgress.current} generated components.`, 'info');
             break;
           }
