@@ -1,0 +1,37 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Components Collection
+    match /components/{componentId} {
+      // Allow anyone to read components
+      allow read: if true;
+      
+      // Allow anyone to create components
+      allow create: if true;
+      
+      // Allow anyone to update components
+      allow update: if true;
+      
+      // Allow anyone to delete components
+      allow delete: if true;
+    }
+    
+    // Bulk Sessions Collection
+    match /bulkSessions/{sessionId} {
+      // Allow anyone to read bulk sessions
+      allow read: if true;
+      
+      // Allow anyone to create bulk sessions
+      allow create: if true;
+      
+      // Allow anyone to update bulk sessions
+      allow update: if true;
+      
+      // Note: For production, you might want to restrict these rules
+      // Example with authentication:
+      // allow read, write: if request.auth != null;
+    }
+  }
+}
+
