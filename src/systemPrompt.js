@@ -125,6 +125,37 @@ useEffect(() => {}, []);
 
 ---
 
+### Rule 2.5: GSAP Animation Library (AVAILABLE)
+
+**✅ GSAP is now available for advanced animations!**
+\`\`\`javascript
+// GSAP is globally available, no import needed
+React.useEffect(() => {
+  gsap.to('.element', {
+    x: 100,
+    duration: 1,
+    ease: 'power2.out'
+  });
+}, []);
+
+// You can use all GSAP features:
+// - gsap.to() / gsap.from() / gsap.fromTo()
+// - gsap.timeline()
+// - ScrollTrigger (if needed)
+// - All easing functions
+\`\`\`
+
+**Use GSAP for:**
+- Complex animation sequences
+- Timeline-based animations
+- Advanced easing and motion
+- Character-level text animations
+- Scroll-triggered effects
+
+**Still respect:** NO LOOP ANIMATIONS unless specifically requested
+
+---
+
 ### Rule 3: Hex Colors Must Be 6 Digits
 
 **✅ CORRECT - Full hex codes:**

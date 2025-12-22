@@ -55,3 +55,4 @@ npm start
 # Cleanup on exit
 trap "echo '🛑 Shutting down...'; kill $API_PID 2>/dev/null; exit" INT TERM EXIT
 
+

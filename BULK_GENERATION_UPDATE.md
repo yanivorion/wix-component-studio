@@ -283,3 +283,4 @@ Download from: `public/bulk-components-template.csv`
 
 **Semicolons + CSV = Unlimited Possibilities** 📊🚀
 
+

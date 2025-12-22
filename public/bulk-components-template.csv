@@ -9,3 +9,4 @@ Component Category,Component Type,User Request
 "Interactive Elements","Comparison Slider","Create a before/after image comparison slider with draggable handle to reveal the difference between two images."
 "Charts & Data","Animated Donut Chart","Create an animated donut chart with percentage display in center, legend, and smooth animation on load."
 "Navigation","Breadcrumb Navigation","Create a breadcrumb navigation component with separators, home icon, and current page highlighting."
+

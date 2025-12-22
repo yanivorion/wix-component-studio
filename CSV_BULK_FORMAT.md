@@ -212,3 +212,4 @@ Each CSV row generates a complete React component with:
 
 Download the template, customize it with your needs, and start bulk generating! 🚀
 
+
