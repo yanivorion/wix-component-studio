@@ -2472,36 +2472,9 @@ function Component({ config = {} }) {
                           e.currentTarget.style.transform = 'translateY(0)';
                         }}
                       >
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleDeleteFromLibrary(component.id);
-                          }}
-                          style={{
-                            position: 'absolute',
-                            top: '12px',
-                            right: '12px',
-                            background: theme.base1,
-                            border: `1px solid ${theme.border}`,
-                            borderRadius: '4px',
-                            padding: '4px',
-                            cursor: 'pointer',
-                            color: theme.text3,
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center'
-                          }}
-                          onMouseOver={(e) => e.currentTarget.style.borderColor = theme.accent1}
-                          onMouseOut={(e) => e.currentTarget.style.borderColor = theme.border}
-                        >
-                          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
-                            <path d="M2 4h12M5 4V3a1 1 0 011-1h4a1 1 0 011 1v1M6 7v5M10 7v5"/>
-                          </svg>
-                        </button>
-                        
                         <div 
                           onClick={() => handleLoadFromSavedLibrary(component)}
-                          style={{ cursor: 'pointer' }}
+                          style={{ cursor: 'pointer', position: 'relative' }}
                         >
                           <div style={{
                             width: '100%',
@@ -2542,6 +2515,44 @@ function Component({ config = {} }) {
                                 <span style={{ fontSize: '11px' }}>No preview</span>
                               </div>
                             )}
+                            
+                            {/* Delete button inside preview */}
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDeleteFromLibrary(component.id);
+                              }}
+                              style={{
+                                position: 'absolute',
+                                top: '8px',
+                                right: '8px',
+                                background: 'rgba(0, 0, 0, 0.6)',
+                                backdropFilter: 'blur(8px)',
+                                border: 'none',
+                                borderRadius: '6px',
+                                padding: '6px',
+                                cursor: 'pointer',
+                                color: '#FFFFFF',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                opacity: 0.8,
+                                transition: 'all 0.2s',
+                                zIndex: 10
+                              }}
+                              onMouseOver={(e) => {
+                                e.currentTarget.style.opacity = '1';
+                                e.currentTarget.style.background = 'rgba(220, 38, 38, 0.9)';
+                              }}
+                              onMouseOut={(e) => {
+                                e.currentTarget.style.opacity = '0.8';
+                                e.currentTarget.style.background = 'rgba(0, 0, 0, 0.6)';
+                              }}
+                            >
+                              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
+                                <path d="M2 4h12M5 4V3a1 1 0 011-1h4a1 1 0 011 1v1M6 7v5M10 7v5"/>
+                              </svg>
+                            </button>
                           </div>
                           <div style={{ 
                             fontSize: '13px', 
@@ -4186,7 +4197,6 @@ function Component({ config = {} }) {
               <div
                 key={tab.id}
                 onClick={() => handleTabSwitch(tab.id)}
-                className="tooltip"
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -4288,33 +4298,6 @@ function Component({ config = {} }) {
                       <path d="M12 4L4 12M4 4l8 8"/>
                     </svg>
                   </button>
-                )}
-                
-                {/* Thumbnail preview tooltip */}
-                {tab.thumbnail && (
-                  <span className="tooltip-text" style={{
-                    padding: 0,
-                    backgroundColor: 'transparent',
-                    border: 'none',
-                    boxShadow: '0 8px 24px rgba(0,0,0,0.3)',
-                    borderRadius: '8px',
-                    overflow: 'hidden',
-                    minWidth: '200px',
-                    width: 'auto'
-                  }}>
-                    <img 
-                      src={tab.thumbnail}
-                      alt={`${tab.name} preview`}
-                      style={{
-                        width: '300px',
-                        height: 'auto',
-                        maxHeight: '200px',
-                        objectFit: 'cover',
-                        objectPosition: 'top',
-                        display: 'block'
-                      }}
-                    />
-                  </span>
                 )}
               </div>
             ))}
