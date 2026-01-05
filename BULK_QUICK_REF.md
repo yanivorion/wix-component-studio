@@ -54,3 +54,4 @@ Category: Complex Slideshows & Carousels, Type: Cinematic Ken Burns Gallery - Cr
 **That's it! Upload CSV or type semicolon-separated prompts and generate!** 🎉
 
 
+

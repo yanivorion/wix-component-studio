@@ -203,3 +203,4 @@ Try it now:
 1. Adjust slider to 1920px → Canvas grows! ✅
 2. Click camera button → Thumbnail saved! ✅
 
+

@@ -19,6 +19,23 @@
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
     <!-- Three.js 3D Library -->
     <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+    <!-- Framer Motion Animation Library -->
+    <script src="https://unpkg.com/framer-motion@11.0.8/dist/framer-motion.js"></script>
+    <script>
+      // Expose Framer Motion to global scope for component access
+      if (window.FramerMotion) {
+        window.motion = window.FramerMotion.motion;
+        window.AnimatePresence = window.FramerMotion.AnimatePresence;
+        window.useScroll = window.FramerMotion.useScroll;
+        window.useTransform = window.FramerMotion.useTransform;
+        window.useSpring = window.FramerMotion.useSpring;
+        window.useInView = window.FramerMotion.useInView;
+        window.useAnimation = window.FramerMotion.useAnimation;
+        window.useMotionValue = window.FramerMotion.useMotionValue;
+        window.useMotionTemplate = window.FramerMotion.useMotionTemplate;
+        window.useVelocity = window.FramerMotion.useVelocity;
+      }
+    </script>
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.

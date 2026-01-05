@@ -237,6 +237,85 @@ import * as THREE from 'three'; // ❌ FAILS - use global THREE instead
 
 ---
 
+### Rule 2.8: Framer Motion Library Usage
+
+**IMPORTANT:** Framer Motion is available globally via CDN. Access motion components and hooks directly.
+
+**✅ CORRECT - Use global motion and hooks:**
+\`\`\`javascript
+function Component({ config = {} }) {
+  const controls = useAnimation();
+  const ref = React.useRef(null);
+  const isInView = useInView(ref);
+  const { scrollYProgress } = useScroll();
+  const scale = useTransform(scrollYProgress, [0, 1], [0.8, 1]);
+  
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 50 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 0.8 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+      style={{ scale }}
+    >
+      {/* Content */}
+    </motion.div>
+  );
+}
+\`\`\`
+
+**Available Framer Motion Globals:**
+- \`motion\` - Animated components (motion.div, motion.span, etc.)
+- \`AnimatePresence\` - For exit animations
+- \`useAnimation\` - Programmatic animation controls
+- \`useScroll\` - Scroll position tracking
+- \`useTransform\` - Transform values based on input
+- \`useSpring\` - Spring physics animations
+- \`useInView\` - Detect when element is in viewport
+- \`useMotionValue\` - Create motion values
+- \`useMotionTemplate\` - Template string interpolation
+- \`useVelocity\` - Track velocity of motion values
+
+**❌ WRONG - Don't try to import:**
+\`\`\`javascript
+import { motion } from 'framer-motion'; // ❌ FAILS - use global motion instead
+\`\`\`
+
+**Key Framer Motion Patterns:**
+- Use \`motion.div\` instead of regular div for animated elements
+- Wrap exit animations with \`<AnimatePresence>\`
+- Use \`initial\`, \`animate\`, \`exit\` props for declarative animations
+- Combine with GSAP for complex timeline sequences
+- Always provide keys for AnimatePresence children
+- Use \`whileHover\` and \`whileTap\` for interactive animations
+
+**Example with AnimatePresence:**
+\`\`\`javascript
+function Component({ config = {} }) {
+  const [show, setShow] = React.useState(true);
+  
+  return (
+    <AnimatePresence mode="wait">
+      {show && (
+        <motion.div
+          key="content"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+        >
+          Content
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+\`\`\`
+
+---
+
 ### Rule 3: Hex Colors Must Be 6 Digits
 
 **✅ CORRECT - Full hex codes:**
