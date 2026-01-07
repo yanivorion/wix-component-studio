@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/ai-driven-editor/static/css/main.e8311f26.css",
-    "main.js": "/ai-driven-editor/static/js/main.ab54e1e6.js",
-    "static/js/453.1090f070.chunk.js": "/ai-driven-editor/static/js/453.1090f070.chunk.js",
-    "index.html": "/ai-driven-editor/index.html",
-    "main.e8311f26.css.map": "/ai-driven-editor/static/css/main.e8311f26.css.map",
-    "main.ab54e1e6.js.map": "/ai-driven-editor/static/js/main.ab54e1e6.js.map",
-    "453.1090f070.chunk.js.map": "/ai-driven-editor/static/js/453.1090f070.chunk.js.map"
+    "main.css": "/wix-component-studio/static/css/main.e8311f26.css",
+    "main.js": "/wix-component-studio/static/js/main.03ea73ce.js",
+    "static/js/453.1090f070.chunk.js": "/wix-component-studio/static/js/453.1090f070.chunk.js",
+    "index.html": "/wix-component-studio/index.html",
+    "main.e8311f26.css.map": "/wix-component-studio/static/css/main.e8311f26.css.map",
+    "main.03ea73ce.js.map": "/wix-component-studio/static/js/main.03ea73ce.js.map",
+    "453.1090f070.chunk.js.map": "/wix-component-studio/static/js/453.1090f070.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.e8311f26.css",
-    "static/js/main.ab54e1e6.js"
+    "static/js/main.03ea73ce.js"
   ]
 }
