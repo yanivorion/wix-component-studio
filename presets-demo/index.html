@@ -1,0 +1,3839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Text Animation Presets</title>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    /* Import Inter variable font with weight and slant axes */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+    
+    /* Neue Haas Grotesk Display - using local font with fallbacks */
+    @font-face {
+      font-family: 'Neue Haas Grotesk';
+      src: local('Neue Haas Grotesk Display Pro'), local('NeueHaasGroteskDisp-55Roman'), local('Helvetica Neue');
+      font-weight: 400;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'Neue Haas Grotesk';
+      src: local('Neue Haas Grotesk Display Pro Medium'), local('NeueHaasGroteskDisp-65Medium'), local('Helvetica Neue Medium');
+      font-weight: 500;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'Neue Haas Grotesk';
+      src: local('Neue Haas Grotesk Display Pro Bold'), local('NeueHaasGroteskDisp-75Bold'), local('Helvetica Neue Bold');
+      font-weight: 700;
+      font-style: normal;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #0d0f0d;
+      color: #f5f0e8;
+      min-height: 100vh;
+    }
+    
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(13, 15, 13, 0.95);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(245, 240, 232, 0.08);
+      padding: 20px 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+    }
+    
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .logo-name {
+      font-family: 'Neue Haas Grotesk', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      color: #f5f0e8;
+    }
+    
+    .logo-divider {
+      color: rgba(245, 240, 232, 0.2);
+      font-weight: 300;
+    }
+    
+    .nav-title {
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      color: rgba(245, 240, 232, 0.5);
+    }
+    
+    .nav-tabs {
+      display: flex;
+      gap: 8px;
+    }
+    
+    .nav-tab {
+      padding: 10px 20px;
+      font-size: 13px;
+      font-weight: 400;
+      color: rgba(245, 240, 232, 0.4);
+      background: transparent;
+      border: 1px solid rgba(245, 240, 232, 0.1);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 200ms ease;
+    }
+    
+    .nav-tab:hover {
+      color: rgba(245, 240, 232, 0.7);
+      border-color: rgba(245, 240, 232, 0.2);
+    }
+    
+    .nav-tab.active {
+      color: #f5f0e8;
+      background: rgba(245, 240, 232, 0.08);
+      border-color: rgba(245, 240, 232, 0.15);
+    }
+    
+    .theme-toggle {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      border: 1px solid rgba(245, 240, 232, 0.1);
+      background: transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 200ms ease;
+    }
+    
+    .theme-toggle:hover {
+      border-color: rgba(245, 240, 232, 0.2);
+      background: rgba(245, 240, 232, 0.05);
+    }
+    
+    .theme-toggle svg {
+      width: 18px;
+      height: 18px;
+    }
+    
+    .main {
+      padding-top: 81px;
+    }
+    
+    /* Preset Card - Editorial Style */
+    .preset-card {
+      position: relative;
+      min-height: 70vh;
+      padding: 56px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(245, 240, 232, 0.08);
+      overflow: visible;
+    }
+    
+    /* Scroll-specific: full viewport height */
+    .preset-card.scroll-card {
+      min-height: 100vh;
+      height: 100vh;
+    }
+    
+    /* Scroll Hero Section */
+    .scroll-hero {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+      border-bottom: 1px solid rgba(245, 240, 232, 0.08);
+    }
+    
+    .scroll-hero-title {
+      font-size: 72px;
+      font-weight: 300;
+      letter-spacing: -0.02em;
+      color: #f5f0e8;
+      margin-bottom: 20px;
+    }
+    
+    .scroll-hero-subtitle {
+      font-size: 16px;
+      font-weight: 400;
+      color: rgba(245, 240, 232, 0.5);
+      margin-bottom: 80px;
+    }
+    
+    .scroll-indicator {
+      position: absolute;
+      bottom: 60px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      animation: bounce 2s ease-in-out infinite;
+    }
+    
+    .scroll-indicator-text {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: rgba(245, 240, 232, 0.4);
+    }
+    
+    .scroll-indicator-arrow {
+      width: 24px;
+      height: 24px;
+      color: rgba(245, 240, 232, 0.4);
+    }
+    
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(10px); }
+      60% { transform: translateY(5px); }
+    }
+    
+    .light-theme .scroll-hero-title {
+      color: #0d0f0d;
+    }
+    
+    .light-theme .scroll-hero-subtitle {
+      color: rgba(13, 15, 13, 0.5);
+    }
+    
+    .light-theme .scroll-indicator-text {
+      color: rgba(13, 15, 13, 0.4);
+    }
+    
+    .light-theme .scroll-indicator-arrow {
+      color: rgba(13, 15, 13, 0.4);
+    }
+    
+    .preset-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      overflow: visible;
+    }
+    
+    .preset-name-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .preset-name {
+      font-size: 13px;
+      font-weight: 500;
+      color: #f5f0e8;
+    }
+    
+    .star-icon {
+      width: 14px;
+      height: 14px;
+      cursor: pointer;
+      opacity: 0.4;
+      transition: opacity 200ms ease;
+    }
+    
+    .star-icon:hover {
+      opacity: 0.8;
+    }
+    
+    .star-icon.active {
+      opacity: 1;
+      fill: #f5f0e8;
+    }
+    
+    /* Top right controls - font size & weight */
+    .preset-style-controls {
+      display: flex;
+      align-items: flex-end;
+      gap: 32px;
+      overflow: visible;
+    }
+    
+    /* Main Animation Display */
+    .animation-display {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 80px 0;
+      position: relative;
+      overflow: hidden;
+      min-height: 300px;
+    }
+    
+    /* 3D Kinetic Card */
+    .kinetic3d-card .kinetic3d-display {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      min-height: 500px;
+    }
+    
+    .animated-text {
+      font-weight: 400;
+      color: #f5f0e8;
+      line-height: 1.1;
+      perspective: 1200px;
+      transform-style: preserve-3d;
+    }
+    
+    .char {
+      display: inline-block;
+      transform-style: preserve-3d;
+      will-change: transform, opacity;
+    }
+    
+    .preset-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+    
+    .preset-text-control {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    
+    .preset-text-label {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(245, 240, 232, 0.35);
+    }
+    
+    .preset-text-input {
+      background: transparent;
+      border: 1px solid rgba(245, 240, 232, 0.12);
+      border-radius: 4px;
+      padding: 8px 12px;
+      font-size: 13px;
+      font-family: inherit;
+      color: rgba(245, 240, 232, 0.7);
+      outline: none;
+      min-width: 200px;
+      transition: border-color 200ms ease;
+    }
+    
+    .preset-text-input:focus {
+      border-color: rgba(245, 240, 232, 0.3);
+      color: #f5f0e8;
+    }
+    
+    /* Per-preset controls - sliders */
+    .preset-controls {
+      display: flex;
+      align-items: flex-end;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+    
+    /* Variable Font Card specific */
+    .variable-font-card .preset-style-controls {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    
+    
+    .slider-control {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-width: 100px;
+      overflow: visible;
+    }
+    
+    .slider-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .slider-label {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: rgba(245, 240, 232, 0.35);
+    }
+    
+    .slider-value {
+      font-size: 10px;
+      color: rgba(245, 240, 232, 0.5);
+    }
+    
+    .slider-input {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 2px;
+      background: rgba(245, 240, 232, 0.15);
+      border-radius: 1px;
+      cursor: pointer;
+      margin: 6px 0;
+      overflow: visible;
+    }
+    
+    .slider-input::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 12px;
+      height: 12px;
+      background: #f5f0e8;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: transform 150ms ease;
+    }
+    
+    .slider-input::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+    }
+    
+    
+    /* Light theme overrides */
+    .light-theme {
+      background: #faf8f5;
+      color: #0d0f0d;
+    }
+    
+    .light-theme .nav {
+      background: rgba(250, 248, 245, 0.95);
+      border-color: rgba(13, 15, 13, 0.08);
+    }
+    
+    .light-theme .logo-name {
+      color: rgba(13, 15, 13, 0.9);
+    }
+    
+    .light-theme .logo-divider {
+      color: rgba(13, 15, 13, 0.2);
+    }
+    
+    .light-theme .nav-title {
+      color: rgba(13, 15, 13, 0.5);
+    }
+    
+    .light-theme .nav-tab {
+      color: rgba(13, 15, 13, 0.4);
+      border-color: rgba(13, 15, 13, 0.1);
+    }
+    
+    .light-theme .nav-tab:hover {
+      color: rgba(13, 15, 13, 0.7);
+      border-color: rgba(13, 15, 13, 0.2);
+    }
+    
+    .light-theme .nav-tab.active {
+      color: #0d0f0d;
+      background: rgba(13, 15, 13, 0.05);
+      border-color: rgba(13, 15, 13, 0.15);
+    }
+    
+    .light-theme .theme-toggle {
+      border-color: rgba(13, 15, 13, 0.1);
+    }
+    
+    .light-theme .theme-toggle:hover {
+      border-color: rgba(13, 15, 13, 0.2);
+      background: rgba(13, 15, 13, 0.03);
+    }
+    
+    .light-theme .preset-card {
+      border-color: rgba(13, 15, 13, 0.08);
+    }
+    
+    .light-theme .preset-name {
+      color: #0d0f0d;
+    }
+    
+    .light-theme .animated-text {
+      color: #0d0f0d;
+    }
+    
+    .light-theme .preset-text-label {
+      color: rgba(13, 15, 13, 0.4);
+    }
+    
+    .light-theme .preset-text-input {
+      border-color: rgba(13, 15, 13, 0.12);
+      color: rgba(13, 15, 13, 0.7);
+    }
+    
+    .light-theme .preset-text-input:focus {
+      border-color: rgba(13, 15, 13, 0.3);
+      color: #0d0f0d;
+    }
+    
+    .light-theme .slider-label {
+      color: rgba(13, 15, 13, 0.4);
+    }
+    
+    .light-theme .slider-value {
+      color: rgba(13, 15, 13, 0.5);
+    }
+    
+    .light-theme .slider-input {
+      background: rgba(13, 15, 13, 0.15);
+    }
+    
+    .light-theme .slider-input::-webkit-slider-thumb {
+      background: #0d0f0d;
+    }
+    
+    @media (max-width: 768px) {
+      .nav {
+        padding-left: 24px;
+        padding-right: 24px;
+      }
+      .preset-card {
+        padding: 32px 24px;
+        min-height: 50vh;
+      }
+      .animated-text {
+        font-size: 48px !important;
+      }
+      .preset-header {
+        flex-direction: column;
+        gap: 16px;
+      }
+      .preset-footer {
+        flex-direction: column;
+        gap: 24px;
+        align-items: flex-start;
+      }
+      .preset-controls {
+        width: 100%;
+        flex-wrap: wrap;
+      }
+      .slider-control {
+        flex: 1;
+        min-width: 80px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  
+  <script type="text/babel">
+    const { useState, useEffect, useRef, useMemo, useCallback } = React;
+    
+    // All presets
+    const LOOP_PRESETS = [
+      "Wave Flow", "Breathing Pulse", "Orbital Dance", "Sine Cascade", "Pendulum Swing",
+      "Heartbeat Rhythm", "Floating Drift", "Electric Pulse", "Ocean Sway", "Morphing Text",
+      "Neon Flicker", "Typewriter Cursor", "Bounce Sequence", "Rotation Carousel", "Scale Breathe",
+      "Glitch Static", "Aurora Shimmer", "Magnetic Field", "Liquid Flow", "Quantum Vibration"
+    ];
+    
+    const ENTRANCE_PRESETS = [
+      "Explosive", "Typewriter", "Wave", "Glitch", "Spiral",
+      "Pendulum", "Quantum", "Cascade", "Magnetic", "Origami",
+      "Ripple", "Aurora", "Wonderland", "Cinematic Reveal", "Quantum Scatter",
+      "Silk Unfold", "Prismatic Burst", "Gravitational Pull", "Ink Bloom", "Neural Cascade"
+    ];
+    
+    const SCROLL_PRESETS = [
+      "Parallax Rise", "Reveal Mask", "Perspective Tilt", "Wave Cascade", "Scatter Collect",
+      "Depth Emerge", "Rotation Spiral", "Scale Bloom", "Horizontal Slide", "Vertical Stack",
+      "Blur Focus", "Skew Transform", "Flip Reveal", "Elastic Bounce", "Typewriter Scroll",
+      "Gravity Fall", "Magnetic Attract", "Split Apart", "Zoom Through", "Curtain Reveal"
+    ];
+    
+    const GENERATIVE_PRESETS = [
+      "Physarum", "Flow Field", "Boids", "Reaction Diffusion", "Game of Life",
+      "DLA", "Circle Packing", "Lorenz", "Wave Interference", "Langtons Ant",
+      "Lissajous", "Brownian Tree", "Spirograph", "Cellular Automata", "Voronoi",
+      "Particle Gravity", "Magnetic Field", "Electric Field", "Strange Attractor", "Neural Network"
+    ];
+    
+    const HOVER_PRESETS = [
+      "Variable Font", "Magnetic Wave", "Elastic Bounce", "Ripple Spread", "Gravity Lift", 
+      "Color Cascade", "Blur Reveal", "Rotation Dance", "Scale Pulse", "Skew Distort", 
+      "Depth Push", "Letter Swap", "Glitch Flicker", "Neon Glow", "Typewriter Delete", 
+      "Accordion Expand", "Flip Card", "Spiral Twist", "Wave Physics", "Liquid Morph"
+    ];
+    
+    // 3D Kinetic Depth Presets
+    const KINETIC_3D_PRESETS = [
+      // Isometric / Orthographic
+      "Iso Grid Float", "Iso Staircase", "Iso Layers", "Iso Cross Axis", "Iso Cube Surface",
+      // Deep Z-Axis
+      "Depth Tunnel", "Z Wave", "Z Accordion", "Infinite Shaft", "Camera Flyover",
+      // Volumetric
+      "Cube Volume", "Sphere Layers", "Thick Torus", "Pyramid Solid", "Cylinder Solid",
+      // Architectural
+      "Twisted Tower", "Colosseum Tiers", "Spiral Staircase", "Bridge Arch", "Stadium Seating",
+      // Complex Knots
+      "Trefoil Knot Thick", "Super Toroid", "Hyperboloid", "Helicoid Ramp", "Klein Loop",
+      // Chaos
+      "Asteroid Belt", "Voxel Cloud", "Matrix Rain 3D", "Explosion Freeze", "Gravity Well"
+    ];
+    
+    // Convert name to id
+    const toId = (name) => name.toLowerCase().replace(/\s+/g, '-');
+    
+    // Icons
+    function SunIcon({ color }) {
+      return (
+        <svg viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="12" cy="12" r="5"/>
+          <line x1="12" y1="1" x2="12" y2="3"/>
+          <line x1="12" y1="21" x2="12" y2="23"/>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+          <line x1="1" y1="12" x2="3" y2="12"/>
+          <line x1="21" y1="12" x2="23" y2="12"/>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </svg>
+      );
+    }
+    
+    function MoonIcon({ color }) {
+      return (
+        <svg viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+      );
+    }
+    
+    function StarIcon({ active, onClick }) {
+      return (
+        <svg 
+          className={`star-icon ${active ? 'active' : ''}`}
+          viewBox="0 0 24 24" 
+          fill={active ? 'currentColor' : 'none'} 
+          stroke="currentColor" 
+          strokeWidth="1.5"
+          onClick={onClick}
+        >
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+        </svg>
+      );
+    }
+    
+    // Glitch Static Logo Component
+    function GlitchStaticLogo({ text, isDark }) {
+      const [time, setTime] = React.useState(0);
+      const chars = text.split('');
+      
+      React.useEffect(() => {
+        let animationId;
+        const animate = () => {
+          setTime(Date.now() / 1000);
+          animationId = requestAnimationFrame(animate);
+        };
+        animationId = requestAnimationFrame(animate);
+        return () => cancelAnimationFrame(animationId);
+      }, []);
+      
+      // Seeded random for consistent glitch patterns
+      const getRandom = (seed, offset) => {
+        const x = Math.sin(seed * 12.9898 + offset * 78.233) * 43758.5453;
+        return x - Math.floor(x);
+      };
+      
+      const getCharStyle = (charIndex) => {
+        const t = time;
+        const idx = charIndex;
+        
+        let transform = 'none';
+        let textShadow = 'none';
+        let opacity = 1;
+        
+        // Glitch Static effect - medium speed and intensity
+        if (getRandom(Math.floor(t * 4), idx + 1) > 0.88) {
+          const ox = (getRandom(Math.floor(t * 6), idx * 2) - 0.5) * 10;
+          transform = `translate(${ox}px, ${(getRandom(Math.floor(t * 8), idx * 3) - 0.5) * 5}px) skewX(${(getRandom(Math.floor(t * 5), idx * 4) - 0.5) * 12}deg)`;
+          textShadow = `${ox}px 0 ${isDark ? 'rgba(245,240,232,0.45)' : 'rgba(13,15,13,0.25)'}, ${-ox}px 0 ${isDark ? 'rgba(245,240,232,0.25)' : 'rgba(13,15,13,0.15)'}`;
+          opacity = getRandom(Math.floor(t * 10), idx) > 0.35 ? 1 : 0.6;
+        }
+        
+        return {
+          display: 'inline-block',
+          transform,
+          textShadow,
+          opacity,
+          transition: 'none'
+        };
+      };
+      
+      return (
+        <span className="logo-name">
+          {chars.map((char, i) => (
+            <span key={i} style={getCharStyle(i)}>
+              {char === ' ' ? '\u00A0' : char}
+            </span>
+          ))}
+        </span>
+      );
+    }
+    
+    // Loop Animation Card
+    function LoopCard({ presetName, index, isDark, totalCount }) {
+      const [time, setTime] = useState(0);
+      const [starred, setStarred] = useState(false);
+      const animationRef = useRef(null);
+      const startTimeRef = useRef(Date.now());
+      
+      const [displayText, setDisplayText] = useState(presetName);
+      const [fontSize, setFontSize] = useState(140);
+      const [fontWeight, setFontWeight] = useState(400);
+      const [kerning, setKerning] = useState(0);
+      const [speed, setSpeed] = useState(1);
+      const [intensity, setIntensity] = useState(1);
+      
+      const textColor = isDark ? '#f5f0e8' : '#0d0f0d';
+      const presetId = toId(presetName);
+      
+      const characters = useMemo(() => displayText.split('').map((char, i) => ({
+        char: char === ' ' ? '\u00A0' : char, index: i
+      })), [displayText]);
+      
+      useEffect(() => {
+        const animate = () => {
+          setTime((Date.now() - startTimeRef.current) * 0.001 * speed);
+          animationRef.current = requestAnimationFrame(animate);
+        };
+        animationRef.current = requestAnimationFrame(animate);
+        return () => cancelAnimationFrame(animationRef.current);
+      }, [speed]);
+      
+      const getRandom = useCallback((idx, seed) => {
+        const x = Math.sin(idx * seed) * 10000;
+        return x - Math.floor(x);
+      }, []);
+      
+      const m = intensity;
+      
+      const getStyle = useCallback((idx) => {
+        const phase = idx * 0.1 * Math.PI * 2;
+        const t = time + phase;
+        
+        let transform = '', opacity = 1, textShadow = 'none', color = textColor;
+        
+        switch (presetId) {
+          case 'wave-flow':
+            transform = `translateY(${Math.sin(t * 2) * 20 * m}px) rotate(${Math.sin(t * 2 + 0.5) * 5 * m}deg)`;
+            break;
+          case 'breathing-pulse':
+            transform = `scale(${1 + Math.sin(t * 1.5) * 0.15 * m})`;
+            opacity = 0.7 + Math.sin(t * 1.5) * 0.3;
+            break;
+          case 'orbital-dance':
+            transform = `translate(${Math.sin(t * 1.5 + idx) * 15 * m}px, ${Math.cos(t * 1.5 + idx) * 10 * m}px) rotate(${Math.sin(t + idx * 0.5) * 10 * m}deg)`;
+            break;
+          case 'sine-cascade':
+            transform = `translate(${Math.cos(t * 1.8 - idx * 0.2) * 8 * m}px, ${Math.sin(t * 2.5 - idx * 0.3) * 25 * m}px)`;
+            break;
+          case 'pendulum-swing':
+            transform = `rotate(${Math.sin(t * 2) * 20 * m}deg) translateY(${Math.cos(t * 2) * m}px)`;
+            break;
+          case 'heartbeat-rhythm':
+            const beat = Math.max(0, Math.sin(t * 4) * 0.3) + Math.max(0, Math.sin(t * 4 + 0.3) * 0.2);
+            transform = `scale(${1 + beat * m})`;
+            break;
+          case 'floating-drift':
+            transform = `translate(${Math.sin(t * 0.7 + idx * 0.8) * 12 * m}px, ${Math.cos(t * 0.5 + idx * 0.6) * 18 * m}px) rotate(${Math.sin(t * 0.4 + idx) * 8 * m}deg)`;
+            opacity = 0.7 + Math.sin(t * 0.3 + idx) * 0.3;
+            break;
+          case 'electric-pulse':
+            const pulse = Math.sin(t * 8 + idx * 2) > 0.7 ? 1 : 0;
+            transform = `translateX(${pulse * (getRandom(Math.floor(t * 10), idx) - 0.5) * 6 * m}px)`;
+            textShadow = `0 0 ${pulse * 15 * m}px ${isDark ? 'rgba(245,240,232,0.6)' : 'rgba(13,15,13,0.4)'}, 0 0 ${pulse * 30 * m}px ${isDark ? 'rgba(245,240,232,0.3)' : 'rgba(13,15,13,0.2)'}`;
+            break;
+          case 'ocean-sway':
+            transform = `translateY(${Math.sin(t * 0.8 + idx * 0.4) * 30 * m}px) rotate(${Math.sin(t * 0.5 + idx * 0.5) * 8 * m}deg) scale(${1 + Math.sin(t * 0.6 + idx * 0.3) * 0.15 * m})`;
+            break;
+          case 'morphing-text':
+            const morph = Math.sin(t * 1.2 + idx * 0.5);
+            transform = `scale(${1 + morph * 0.3 * m}, ${1 - morph * 0.1 * m}) skewX(${morph * 10 * m}deg)`;
+            break;
+          case 'neon-flicker':
+            const flicker = Math.sin(t * 15 + idx * 7) > 0.3;
+            const glow = (flicker ? 15 : 5) * m + (Math.sin(t * 23 + idx * 11) > 0.8 ? 25 * m : 0);
+            textShadow = `0 0 ${glow}px ${isDark ? 'rgba(245,240,232,0.8)' : 'rgba(13,15,13,0.5)'}, 0 0 ${glow * 2}px ${isDark ? 'rgba(245,240,232,0.4)' : 'rgba(13,15,13,0.25)'}`;
+            opacity = flicker ? 1 : 0.7;
+            break;
+          case 'typewriter-cursor':
+            const cursorPos = Math.floor((t * 2) % (characters.length + 3));
+            opacity = idx === cursorPos && Math.sin(t * 8) > 0 ? 0.3 : 1;
+            transform = idx === cursorPos ? 'scaleY(1.2)' : 'none';
+            break;
+          case 'bounce-sequence':
+            const bouncePhase = (t * 3 + idx * 0.5) % (Math.PI * 2);
+            const squash = Math.cos(bouncePhase) > 0.9 ? 1.2 : 1;
+            transform = `translateY(${-Math.abs(Math.sin(bouncePhase)) * 35 * m}px) scaleX(${squash}) scaleY(${2 - squash})`;
+            break;
+          case 'rotation-carousel':
+            const angle = t * 60 + idx * (360 / characters.length);
+            transform = `perspective(500px) translateZ(${Math.sin(angle * Math.PI / 180) * 50 * m}px) scale(${0.8 + (Math.cos(angle * Math.PI / 180) + 1) * 0.2})`;
+            opacity = 0.5 + (Math.cos(angle * Math.PI / 180) + 1) * 0.25;
+            break;
+          case 'scale-breathe':
+            const breathe = Math.sin(t * 1.2 + idx * 0.2);
+            transform = `translateY(${breathe * 8 * m}px) scale(${1 + breathe * 0.25 * m})`;
+            opacity = 0.6 + breathe * 0.2 + 0.2;
+            break;
+          case 'glitch-static':
+            if (getRandom(Math.floor(t * 8), idx + 1) > 0.85) {
+              const ox = (getRandom(Math.floor(t * 12), idx * 2) - 0.5) * 15 * m;
+              transform = `translate(${ox}px, ${(getRandom(Math.floor(t * 15), idx * 3) - 0.5) * 8 * m}px) skewX(${(getRandom(Math.floor(t * 10), idx * 4) - 0.5) * 20 * m}deg)`;
+              textShadow = `${ox}px 0 ${isDark ? 'rgba(245,240,232,0.5)' : 'rgba(13,15,13,0.3)'}, ${-ox}px 0 ${isDark ? 'rgba(245,240,232,0.3)' : 'rgba(13,15,13,0.2)'}`;
+              opacity = getRandom(Math.floor(t * 20), idx) > 0.3 ? 1 : 0.5;
+            }
+            break;
+          case 'aurora-shimmer':
+            const hue = (t * 30 + idx * 20) % 360;
+            const shimmer = Math.sin(t * 2 + idx * 0.5);
+            transform = `translateY(${shimmer * 15 * m}px)`;
+            color = `hsl(${hue}, 70%, ${isDark ? 75 : 35}%)`;
+            textShadow = `0 0 ${(shimmer + 1) * 3 * m}px hsl(${hue}, 80%, 60%), 0 0 ${(shimmer + 1) * 6 * m}px hsl(${(hue + 60) % 360}, 70%, 50%)`;
+            break;
+          case 'magnetic-field':
+            transform = `translate(${Math.sin(t * 1.5 + idx * 0.7) * Math.cos(t * 0.8) * 20 * m}px, ${Math.cos(t * 1.2 + idx * 0.5) * Math.sin(t * 0.9) * 25 * m}px) rotate(${Math.sin(t * 0.7 + idx * 0.4) * 12 * m}deg)`;
+            break;
+          case 'liquid-flow':
+            transform = `translate(${Math.sin(t * 0.9 + idx * 0.6) * 18 * m}px, ${Math.cos(t * 0.7 + idx * 0.4) * 22 * m}px) scale(${1 + Math.sin(t * 1.1 + idx * 0.3) * 0.15 * m}, ${1 + Math.cos(t * 0.9 + idx * 0.5) * 0.1 * m}) skewX(${Math.sin(t * 0.6 + idx * 0.4) * 8 * m}deg)`;
+            break;
+          case 'quantum-vibration':
+            const vx = (getRandom(Math.floor(t * 30), idx + t) - 0.5) * 4 * m;
+            const vy = (getRandom(Math.floor(t * 35), idx * 2 + t) - 0.5) * 4 * m;
+            transform = `translate(${Math.sin(t * 2 + idx * 0.8) * 8 * m + vx}px, ${Math.cos(t * 1.5 + idx * 0.6) * 10 * m + vy}px)`;
+            opacity = 0.7 + getRandom(Math.floor(t * 25), idx) * 0.3;
+            break;
+          default:
+            transform = `translateY(${Math.sin(t * 2 + phase) * 15 * m}px)`;
+        }
+        
+        return { display: 'inline-block', transform, opacity, textShadow, color, transformStyle: 'preserve-3d' };
+      }, [time, presetId, characters.length, getRandom, m, textColor, isDark]);
+      
+      return (
+        <div className="preset-card">
+          <div className="preset-header">
+            <div className="preset-name-row">
+              <span className="preset-name">{presetName}</span>
+              <StarIcon active={starred} onClick={() => setStarred(!starred)} />
+            </div>
+            <div className="preset-style-controls">
+              <div className="slider-control">
+                <div className="slider-header">
+                  <span className="slider-label">Size</span>
+                  <span className="slider-value">{fontSize}</span>
+                </div>
+                <input 
+                  type="range"
+                  className="slider-input"
+                  min="48"
+                  max="200"
+                  value={fontSize}
+                  onChange={(e) => setFontSize(parseInt(e.target.value))}
+                />
+              </div>
+              <div className="slider-control">
+                <div className="slider-header">
+                  <span className="slider-label">Weight</span>
+                  <span className="slider-value">{fontWeight}</span>
+                </div>
+                <input 
+                  type="range"
+                  className="slider-input"
+                  min="100"
+                  max="900"
+                  step="100"
+                  value={fontWeight}
+                  onChange={(e) => setFontWeight(parseInt(e.target.value))}
+                />
+              </div>
+              <div className="slider-control">
+                <div className="slider-header">
+                  <span className="slider-label">Kerning</span>
+                  <span className="slider-value">{kerning.toFixed(2)}</span>
+                </div>
+                <input 
+                  type="range"
+                  className="slider-input"
+                  min="-0.1"
+                  max="0.5"
+                  step="0.01"
+                  value={kerning}
+                  onChange={(e) => setKerning(parseFloat(e.target.value))}
+                />
+              </div>
+            </div>
+          </div>
+          
+          <div className="animation-display">
+            <div className="animated-text" style={{ fontSize: `${fontSize}px`, fontWeight, letterSpacing: `${kerning}em` }}>
+              {characters.map((c, i) => (
+                <span key={i} className="char" style={getStyle(i)}>{c.char}</span>
+              ))}
+            </div>
+          </div>
+          
+          <div className="preset-footer">
+            <div className="preset-text-control">
+              <label className="preset-text-label">Display Text</label>
+              <input 
+                type="text"
+                className="preset-text-input"
+                value={displayText}
+                onChange={(e) => setDisplayText(e.target.value)}
+              />
+            </div>
+            
+            <div className="preset-controls">
+              <div className="slider-control">
+                <div className="slider-header">
+                  <span className="slider-label">Speed</span>
+                  <span className="slider-value">{speed.toFixed(1)}x</span>
+                </div>
+                <input 
+                  type="range"
+                  className="slider-input"
+                  min="0.25"
+                  max="3"
+                  step="0.25"
+                  value={speed}
+                  onChange={(e) => setSpeed(parseFloat(e.target.value))}
+                />
+              </div>
+              <div className="slider-control">
+                <div className="slider-header">
+                  <span className="slider-label">Intensity</span>
+                  <span className="slider-value">{intensity.toFixed(1)}x</span>
+                </div>
+                <input 
+                  type="range"
+                  className="slider-input"
+                  min="0.25"
+                  max="3"
+                  step="0.25"
+                  value={intensity}
+                  onChange={(e) => setIntensity(parseFloat(e.target.value))}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+    
+    // Entrance Animation Card
+    function EntranceCard({ presetName, index, isDark, totalCount }) {
+      const [animatedIndices, setAnimatedIndices] = useState(new Set());
+      const [starred, setStarred] = useState(false);
+      
+      const [displayText, setDisplayText] = useState(presetName);
+      const [fontSize, setFontSize] = useState(140);
+      const [fontWeight, setFontWeight] = useState(400);
+      const [kerning, setKerning] = useState(0);
+      const [intensity, setIntensity] = useState(1);
+      const [repeatDelay, setRepeatDelay] = useState(3);
+      
+      const textColor = isDark ? '#f5f0e8' : '#0d0f0d';
+      const presetId = toId(presetName);
+      const m = intensity;
+      
+      const characters = useMemo(() => displayText.split('').map((char, i) => ({
+        char: char === ' ' ? '\u00A0' : char, index: i
+      })), [displayText]);
+      
+      const getRandom = useCallback((idx, seed, min, max) => {
+        const x = Math.sin(idx * seed) * 10000;
+        return min + (x - Math.floor(x)) * (max - min);
+      }, []);
+      
+      const animate = useCallback(() => {
+        setAnimatedIndices(new Set());
+        
+        characters.forEach((_, i) => {
+          setTimeout(() => {
+            setAnimatedIndices(prev => new Set([...prev, i]));
+          }, i * 50);
+        });
+      }, [characters]);
+      
+      // Initial animation on mount
+      useEffect(() => {
+        const delay = index * 200;
+        const timeout = setTimeout(() => {
+          animate();
+        }, delay);
+        return () => clearTimeout(timeout);
+      }, []);
+      
+      // Repeat animation based on repeatDelay
+      useEffect(() => {
+        const animationDuration = characters.length * 50 + 600;
+        const totalCycle = animationDuration + (repeatDelay * 1000);
+        
+        const interval = setInterval(() => {
+          setAnimatedIndices(new Set());
+          setTimeout(() => {
+            animate();
+          }, 100);
+        }, totalCycle);
+        
+        return () => clearInterval(interval);
+      }, [animate, repeatDelay, characters.length]);
+      
+      const getStyle = useCallback((idx) => {
+        const isAnimated = animatedIndices.has(idx);
+        const position = idx / Math.max(characters.length - 1, 1);
+        
+        const configs = {
+          // Premium Kinetic Typography Presets from JSON
+          'explosive': { y: getRandom(idx, 1.5, -150, 150) * m, x: getRandom(idx, 2.3, -150, 150) * m, rotate: getRandom(idx, 3.7, -180, 180) * m, scale: 0.3, blur: 10 * m },
+          'typewriter': { x: -20 * m, scale: 1, blur: 0 },
+          'wave': { y: Math.sin(position * Math.PI * 2) * 80 * m, rotate: Math.sin(position * Math.PI * 2) * 15 * m, scale: 0.8, blur: 0 },
+          'glitch': { y: getRandom(idx, 4.1, -60, 60) * m, x: getRandom(idx, 5.2, -90, 90) * m, rotate: getRandom(idx, 6.3, -30, 30) * m, scale: getRandom(idx, 7.4, 0.5, 1.5), blur: getRandom(idx, 8.5, 0, 8) * m },
+          'spiral': { y: Math.sin(position * Math.PI * 6) * 120 * m, x: Math.cos(position * Math.PI * 6) * 120 * m, rotate: position * 720 * m, scale: 0.3, blur: 5 * m },
+          'pendulum': { y: Math.sin(position * Math.PI) * 100 * m, x: (position - 0.5) * 150 * m, rotate: (position - 0.5) * 90 * m, scale: 0.7, blur: 0 },
+          'quantum': { y: (idx % 2 === 0 ? 80 : -80) * m, x: (idx % 3 === 0 ? 60 : idx % 3 === 1 ? 0 : -60) * m, rotate: (idx % 4) * 90, scale: idx % 2 === 0 ? 0.4 : 1.6, blur: idx % 2 === 0 ? 15 * m : 0 },
+          'cascade': { y: -150 * m, x: getRandom(idx, 2.7, -30, 30) * m, rotate: getRandom(idx, 3.1, -20, 20) * m, scale: 0.5, blur: 8 * m },
+          'magnetic': { y: (position - 0.5) * 200 * m, x: (position - 0.5) * 200 * m, rotate: (position - 0.5) * 180 * m, scale: 0.2, blur: 12 * m },
+          'origami': { y: (idx % 2 === 0 ? -100 : 100) * m, rotateX: (idx % 2 === 0 ? -90 : 90) * m, scale: 0.1, blur: 0 },
+          'ripple': { y: Math.sin(Math.abs(idx - characters.length / 2) * 0.5) * 80 * m, x: Math.cos(Math.abs(idx - characters.length / 2) * 0.5) * 80 * m, rotate: Math.abs(idx - characters.length / 2) * 15, scale: 0.4 + Math.abs(idx - characters.length / 2) * 0.05, blur: Math.abs(idx - characters.length / 2) * 0.5 * m },
+          'aurora': { y: Math.sin(position * Math.PI * 4) * 60 * m, x: Math.cos(position * Math.PI * 3) * 60 * m, rotate: position * 360, scale: 0.6, blur: 10 * m },
+          'wonderland': { y: 40 + Math.sin(idx * 0.5) * 40 * m, x: Math.sin(idx * 0.3) * 25 * m, rotateX: 35 + Math.sin(idx * 0.4) * 35 * m, rotateY: -40 + Math.cos(idx * 0.3) * 40 * m, rotateZ: -18 + Math.sin(idx * 0.6) * 18 * m, scale: 1, blur: 0 },
+          // Original Presets
+          'cinematic-reveal': { y: 120 * m, rotateX: 90 * m, scale: 0.8, blur: 8 * m },
+          'quantum-scatter': { y: getRandom(idx, 5.7, -200, 200) * m, x: getRandom(idx, 3.2, -300, 300) * m, rotate: getRandom(idx, 8.1, -180, 180) * m, scale: 0.4, blur: 10 * m },
+          'silk-unfold': { y: 60 * m, x: (position - 0.5) * -100 * m, rotate: (position - 0.5) * 15 * m, scale: 0.9, blur: 4 * m },
+          'prismatic-burst': { rotateY: 180 * m, scale: 0, blur: 0 },
+          'gravitational-pull': { y: -300 * m, x: (position - 0.5) * 150 * m, rotateZ: (position - 0.5) * 30 * m, scale: 0.3, blur: 12 * m },
+          'ink-bloom': { scale: 0, blur: 20 * m },
+          'neural-cascade': { y: Math.sin(idx * 0.8) * 80 * m, x: Math.cos(idx * 0.8) * 50 * m, rotate: Math.sin(idx * 0.5) * 20 * m, scale: 0.7, blur: 6 * m }
+        };
+        
+        const c = configs[presetId] || configs['cinematic-reveal'];
+        
+        const transforms = [];
+        if (c.rotateX || c.rotateY || c.rotateZ) transforms.push('perspective(1200px)');
+        if (!isAnimated) {
+          if (c.x || c.y) transforms.push(`translate(${c.x || 0}px, ${c.y || 0}px)`);
+          if (c.rotateX) transforms.push(`rotateX(${c.rotateX}deg)`);
+          if (c.rotateY) transforms.push(`rotateY(${c.rotateY}deg)`);
+          if (c.rotateZ) transforms.push(`rotateZ(${c.rotateZ}deg)`);
+          if (c.rotate) transforms.push(`rotate(${c.rotate}deg)`);
+          if (c.skewX) transforms.push(`skewX(${c.skewX}deg)`);
+        }
+        transforms.push(`scale(${isAnimated ? 1 : c.scale})`);
+        
+        return {
+          display: 'inline-block',
+          opacity: isAnimated ? 1 : 0,
+          transform: transforms.join(' '),
+          filter: `blur(${isAnimated ? 0 : c.blur}px)`,
+          transition: 'all 600ms cubic-bezier(0.16, 1, 0.3, 1)',
+          transformStyle: 'preserve-3d',
+          backfaceVisibility: 'hidden',
+          color: textColor
+        };
+      }, [animatedIndices, presetId, characters.length, getRandom, m, textColor]);
+      
+      return (
+        <div className="preset-card">
+          <div className="preset-header">
+            <div className="preset-name-row">
+              <span className="preset-name">{presetName}</span>
+              <StarIcon active={starred} onClick={() => setStarred(!starred)} />
+            </div>
+            <div className="preset-style-controls">
+              <div className="slider-control">
+                <div className="slider-header">
+                  <span className="slider-label">Size</span>
+                  <span className="slider-value">{fontSize}</span>
+                </div>
+                <input 
+                  type="range"
+                  className="slider-input"
+                  min="48"
+                  max="200"
+                  value={fontSize}
+                  onChange={(e) => setFontSize(parseInt(e.target.value))}
+                />
+              </div>
+              <div className="slider-control">
+                <div className="slider-header">
+                  <span className="slider-label">Weight</span>
+                  <span className="slider-value">{fontWeight}</span>
+                </div>
+                <input 
+                  type="range"
+                  className="slider-input"
+                  min="100"
+                  max="900"
+                  step="100"
+                  value={fontWeight}
+                  onChange={(e) => setFontWeight(parseInt(e.target.value))}
+                />
+              </div>
+              <div className="slider-control">
+                <div className="slider-header">
+                  <span className="slider-label">Kerning</span>
+                  <span className="slider-value">{kerning.toFixed(2)}</span>
+                </div>
+                <input 
+                  type="range"
+                  className="slider-input"
+                  min="-0.1"
+                  max="0.5"
+                  step="0.01"
+                  value={kerning}
+                  onChange={(e) => setKerning(parseFloat(e.target.value))}
+                />
+              </div>
+            </div>
+          </div>
+          
+          <div className="animation-display">
+            <div className="animated-text" style={{ fontSize: `${fontSize}px`, fontWeight, letterSpacing: `${kerning}em` }}>
+              {characters.map((c, i) => (
+                <span key={i} className="char" style={getStyle(i)}>{c.char}</span>
+              ))}
+            </div>
+          </div>
+          
+          <div className="preset-footer">
+            <div className="preset-text-control">
+              <label className="preset-text-label">Display Text</label>
+              <input 
+                type="text"
+                className="preset-text-input"
+                value={displayText}
+                onChange={(e) => setDisplayText(e.target.value)}
+              />
+            </div>
+            
+            <div className="preset-controls">
+              <div className="slider-control">
+                <div className="slider-header">
+                  <span className="slider-label">Repeat</span>
+                  <span className="slider-value">{repeatDelay}s</span>
+                </div>
+                <input 
+                  type="range"
+                  className="slider-input"
+                  min="1"
+                  max="10"
+                  step="0.5"
+                  value={repeatDelay}
+                  onChange={(e) => setRepeatDelay(parseFloat(e.target.value))}
+                />
+              </div>
+              <div className="slider-control">
+                <div className="slider-header">
+                  <span className="slider-label">Intensity</span>
+                  <span className="slider-value">{intensity.toFixed(1)}x</span>
+                </div>
+                <input 
+                  type="range"
+                  className="slider-input"
+                  min="0.25"
+                  max="3"
+                  step="0.25"
+                  value={intensity}
+                  onChange={(e) => setIntensity(parseFloat(e.target.value))}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+    
+    // Scroll Animation Card
+    function ScrollCard({ presetName, index, isDark, totalCount }) {
+      const [starred, setStarred] = useState(false);
+      const [scrollProgress, setScrollProgress] = useState(0);
+      const cardRef = useRef(null);
+      
+      const [displayText, setDisplayText] = useState(presetName);
+      const [fontSize, setFontSize] = useState(140);
+      const [fontWeight, setFontWeight] = useState(400);
+      const [kerning, setKerning] = useState(0);
+      const [intensity, setIntensity] = useState(1);
+      
+      const textColor = isDark ? '#f5f0e8' : '#0d0f0d';
+      const presetId = toId(presetName);
+      const m = intensity;
+      
+      const characters = useMemo(() => displayText.split('').map((char, i) => ({
+        char: char === ' ' ? '\u00A0' : char, index: i
+      })), [displayText]);
+      
+      // Intersection Observer for scroll progress
+      useEffect(() => {
+        const card = cardRef.current;
+        if (!card) return;
+        
+        const handleScroll = () => {
+          const rect = card.getBoundingClientRect();
+          const windowHeight = window.innerHeight;
+          const cardCenter = rect.top + rect.height / 2;
+          // Animation completes when card is centered in viewport
+          const progress = (windowHeight - cardCenter) / (windowHeight * 0.5);
+          setScrollProgress(Math.max(0, Math.min(1, progress)));
+        };
+        
+        window.addEventListener('scroll', handleScroll);
+        handleScroll();
+        
+        return () => window.removeEventListener('scroll', handleScroll);
+      }, []);
+      
+      const getRandom = useCallback((idx, seed, min, max) => {
+        const x = Math.sin(idx * seed) * 10000;
+        return min + (x - Math.floor(x)) * (max - min);
+      }, []);
+      
+      const getStyle = useCallback((idx) => {
+        const p = scrollProgress;
+        const position = idx / Math.max(characters.length - 1, 1);
+        const stagger = idx * 0.05;
+        const adjustedP = Math.max(0, Math.min(1, (p - stagger) / (1 - stagger)));
+        
+        let transform = '', opacity = 1, filter = 'none', color = textColor;
+        
+        switch (presetId) {
+          case 'parallax-rise':
+            const yOffset = (1 - adjustedP) * 100 * m;
+            transform = `translateY(${yOffset}px)`;
+            opacity = adjustedP;
+            break;
+          case 'reveal-mask':
+            transform = `translateY(${(1 - adjustedP) * 50 * m}px)`;
+            opacity = adjustedP;
+            filter = `blur(${(1 - adjustedP) * 10 * m}px)`;
+            break;
+          case 'perspective-tilt':
+            const tilt = (1 - adjustedP) * 45 * m;
+            transform = `perspective(1000px) rotateX(${tilt}deg) translateY(${(1 - adjustedP) * 30 * m}px)`;
+            opacity = adjustedP;
+            break;
+          case 'wave-cascade':
+            const wave = Math.sin(position * Math.PI * 2 + p * Math.PI * 2) * (1 - adjustedP);
+            transform = `translateY(${wave * 50 * m}px)`;
+            opacity = 0.3 + adjustedP * 0.7;
+            break;
+          case 'scatter-collect':
+            const scatterX = getRandom(idx, 3.2, -200, 200) * (1 - adjustedP) * m;
+            const scatterY = getRandom(idx, 5.7, -150, 150) * (1 - adjustedP) * m;
+            const scatterR = getRandom(idx, 8.1, -30, 30) * (1 - adjustedP) * m;
+            transform = `translate(${scatterX}px, ${scatterY}px) rotate(${scatterR}deg)`;
+            opacity = 0.2 + adjustedP * 0.8;
+            break;
+          case 'depth-emerge':
+            const z = (1 - adjustedP) * -200 * m;
+            transform = `perspective(1000px) translateZ(${z}px)`;
+            opacity = adjustedP;
+            filter = `blur(${(1 - adjustedP) * 5 * m}px)`;
+            break;
+          case 'rotation-spiral':
+            const spiral = (1 - adjustedP) * 360 * m;
+            const dist = (1 - adjustedP) * 100 * m;
+            transform = `rotate(${spiral}deg) translateX(${dist}px)`;
+            opacity = adjustedP;
+            break;
+          case 'scale-bloom':
+            const scale = 0.3 + adjustedP * 0.7;
+            transform = `scale(${scale})`;
+            opacity = adjustedP;
+            break;
+          case 'horizontal-slide':
+            const slideX = (position - 0.5) * (1 - adjustedP) * 400 * m;
+            transform = `translateX(${slideX}px)`;
+            opacity = adjustedP;
+            break;
+          case 'vertical-stack':
+            const stackY = (1 - adjustedP) * (idx - characters.length / 2) * 20 * m;
+            transform = `translateY(${stackY}px)`;
+            opacity = adjustedP;
+            break;
+          case 'blur-focus':
+            const blur = (1 - adjustedP) * 20 * m;
+            transform = `scale(${0.9 + adjustedP * 0.1})`;
+            opacity = 0.3 + adjustedP * 0.7;
+            filter = `blur(${blur}px)`;
+            break;
+          case 'skew-transform':
+            const skew = (1 - adjustedP) * 30 * m;
+            transform = `skewX(${skew}deg) skewY(${skew * 0.3}deg)`;
+            opacity = adjustedP;
+            break;
+          case 'flip-reveal':
+            const flip = (1 - adjustedP) * 180 * m;
+            transform = `perspective(1000px) rotateY(${flip}deg)`;
+            opacity = adjustedP > 0.5 ? 1 : adjustedP * 2;
+            break;
+          case 'elastic-bounce':
+            const bounce = Math.sin(adjustedP * Math.PI * 3) * (1 - adjustedP) * 30 * m;
+            transform = `translateY(${(1 - adjustedP) * 80 * m + bounce}px)`;
+            opacity = adjustedP;
+            break;
+          case 'typewriter-scroll':
+            const revealed = adjustedP > position;
+            opacity = revealed ? 1 : 0;
+            break;
+          case 'gravity-fall':
+            const fall = (1 - adjustedP) * -200 * m;
+            const fallR = (1 - adjustedP) * getRandom(idx, 4.4, -20, 20) * m;
+            transform = `translateY(${fall}px) rotate(${fallR}deg)`;
+            opacity = adjustedP;
+            break;
+          case 'magnetic-attract':
+            const magX = (position - 0.5) * (1 - adjustedP) * 300 * m;
+            const magY = (1 - adjustedP) * 50 * m;
+            transform = `translate(${magX}px, ${magY}px)`;
+            opacity = 0.3 + adjustedP * 0.7;
+            break;
+          case 'split-apart':
+            const splitDir = idx < characters.length / 2 ? -1 : 1;
+            const splitX = splitDir * (1 - adjustedP) * 100 * m;
+            transform = `translateX(${splitX}px)`;
+            opacity = adjustedP;
+            break;
+          case 'zoom-through':
+            const zoom = 0.5 + adjustedP * 0.5 + (1 - adjustedP) * position * 0.5;
+            const zoomZ = (1 - adjustedP) * 500 * m;
+            transform = `perspective(1000px) translateZ(${zoomZ}px) scale(${zoom})`;
+            opacity = adjustedP;
+            break;
+          case 'curtain-reveal':
+            const curtain = (1 - adjustedP) * (idx % 2 === 0 ? -1 : 1) * 100 * m;
+            transform = `translateY(${curtain}px)`;
+            opacity = adjustedP;
+            break;
+          default:
+            transform = `translateY(${(1 - adjustedP) * 50 * m}px)`;
+            opacity = adjustedP;
+        }
+        
+        return { 
+          display: 'inline-block', 
+          transform, 
+          opacity, 
+          filter,
+          color, 
+          transformStyle: 'preserve-3d',
+          transition: 'none'
+        };
+      }, [scrollProgress, presetId, characters.length, getRandom, m, textColor]);
+      
+      return (
+        <div className="preset-card scroll-card" ref={cardRef}>
+          <div className="preset-header">
+            <div className="preset-name-row">
+              <span className="preset-name">{presetName}</span>
+              <StarIcon active={starred} onClick={() => setStarred(!starred)} />
+            </div>
+            <div className="preset-style-controls">
+              <div className="slider-control">
+                <div className="slider-header">
+                  <span className="slider-label">Size</span>
+                  <span className="slider-value">{fontSize}</span>
+                </div>
+                <input 
+                  type="range"
+                  className="slider-input"
+                  min="48"
+                  max="200"
+                  value={fontSize}
+                  onChange={(e) => setFontSize(parseInt(e.target.value))}
+                />
+              </div>
+              <div className="slider-control">
+                <div className="slider-header">
+                  <span className="slider-label">Weight</span>
+                  <span className="slider-value">{fontWeight}</span>
+                </div>
+                <input 
+                  type="range"
+                  className="slider-input"
+                  min="100"
+                  max="900"
+                  step="100"
+                  value={fontWeight}
+                  onChange={(e) => setFontWeight(parseInt(e.target.value))}
+                />
+              </div>
+              <div className="slider-control">
+                <div className="slider-header">
+                  <span className="slider-label">Kerning</span>
+                  <span className="slider-value">{kerning.toFixed(2)}</span>
+                </div>
+                <input 
+                  type="range"
+                  className="slider-input"
+                  min="-0.1"
+                  max="0.5"
+                  step="0.01"
+                  value={kerning}
+                  onChange={(e) => setKerning(parseFloat(e.target.value))}
+                />
+              </div>
+            </div>
+          </div>
+          
+          <div className="animation-display">
+            <div className="animated-text" style={{ fontSize: `${fontSize}px`, fontWeight, letterSpacing: `${kerning}em` }}>
+              {characters.map((c, i) => (
+                <span key={i} className="char" style={getStyle(i)}>{c.char}</span>
+              ))}
+            </div>
+          </div>
+          
+          <div className="preset-footer">
+            <div className="preset-text-control">
+              <label className="preset-text-label">Display Text</label>
+              <input 
+                type="text"
+                className="preset-text-input"
+                value={displayText}
+                onChange={(e) => setDisplayText(e.target.value)}
+              />
+            </div>
+            
+            <div className="preset-controls">
+              <div className="slider-control">
+                <div className="slider-header">
+                  <span className="slider-label">Intensity</span>
+                  <span className="slider-value">{intensity.toFixed(1)}x</span>
+                </div>
+                <input 
+                  type="range"
+                  className="slider-input"
+                  min="0.25"
+                  max="3"
+                  step="0.25"
+                  value={intensity}
+                  onChange={(e) => setIntensity(parseFloat(e.target.value))}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+    
+    // Hover Animation Card
+    // Variable Font Cursor Proximity Card (special component)
+    function VariableFontCard({ isDark }) {
+      const containerRef = useRef(null);
+      const charRefs = useRef([]);
+      const mouseRef = useRef({ x: -1000, y: -1000 });
+      const isMouseInsideRef = useRef(false);
+      const animationFrameRef = useRef(null);
+      const [starred, setStarred] = useState(false);
+      const [, forceUpdate] = useState(0);
+      
+      // Content
+      const [displayText, setDisplayText] = useState('Extraordinary');
+      
+      // Typography
+      const [fromFontSettings, setFromFontSettings] = useState("'wght' 400, 'slnt' 0");
+      const [toFontSettings, setToFontSettings] = useState("'wght' 900, 'slnt' -10");
+      const [fontSize, setFontSize] = useState(200);
+      const [fontWeight, setFontWeight] = useState(500);
+      const [letterSpacing, setLetterSpacing] = useState(-0.02); // numeric em value
+      const [lineHeight, setLineHeight] = useState(1);
+      
+      // Animation
+      const [proximityRadius, setProximityRadius] = useState(200);
+      const [transitionSpeed, setTransitionSpeed] = useState(150); // ms value as slider
+      
+      const textColor = isDark ? '#f5f0e8' : '#0d0f0d';
+      const bgColor = isDark ? '#0d0f0d' : '#f5f0e8';
+      
+      // Parse font variation settings
+      const parseFontVariationSettings = (settings) => {
+        const axes = {};
+        const matches = settings.matchAll(/'(\w+)'\s+([-\d.]+)/g);
+        for (const match of matches) {
+          axes[match[1]] = parseFloat(match[2]);
+        }
+        return axes;
+      };
+      
+      const fromAxes = useMemo(() => parseFontVariationSettings(fromFontSettings), [fromFontSettings]);
+      const toAxes = useMemo(() => parseFontVariationSettings(toFontSettings), [toFontSettings]);
+      
+      // Get transition duration (now uses numeric ms value)
+      const getTransitionDuration = () => `${transitionSpeed}ms`;
+      
+      // Update characters based on mouse position
+      const updateCharacters = useCallback(() => {
+        if (!charRefs.current.length) return;
+        
+        const mouseX = mouseRef.current.x;
+        const mouseY = mouseRef.current.y;
+        
+        charRefs.current.forEach((charEl) => {
+          if (!charEl) return;
+          
+          const rect = charEl.getBoundingClientRect();
+          const charX = rect.left + rect.width / 2;
+          const charY = rect.top + rect.height / 2;
+          
+          const distance = Math.sqrt(
+            Math.pow(mouseX - charX, 2) + 
+            Math.pow(mouseY - charY, 2)
+          );
+          
+          if (distance > proximityRadius || !isMouseInsideRef.current) {
+            charEl.style.fontVariationSettings = fromFontSettings;
+          } else {
+            const t = distance / proximityRadius;
+            
+            const interpolatedAxes = Object.keys(fromAxes).map(axis => {
+              const fromValue = fromAxes[axis];
+              const toValue = toAxes[axis] || fromValue;
+              const value = fromValue + (toValue - fromValue) * (1 - t);
+              return `'${axis}' ${value.toFixed(2)}`;
+            });
+            
+            charEl.style.fontVariationSettings = interpolatedAxes.join(', ');
+          }
+        });
+      }, [proximityRadius, fromFontSettings, fromAxes, toAxes]);
+      
+      // Animation loop
+      useEffect(() => {
+        const animate = () => {
+          updateCharacters();
+          animationFrameRef.current = requestAnimationFrame(animate);
+        };
+        animationFrameRef.current = requestAnimationFrame(animate);
+        return () => {
+          if (animationFrameRef.current) {
+            cancelAnimationFrame(animationFrameRef.current);
+          }
+        };
+      }, [updateCharacters]);
+      
+      // Mouse events
+      useEffect(() => {
+        const handleMouseMove = (e) => {
+          mouseRef.current = { x: e.clientX, y: e.clientY };
+        };
+        
+        const handleMouseEnter = () => {
+          isMouseInsideRef.current = true;
+        };
+        
+        const handleMouseLeave = () => {
+          isMouseInsideRef.current = false;
+          mouseRef.current = { x: -1000, y: -1000 };
+        };
+        
+        const container = containerRef.current;
+        if (!container) return;
+        
+        window.addEventListener('mousemove', handleMouseMove);
+        container.addEventListener('mouseenter', handleMouseEnter);
+        container.addEventListener('mouseleave', handleMouseLeave);
+        
+        return () => {
+          window.removeEventListener('mousemove', handleMouseMove);
+          container.removeEventListener('mouseenter', handleMouseEnter);
+          container.removeEventListener('mouseleave', handleMouseLeave);
+        };
+      }, []);
+      
+      const characters = useMemo(() => displayText.split('').map((char, i) => ({
+        char: char === ' ' ? '\u00A0' : char, index: i
+      })), [displayText]);
+      
+      const transitionDuration = getTransitionDuration();
+      
+      return (
+        <div className="preset-card variable-font-card">
+          <div className="preset-header">
+            <div className="preset-name-row">
+              <span className="preset-name">Variable Font</span>
+              <StarIcon active={starred} onClick={() => setStarred(!starred)} />
+            </div>
+            <div className="preset-style-controls">
+              <div className="slider-control">
+                <div className="slider-header">
+                  <span className="slider-label">SIZE</span>
+                  <span className="slider-value">{fontSize}px</span>
+                </div>
+                <input 
+                  type="range"
+                  className="slider-input"
+                  min="48"
+                  max="300"
+                  step="4"
+                  value={fontSize}
+                  onChange={(e) => setFontSize(parseInt(e.target.value))}
+                />
+              </div>
+              <div className="slider-control">
+                <div className="slider-header">
+                  <span className="slider-label">WEIGHT</span>
+                  <span className="slider-value">{fontWeight}</span>
+                </div>
+                <input 
+                  type="range"
+                  className="slider-input"
+                  min="100"
+                  max="900"
+                  step="100"
+                  value={fontWeight}
+                  onChange={(e) => setFontWeight(parseInt(e.target.value))}
+                />
+              </div>
+              <div className="slider-control">
+                <div className="slider-header">
+                  <span className="slider-label">SPACING</span>
+                  <span className="slider-value">{letterSpacing.toFixed(2)}em</span>
+                </div>
+                <input 
+                  type="range"
+                  className="slider-input"
+                  min="-0.1"
+                  max="0.1"
+                  step="0.01"
+                  value={letterSpacing}
+                  onChange={(e) => setLetterSpacing(parseFloat(e.target.value))}
+                />
+              </div>
+              <div className="slider-control">
+                <div className="slider-header">
+                  <span className="slider-label">HEIGHT</span>
+                  <span className="slider-value">{lineHeight.toFixed(1)}</span>
+                </div>
+                <input 
+                  type="range"
+                  className="slider-input"
+                  min="0.8"
+                  max="1.5"
+                  step="0.1"
+                  value={lineHeight}
+                  onChange={(e) => setLineHeight(parseFloat(e.target.value))}
+                />
+              </div>
+              </div>
+          </div>
+          
+          <div 
+            ref={containerRef}
+            className="animation-display"
+            style={{
+              backgroundColor: bgColor,
+              justifyContent: 'center'
+            }}
+          >
+            <div
+              style={{
+                fontSize: `${fontSize}px`,
+                fontWeight,
+                letterSpacing: `${letterSpacing}em`,
+                lineHeight,
+                color: textColor,
+                textAlign: 'center',
+                fontFamily: "'Inter Variable', Inter, system-ui, sans-serif",
+                fontFeatureSettings: '"kern" 1',
+                textRendering: 'optimizeLegibility',
+                display: 'inline-block',
+                whiteSpace: 'pre-wrap',
+                wordBreak: 'break-word'
+              }}
+            >
+              {characters.map(({ char, index }) => (
+                <span
+                  key={index}
+                  ref={(el) => charRefs.current[index] = el}
+                  style={{
+                    display: 'inline-block',
+                    fontVariationSettings: fromFontSettings,
+                    transition: `font-variation-settings ${transitionDuration} ease-out`,
+                    willChange: 'font-variation-settings'
+                  }}
+                >
+                  {char}
+                </span>
+              ))}
+            </div>
+          </div>
+          
+          <div className="preset-footer">
+            <div className="preset-text-control">
+              <label className="preset-text-label">DISPLAY TEXT</label>
+              <input
+                type="text"
+                className="preset-text-input"
+                value={displayText}
+                onChange={(e) => setDisplayText(e.target.value)}
+              />
+            </div>
+            
+            <div className="preset-controls">
+              <div className="slider-control">
+                <div className="slider-header">
+                  <span className="slider-label">Radius</span>
+                  <span className="slider-value">{proximityRadius}px</span>
+                </div>
+                <input 
+                  type="range"
+                  className="slider-input"
+                  min="50"
+                  max="400"
+                  step="25"
+                  value={proximityRadius}
+                  onChange={(e) => setProximityRadius(parseInt(e.target.value))}
+                />
+              </div>
+              <div className="slider-control">
+                <div className="slider-header">
+                  <span className="slider-label">Speed</span>
+                  <span className="slider-value">{transitionSpeed}ms</span>
+                </div>
+                <input 
+                  type="range"
+                  className="slider-input"
+                  min="0"
+                  max="300"
+                  step="10"
+                  value={transitionSpeed}
+                  onChange={(e) => setTransitionSpeed(parseInt(e.target.value))}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+    
+    function HoverCard({ presetName, index, isDark, totalCount }) {
+      const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+      const [isHovering, setIsHovering] = useState(false);
+      const [charPositions, setCharPositions] = useState([]);
+      const [starred, setStarred] = useState(false);
+      const containerRef = useRef(null);
+      const charRefs = useRef([]);
+      const smoothMouseRef = useRef({ x: 0, y: 0 });
+      
+      const [displayText, setDisplayText] = useState(presetName);
+      const [fontSize, setFontSize] = useState(140);
+      const [fontWeight, setFontWeight] = useState(400);
+      const [kerning, setKerning] = useState(0);
+      const [hoverRadius, setHoverRadius] = useState(150);
+      const [intensity, setIntensity] = useState(1);
+      
+      const textColor = isDark ? '#f5f0e8' : '#0d0f0d';
+      const hoverColor = isDark ? '#a1a1aa' : '#3f3f46';
+      const presetId = toId(presetName);
+      const m = intensity;
+      
+      const characters = useMemo(() => displayText.split('').map((char, i) => ({
+        char: char === ' ' ? '\u00A0' : char, index: i
+      })), [displayText]);
+      
+      // Update character positions
+      useEffect(() => {
+        const updatePositions = () => {
+          const positions = charRefs.current.map(ref => {
+            if (!ref) return { x: 0, y: 0, width: 0, height: 0 };
+            const rect = ref.getBoundingClientRect();
+            const containerRect = containerRef.current?.getBoundingClientRect() || { left: 0, top: 0 };
+            return {
+              x: rect.left - containerRect.left + rect.width / 2,
+              y: rect.top - containerRect.top + rect.height / 2,
+              width: rect.width,
+              height: rect.height
+            };
+          });
+          setCharPositions(positions);
+        };
+        
+        updatePositions();
+        window.addEventListener('resize', updatePositions);
+        return () => window.removeEventListener('resize', updatePositions);
+      }, [displayText, fontSize]);
+      
+      // Smooth mouse tracking
+      useEffect(() => {
+        let animationId;
+        const animate = () => {
+          smoothMouseRef.current.x += (mousePosition.x - smoothMouseRef.current.x) * 0.2;
+          smoothMouseRef.current.y += (mousePosition.y - smoothMouseRef.current.y) * 0.2;
+          animationId = requestAnimationFrame(animate);
+        };
+        animationId = requestAnimationFrame(animate);
+        return () => cancelAnimationFrame(animationId);
+      }, [mousePosition]);
+      
+      const handleMouseMove = useCallback((e) => {
+        const container = containerRef.current;
+        if (!container) return;
+        const rect = container.getBoundingClientRect();
+        setMousePosition({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+      }, []);
+      
+      const getRandom = useCallback((idx, seed, min, max) => {
+        const x = Math.sin(idx * seed) * 10000;
+        return min + (x - Math.floor(x)) * (max - min);
+      }, []);
+      
+      const getDistance = useCallback((charPos) => {
+        if (!charPos) return Infinity;
+        const dx = smoothMouseRef.current.x - charPos.x;
+        const dy = smoothMouseRef.current.y - charPos.y;
+        return Math.sqrt(dx * dx + dy * dy);
+      }, []);
+      
+      const getInfluence = useCallback((distance) => {
+        if (distance > hoverRadius) return 0;
+        // Smoother cubic ease for more natural falloff
+        const t = 1 - distance / hoverRadius;
+        return t * t * (3 - 2 * t); // smoothstep
+      }, [hoverRadius]);
+      
+      // Force re-render for animations
+      const [, forceUpdate] = useState(0);
+      useEffect(() => {
+        if (!isHovering) return;
+        const interval = setInterval(() => forceUpdate(n => n + 1), 16);
+        return () => clearInterval(interval);
+      }, [isHovering]);
+      
+      const getStyle = useCallback((idx) => {
+        const charPos = charPositions[idx];
+        const distance = getDistance(charPos);
+        const influence = isHovering ? getInfluence(distance) : 0;
+        
+        const dx = charPos ? smoothMouseRef.current.x - charPos.x : 0;
+        const dy = charPos ? smoothMouseRef.current.y - charPos.y : 0;
+        const angle = Math.atan2(dy, dx);
+        
+        let transform = '', color = textColor, filter = 'none', textShadow = 'none', opacity = 1, fontVariationSettings = null;
+        
+        switch (presetId) {
+          case 'magnetic-wave': {
+            const waveOffset = Math.sin(idx * 0.5 + Date.now() * 0.002) * influence * 10 * m;
+            const pushX = -Math.cos(angle) * influence * 30 * m;
+            const pushY = -Math.sin(angle) * influence * 30 * m + waveOffset;
+            transform = `translate(${pushX}px, ${pushY}px)`;
+            break;
+          }
+          case 'elastic-bounce': {
+            const bounceY = -influence * 40 * m;
+            const scale = 1 + influence * 0.3 * m;
+            const squash = 1 - influence * 0.1;
+            transform = `translateY(${bounceY}px) scaleX(${squash}) scaleY(${scale})`;
+            break;
+          }
+          case 'ripple-spread': {
+            const ripple = Math.sin((distance / 30) - Date.now() * 0.005) * influence;
+            const y = ripple * 25 * m;
+            const scale = 1 + ripple * 0.15 * m;
+            transform = `translateY(${y}px) scale(${scale})`;
+            break;
+          }
+          case 'gravity-lift': {
+            const lift = -influence * 60 * m;
+            const wobble = Math.sin(idx * 0.8 + Date.now() * 0.003) * influence * 5 * m;
+            transform = `translateY(${lift}px) translateX(${wobble}px)`;
+            filter = `drop-shadow(0 ${influence * 20 * m}px ${influence * 30 * m}px rgba(0,0,0,0.15))`;
+            break;
+          }
+          case 'color-cascade': {
+            // Color cascade is special - it's meant to show rainbow colors
+            const hue = (idx * 30 + Date.now() * 0.05) % 360;
+            const saturation = 70 + influence * 30;
+            const lightness = isDark ? (60 + influence * 20) : (40 + influence * 10);
+            color = influence > 0.1 ? `hsl(${hue}, ${saturation}%, ${lightness}%)` : textColor;
+            const scale = 1 + influence * 0.2 * m;
+            transform = `scale(${scale})`;
+            break;
+          }
+          case 'blur-reveal': {
+            // Text starts blurred, reveals (clears) on hover
+            const blur = (1 - influence) * 8 * m;
+            filter = `blur(${blur}px)`;
+            opacity = 0.4 + influence * 0.6;
+            break;
+          }
+          case 'rotation-dance': {
+            const rotate = influence * 30 * m * (idx % 2 === 0 ? 1 : -1);
+            const scale = 1 + influence * 0.2 * m;
+            transform = `rotate(${rotate}deg) scale(${scale})`;
+            break;
+          }
+          case 'scale-pulse': {
+            const pulse = Math.sin(Date.now() * 0.008 + idx * 0.3) * 0.5 + 0.5;
+            const scale = 1 + influence * (0.3 + pulse * 0.2) * m;
+            transform = `scale(${scale})`;
+            break;
+          }
+          case 'skew-distort': {
+            const skewX = influence * 25 * m * (dx > 0 ? 1 : -1);
+            const skewY = influence * 10 * m * (dy > 0 ? 1 : -1);
+            transform = `skew(${skewX}deg, ${skewY}deg)`;
+            break;
+          }
+          case 'depth-push': {
+            const z = -influence * 100 * m;
+            const scale = 1 - influence * 0.3;
+            const blur = influence * 5 * m;
+            transform = `perspective(500px) translateZ(${z}px) scale(${scale})`;
+            filter = `blur(${blur}px)`;
+            opacity = 1 - influence * 0.5;
+            break;
+          }
+          case 'letter-swap': {
+            const flip = influence > 0.5 ? 180 : 0;
+            transform = `perspective(500px) rotateY(${flip}deg)`;
+            break;
+          }
+          case 'glitch-flicker': {
+            if (influence > 0.3) {
+              const glitchX = (getRandom(idx + Math.floor(Date.now() / 50), 3.7, 0, 1) - 0.5) * 10 * m;
+              const glitchY = (getRandom(idx + Math.floor(Date.now() / 70), 5.2, 0, 1) - 0.5) * 5 * m;
+              const skew = (getRandom(idx + Math.floor(Date.now() / 100), 8.1, 0, 1) - 0.5) * 10 * m;
+              transform = `translate(${glitchX}px, ${glitchY}px) skewX(${skew}deg)`;
+              textShadow = `${glitchX}px 0 rgba(255,0,0,0.5), ${-glitchX}px 0 rgba(0,255,255,0.5)`;
+            }
+            break;
+          }
+          case 'neon-glow': {
+            const glowIntensity = influence * 20 * m;
+            const pulseGlow = Math.sin(Date.now() * 0.005) * 5 + 5;
+            const glowCol = isDark ? 'rgba(245,240,232,0.6)' : 'rgba(13,15,13,0.4)';
+            textShadow = influence > 0.1 
+              ? `0 0 ${glowIntensity}px ${glowCol}, 0 0 ${glowIntensity * 2 + pulseGlow}px ${glowCol}`
+              : 'none';
+            const scale = 1 + influence * 0.1 * m;
+            transform = `scale(${scale})`;
+            break;
+          }
+          case 'typewriter-delete': {
+            const strike = influence > 0.5;
+            const shake = strike ? (getRandom(Math.floor(Date.now() / 30), idx, 0, 1) - 0.5) * 4 : 0;
+            transform = `translateX(${shake}px)`;
+            opacity = strike ? 0.5 : 1;
+            break;
+          }
+          case 'accordion-expand': {
+            const expand = influence * 30 * m;
+            const spacing = expand * 0.5;
+            transform = `translateX(${(idx - characters.length / 2) * spacing * 0.1}px)`;
+            break;
+          }
+          case 'flip-card': {
+            const rotateX = influence * 180 * m;
+            transform = `perspective(500px) rotateX(${rotateX}deg)`;
+            break;
+          }
+          case 'spiral-twist': {
+            const twist = influence * 360 * m;
+            const radius = influence * 20 * m;
+            const spiralX = Math.cos(twist * Math.PI / 180) * radius;
+            const spiralY = Math.sin(twist * Math.PI / 180) * radius;
+            transform = `translate(${spiralX}px, ${spiralY}px) rotate(${twist}deg)`;
+            break;
+          }
+          case 'wave-physics': {
+            const time = Date.now() * 0.003;
+            const waveY = Math.sin(idx * 0.5 + time) * influence * 30 * m;
+            const waveX = Math.cos(idx * 0.3 + time) * influence * 10 * m;
+            const rotate = Math.sin(idx * 0.4 + time) * influence * 15 * m;
+            transform = `translate(${waveX}px, ${waveY}px) rotate(${rotate}deg)`;
+            break;
+          }
+          case 'particle-trail': {
+            const trailX = -dx * influence * 0.3;
+            const trailY = -dy * influence * 0.3;
+            transform = `translate(${trailX}px, ${trailY}px)`;
+            textShadow = influence > 0.1 
+              ? `${trailX * 2}px ${trailY * 2}px 0 ${isDark ? 'rgba(245,240,232,0.3)' : 'rgba(13,15,13,0.2)'}, ${trailX * 4}px ${trailY * 4}px 0 ${isDark ? 'rgba(245,240,232,0.15)' : 'rgba(13,15,13,0.1)'}`
+              : 'none';
+            break;
+          }
+          case 'liquid-morph': {
+            const morphX = Math.sin(Date.now() * 0.004 + idx) * influence * 15 * m;
+            const morphY = Math.cos(Date.now() * 0.003 + idx * 0.7) * influence * 20 * m;
+            const scaleX = 1 + Math.sin(Date.now() * 0.005 + idx) * influence * 0.2 * m;
+            const scaleY = 1 + Math.cos(Date.now() * 0.006 + idx) * influence * 0.2 * m;
+            transform = `translate(${morphX}px, ${morphY}px) scale(${scaleX}, ${scaleY})`;
+            break;
+          }
+          default:
+            const pushX = -Math.cos(angle) * influence * 20 * m;
+            const pushY = -Math.sin(angle) * influence * 20 * m;
+            transform = `translate(${pushX}px, ${pushY}px)`;
+        }
+        
+        const style = { 
+          display: 'inline-block', 
+          transform: transform || 'none', 
+          color, 
+          filter, 
+          textShadow, 
+          opacity,
+          transition: 'transform 120ms ease-out, filter 120ms ease-out, opacity 120ms ease-out, color 200ms ease-out',
+          transformStyle: 'preserve-3d'
+        };
+        return style;
+      }, [charPositions, isHovering, presetId, characters.length, m, textColor, isDark, getDistance, getInfluence, getRandom]);
+      
+      return (
+        <div className="preset-card">
+          <div className="preset-header">
+            <div className="preset-name-row">
+              <span className="preset-name">{presetName}</span>
+              <StarIcon active={starred} onClick={() => setStarred(!starred)} />
+            </div>
+            <div className="preset-style-controls">
+              <div className="slider-control">
+                <div className="slider-header">
+                  <span className="slider-label">Size</span>
+                  <span className="slider-value">{fontSize}</span>
+                </div>
+                <input 
+                  type="range"
+                  className="slider-input"
+                  min="48"
+                  max="200"
+                  value={fontSize}
+                  onChange={(e) => setFontSize(parseInt(e.target.value))}
+                />
+              </div>
+              <div className="slider-control">
+                <div className="slider-header">
+                  <span className="slider-label">Weight</span>
+                  <span className="slider-value">{fontWeight}</span>
+                </div>
+                <input 
+                  type="range"
+                  className="slider-input"
+                  min="100"
+                  max="900"
+                  step="100"
+                  value={fontWeight}
+                  onChange={(e) => setFontWeight(parseInt(e.target.value))}
+                />
+              </div>
+              <div className="slider-control">
+                <div className="slider-header">
+                  <span className="slider-label">Kerning</span>
+                  <span className="slider-value">{kerning.toFixed(2)}</span>
+                </div>
+                <input 
+                  type="range"
+                  className="slider-input"
+                  min="-0.1"
+                  max="0.5"
+                  step="0.01"
+                  value={kerning}
+                  onChange={(e) => setKerning(parseFloat(e.target.value))}
+                />
+              </div>
+            </div>
+          </div>
+          
+          <div 
+            className="animation-display"
+            ref={containerRef}
+            onMouseMove={handleMouseMove}
+            onMouseEnter={() => setIsHovering(true)}
+            onMouseLeave={() => setIsHovering(false)}
+            style={{ cursor: 'default' }}
+          >
+            <div className="animated-text" style={{ fontSize: `${fontSize}px`, fontWeight, letterSpacing: `${kerning}em` }}>
+              {characters.map((c, i) => (
+                <span key={i} ref={el => charRefs.current[i] = el} className="char" style={getStyle(i)}>{c.char}</span>
+              ))}
+            </div>
+          </div>
+          
+          <div className="preset-footer">
+            <div className="preset-text-control">
+              <label className="preset-text-label">Display Text</label>
+              <input 
+                type="text"
+                className="preset-text-input"
+                value={displayText}
+                onChange={(e) => setDisplayText(e.target.value)}
+              />
+            </div>
+            
+            <div className="preset-controls">
+              <div className="slider-control">
+                <div className="slider-header">
+                  <span className="slider-label">Radius</span>
+                  <span className="slider-value">{hoverRadius}px</span>
+                </div>
+                <input 
+                  type="range"
+                  className="slider-input"
+                  min="50"
+                  max="300"
+                  step="10"
+                  value={hoverRadius}
+                  onChange={(e) => setHoverRadius(parseInt(e.target.value))}
+                />
+              </div>
+              <div className="slider-control">
+                <div className="slider-header">
+                  <span className="slider-label">Intensity</span>
+                  <span className="slider-value">{intensity.toFixed(1)}x</span>
+                </div>
+                <input 
+                  type="range"
+                  className="slider-input"
+                  min="0.25"
+                  max="3"
+                  step="0.25"
+                  value={intensity}
+                  onChange={(e) => setIntensity(parseFloat(e.target.value))}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+    
+    // Generative Algorithmic Card
+    function GenerativeCard({ presetName, index, isDark, totalCount }) {
+      const canvasRef = useRef(null);
+      const textCanvasRef = useRef(null);
+      const animationRef = useRef(null);
+      const stateRef = useRef({});
+      const [starred, setStarred] = useState(false);
+      
+      // Content controls
+      const [displayText, setDisplayText] = useState(presetName);
+      const [fontSize, setFontSize] = useState(60);
+      const [fontWeight, setFontWeight] = useState(700);
+      const [kerning, setKerning] = useState(0);
+      
+      // Animation controls
+      const [speed, setSpeed] = useState(1);
+      const [intensity, setIntensity] = useState(1);
+      const [particleCount, setParticleCount] = useState(800);
+      const [trailLength, setTrailLength] = useState(20);
+      
+      const textColor = isDark ? '#f5f0e8' : '#0d0f0d';
+      const bgColor = isDark ? '#0d0f0d' : '#faf8f5';
+      const presetId = toId(presetName);
+      
+      const hexToRgb = useCallback((hex) => {
+        const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return result ? {
+          r: parseInt(result[1], 16),
+          g: parseInt(result[2], 16),
+          b: parseInt(result[3], 16)
+        } : { r: 33, g: 37, b: 41 };
+      }, []);
+      
+      const createTextMask = useCallback((ctx, width, height, text, fSize, fWeight, kern) => {
+        ctx.fillStyle = '#000000';
+        ctx.fillRect(0, 0, width, height);
+        ctx.fillStyle = '#FFFFFF';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        const scaledFontSize = Math.min(fSize * (width / 600), height / 2);
+        ctx.font = `${fWeight} ${scaledFontSize}px Inter, sans-serif`;
+        ctx.letterSpacing = `${kern}em`;
+        ctx.fillText(text, width / 2, height / 2);
+        
+        const imageData = ctx.getImageData(0, 0, width, height);
+        const mask = new Uint8Array(width * height);
+        for (let i = 0; i < width * height; i++) {
+          mask[i] = imageData.data[i * 4] > 128 ? 1 : 0;
+        }
+        return mask;
+      }, []);
+      
+      const getTextPoints = useCallback((mask, width, height, step = 3) => {
+        const points = [];
+        for (let y = 0; y < height; y += step) {
+          for (let x = 0; x < width; x += step) {
+            if (mask[y * width + x]) {
+              points.push({ x, y });
+            }
+          }
+        }
+        return points;
+      }, []);
+      
+      const createNoise = useCallback(() => {
+        const perm = [];
+        for (let i = 0; i < 512; i++) perm[i] = Math.floor(Math.random() * 256);
+        const lerp = (t, a, b) => a + t * (b - a);
+        const grad = (hash, x, y, z) => {
+          const h = hash & 15;
+          const u = h < 8 ? x : y;
+          const v = h < 4 ? y : h === 12 || h === 14 ? x : z;
+          return ((h & 1) === 0 ? u : -u) + ((h & 2) === 0 ? v : -v);
+        };
+        return (x, y, z) => {
+          const X = Math.floor(x) & 255;
+          const Y = Math.floor(y) & 255;
+          const Z = Math.floor(z) & 255;
+          x -= Math.floor(x); y -= Math.floor(y); z -= Math.floor(z);
+          const u = x * x * (3 - 2 * x);
+          const v = y * y * (3 - 2 * y);
+          const w = z * z * (3 - 2 * z);
+          const A = perm[X] + Y, AA = perm[A] + Z, AB = perm[A + 1] + Z;
+          const B = perm[X + 1] + Y, BA = perm[B] + Z, BB = perm[B + 1] + Z;
+          return lerp(w, lerp(v, lerp(u, grad(perm[AA], x, y, z), grad(perm[BA], x - 1, y, z)),
+            lerp(u, grad(perm[AB], x, y - 1, z), grad(perm[BB], x - 1, y - 1, z))),
+            lerp(v, lerp(u, grad(perm[AA + 1], x, y, z - 1), grad(perm[BA + 1], x - 1, y, z - 1)),
+            lerp(u, grad(perm[AB + 1], x, y - 1, z - 1), grad(perm[BB + 1], x - 1, y - 1, z - 1))));
+        };
+      }, []);
+      
+      useEffect(() => {
+        const canvas = canvasRef.current;
+        const textCanvas = textCanvasRef.current;
+        if (!canvas || !textCanvas) return;
+        
+        const container = canvas.parentElement;
+        const rect = container.getBoundingClientRect();
+        
+        const ctx = canvas.getContext('2d');
+        const textCtx = textCanvas.getContext('2d');
+        const width = canvas.width = textCanvas.width = Math.floor(rect.width) || 800;
+        const height = canvas.height = textCanvas.height = Math.floor(rect.height) || 400;
+        
+        const mask = createTextMask(textCtx, width, height, displayText, fontSize, fontWeight, kerning);
+        const points = getTextPoints(mask, width, height);
+        const noise = createNoise();
+        
+        const rgb = hexToRgb(textColor);
+        const bgRgb = hexToRgb(bgColor);
+        
+        // Initialize based on preset
+        let particles = [];
+        const pCount = Math.floor(particleCount * intensity);
+        
+        if (presetId === 'physarum') {
+          for (let i = 0; i < pCount && i < points.length * 2; i++) {
+            const pt = points[Math.floor(Math.random() * points.length)] || { x: width/2, y: height/2 };
+            particles.push({ x: pt.x, y: pt.y, origX: pt.x, origY: pt.y, angle: Math.random() * Math.PI * 2 });
+          }
+          stateRef.current = { particles, trailMap: new Float32Array(width * height) };
+        } else if (presetId === 'flow-field') {
+          for (let i = 0; i < pCount && points.length > 0; i++) {
+            const pt = points[Math.floor(Math.random() * points.length)];
+            particles.push({ x: pt.x, y: pt.y, origX: pt.x, origY: pt.y, trail: [{ x: pt.x, y: pt.y }] });
+          }
+          stateRef.current = { particles, noise, noiseZ: Math.random() * 1000 };
+        } else if (presetId === 'boids') {
+          for (let i = 0; i < Math.min(300, points.length); i++) {
+            const pt = points[Math.floor(Math.random() * points.length)] || { x: width/2, y: height/2 };
+            particles.push({ x: pt.x, y: pt.y, origX: pt.x, origY: pt.y, vx: (Math.random() - 0.5) * 2, vy: (Math.random() - 0.5) * 2, targetX: pt.x, targetY: pt.y });
+          }
+          stateRef.current = { particles };
+        } else if (presetId === 'circle-packing') {
+          stateRef.current = { circles: [], growing: [], mask, width, height };
+        } else if (presetId === 'particle-gravity') {
+          const attractors = [];
+          const step = Math.max(1, Math.floor(points.length / 30));
+          for (let i = 0; i < points.length; i += step) {
+            attractors.push({ x: points[i].x, y: points[i].y, mass: 20 + Math.random() * 30 });
+          }
+          for (let i = 0; i < Math.min(400, points.length * 2); i++) {
+            const pt = points[Math.floor(Math.random() * points.length)] || { x: width/2, y: height/2 };
+            particles.push({ x: pt.x, y: pt.y, origX: pt.x, origY: pt.y, vx: 0, vy: 0, trail: [] });
+          }
+          stateRef.current = { particles, attractors };
+        } else {
+          // Default: flow field style
+          for (let i = 0; i < pCount && points.length > 0; i++) {
+            const pt = points[Math.floor(Math.random() * points.length)];
+            particles.push({ x: pt.x, y: pt.y, origX: pt.x, origY: pt.y, prevX: pt.x, prevY: pt.y });
+          }
+          stateRef.current = { particles, noise, noiseZ: 0, time: 0 };
+        }
+        
+        stateRef.current.mask = mask;
+        stateRef.current.points = points;
+        stateRef.current.width = width;
+        stateRef.current.height = height;
+        stateRef.current.trailLength = trailLength;
+        stateRef.current.intensity = intensity;
+        
+        ctx.fillStyle = bgColor;
+        ctx.fillRect(0, 0, width, height);
+        
+        // Global time for breathing cycle
+        let globalTime = 0;
+        
+        const animate = () => {
+          const state = stateRef.current;
+          if (!state.width) return;
+          
+          globalTime += 0.02 * speed;
+          // Breathing factor: 0 = particles at origin, 1 = particles animated
+          // Creates a smooth cycle: expand for ~3s, contract for ~3s
+          const breathingCycle = (Math.sin(globalTime * 0.5) + 1) / 2;
+          const returnStrength = 1 - breathingCycle; // How strongly to pull back to origin
+          
+          // Update and render based on preset
+          if (presetId === 'physarum') {
+            const { particles, trailMap } = state;
+            const tLen = state.trailLength || 0;
+            const turnAngle = Math.PI / 4;
+            
+            for (let i = 0; i < particles.length; i++) {
+              const p = particles[i];
+              
+              // Animate outward
+              p.x += Math.cos(p.angle) * speed * breathingCycle;
+              p.y += Math.sin(p.angle) * speed * breathingCycle;
+              p.angle += (Math.random() - 0.5) * turnAngle * breathingCycle;
+              
+              // Pull back to origin
+              p.x += (p.origX - p.x) * returnStrength * 0.1;
+              p.y += (p.origY - p.y) * returnStrength * 0.1;
+              
+              // Keep within bounds
+              if (p.x < 0) p.x = 0;
+              if (p.x >= width) p.x = width - 1;
+              if (p.y < 0) p.y = 0;
+              if (p.y >= height) p.y = height - 1;
+              
+              const ix = Math.floor(p.x), iy = Math.floor(p.y);
+              if (tLen > 0 && ix >= 0 && ix < width && iy >= 0 && iy < height) trailMap[iy * width + ix] = 1;
+            }
+            
+            if (tLen > 0) {
+              // Trail mode with gradual fade - shorter trail = faster fade
+              const fadeRate = Math.max(0.9, 0.99 - (tLen * 0.002));
+              for (let i = 0; i < trailMap.length; i++) trailMap[i] *= fadeRate;
+              
+              const imageData = ctx.createImageData(width, height);
+              const data = imageData.data;
+              for (let i = 0; i < trailMap.length; i++) {
+                const val = trailMap[i];
+                const idx = i * 4;
+                data[idx] = bgRgb.r - (bgRgb.r - rgb.r) * val;
+                data[idx + 1] = bgRgb.g - (bgRgb.g - rgb.g) * val;
+                data[idx + 2] = bgRgb.b - (bgRgb.b - rgb.b) * val;
+                data[idx + 3] = 255;
+              }
+              ctx.putImageData(imageData, 0, 0);
+            } else {
+              // No trail - just draw particles as dots
+              ctx.fillStyle = bgColor;
+              ctx.fillRect(0, 0, width, height);
+              ctx.fillStyle = textColor;
+              for (let i = 0; i < particles.length; i++) {
+                const p = particles[i];
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 1.5, 0, Math.PI * 2);
+                ctx.fill();
+              }
+            }
+            
+          } else if (presetId === 'flow-field') {
+            const { particles, noise } = state;
+            const tLen = state.trailLength || 20;
+            state.noiseZ += 0.002 * speed;
+            
+            // Clear background completely then redraw trails
+            ctx.fillStyle = bgColor;
+            ctx.fillRect(0, 0, width, height);
+            
+            ctx.strokeStyle = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.5)`;
+            ctx.lineWidth = 1.2;
+            
+            for (let i = 0; i < particles.length; i++) {
+              const p = particles[i];
+              
+              // Animate with flow field
+              const angle = noise(p.x * 0.003, p.y * 0.003, state.noiseZ) * Math.PI * 4;
+              const animX = p.x + Math.cos(angle) * 2 * speed * breathingCycle;
+              const animY = p.y + Math.sin(angle) * 2 * speed * breathingCycle;
+              
+              // Blend between animated position and origin
+              p.x = animX + (p.origX - animX) * returnStrength * 0.15;
+              p.y = animY + (p.origY - animY) * returnStrength * 0.15;
+              
+              // Add to trail
+              p.trail.push({ x: p.x, y: p.y });
+              if (p.trail.length > tLen) p.trail.shift();
+              
+              // Reset if too far from origin
+              if (Math.hypot(p.x - p.origX, p.y - p.origY) > 100) {
+                p.x = p.origX;
+                p.y = p.origY;
+                p.trail = [{ x: p.x, y: p.y }];
+              }
+            }
+            
+            // Draw all trails
+            for (let i = 0; i < particles.length; i++) {
+              const p = particles[i];
+              if (p.trail.length > 1) {
+                ctx.beginPath();
+                ctx.moveTo(p.trail[0].x, p.trail[0].y);
+                for (let j = 1; j < p.trail.length; j++) {
+                  ctx.lineTo(p.trail[j].x, p.trail[j].y);
+                }
+                ctx.stroke();
+              }
+            }
+            
+          } else if (presetId === 'boids') {
+            const { particles } = state;
+            
+            ctx.fillStyle = bgColor;
+            ctx.fillRect(0, 0, width, height);
+            
+            for (let i = 0; i < particles.length; i++) {
+              const b = particles[i];
+              let sepX = 0, sepY = 0, sepC = 0, aliX = 0, aliY = 0, aliC = 0, cohX = 0, cohY = 0, cohC = 0;
+              for (let j = 0; j < particles.length; j++) {
+                if (i === j) continue;
+                const o = particles[j];
+                const d = Math.hypot(b.x - o.x, b.y - o.y);
+                if (d < 15 && d > 0) { sepX += (b.x - o.x) / d; sepY += (b.y - o.y) / d; sepC++; }
+                if (d < 30) { aliX += o.vx; aliY += o.vy; aliC++; cohX += o.x; cohY += o.y; cohC++; }
+              }
+              if (sepC > 0) { b.vx += sepX / sepC * 0.08 * speed * breathingCycle; b.vy += sepY / sepC * 0.08 * speed * breathingCycle; }
+              if (aliC > 0) { b.vx += (aliX / aliC - b.vx) * 0.05 * speed * breathingCycle; b.vy += (aliY / aliC - b.vy) * 0.05 * speed * breathingCycle; }
+              if (cohC > 0) { b.vx += (cohX / cohC - b.x) * 0.002 * speed * breathingCycle; b.vy += (cohY / cohC - b.y) * 0.002 * speed * breathingCycle; }
+              
+              // Pull back to target (origin) position
+              b.vx += (b.targetX - b.x) * (0.01 + returnStrength * 0.05) * speed;
+              b.vy += (b.targetY - b.y) * (0.01 + returnStrength * 0.05) * speed;
+              
+              const spd = Math.hypot(b.vx, b.vy);
+              if (spd > 4) { b.vx = (b.vx / spd) * 4; b.vy = (b.vy / spd) * 4; }
+              b.x += b.vx; b.y += b.vy;
+            }
+            
+            ctx.fillStyle = textColor;
+            for (let i = 0; i < particles.length; i++) {
+              const b = particles[i];
+              const angle = Math.atan2(b.vy, b.vx);
+              ctx.save();
+              ctx.translate(b.x, b.y);
+              ctx.rotate(angle);
+              ctx.beginPath();
+              ctx.moveTo(6, 0);
+              ctx.lineTo(-3, 2);
+              ctx.lineTo(-3, -2);
+              ctx.closePath();
+              ctx.fill();
+              ctx.restore();
+            }
+            
+          } else if (presetId === 'circle-packing') {
+            const { circles, growing, mask } = state;
+            
+            const isInText = (x, y) => {
+              const ix = Math.floor(x), iy = Math.floor(y);
+              return ix >= 0 && ix < width && iy >= 0 && iy < height && mask[iy * width + ix] === 1;
+            };
+            
+            for (let a = 0; a < Math.ceil(3 * speed); a++) {
+              for (let attempts = 0; attempts < 50; attempts++) {
+                const x = Math.random() * width, y = Math.random() * height;
+                if (!isInText(x, y)) continue;
+                let valid = true;
+                for (let j = 0; j < circles.length; j++) {
+                  if (Math.hypot(x - circles[j].x, y - circles[j].y) < circles[j].r + 2) { valid = false; break; }
+                }
+                if (valid) {
+                  const circle = { x, y, r: 1 };
+                  circles.push(circle);
+                  growing.push(circle);
+                  break;
+                }
+              }
+            }
+            
+            for (let i = growing.length - 1; i >= 0; i--) {
+              const c = growing[i];
+              let canGrow = isInText(c.x - c.r, c.y) && isInText(c.x + c.r, c.y) && isInText(c.x, c.y - c.r) && isInText(c.x, c.y + c.r);
+              if (canGrow) {
+                for (let j = 0; j < circles.length; j++) {
+                  if (circles[j] !== c && Math.hypot(c.x - circles[j].x, c.y - circles[j].y) < c.r + circles[j].r + 1) { canGrow = false; break; }
+                }
+              }
+              if (canGrow) c.r += 0.3 * speed;
+              else growing.splice(i, 1);
+            }
+            
+            ctx.fillStyle = bgColor;
+            ctx.fillRect(0, 0, width, height);
+            ctx.strokeStyle = textColor;
+            ctx.lineWidth = 1;
+            for (let i = 0; i < circles.length; i++) {
+              ctx.beginPath();
+              ctx.arc(circles[i].x, circles[i].y, circles[i].r, 0, Math.PI * 2);
+              ctx.stroke();
+            }
+            
+          } else if (presetId === 'particle-gravity') {
+            const { particles, attractors } = state;
+            const tLen = state.trailLength || 20;
+            
+            // Complete background clear
+            ctx.fillStyle = bgColor;
+            ctx.fillRect(0, 0, width, height);
+            
+            for (let i = 0; i < particles.length; i++) {
+              const p = particles[i];
+              
+              // Gravity towards attractors (scaled by breathing)
+              for (let j = 0; j < attractors.length; j++) {
+                const a = attractors[j];
+                const dx = a.x - p.x, dy = a.y - p.y;
+                let dist = Math.hypot(dx, dy);
+                if (dist < 3) dist = 3;
+                const force = Math.min(a.mass / (dist * dist), 0.5);
+                p.vx += (dx / dist) * force * 0.1 * speed * breathingCycle;
+                p.vy += (dy / dist) * force * 0.1 * speed * breathingCycle;
+              }
+              
+              // Pull back to origin
+              p.vx += (p.origX - p.x) * returnStrength * 0.08;
+              p.vy += (p.origY - p.y) * returnStrength * 0.08;
+              
+              p.vx *= 0.95; p.vy *= 0.95;
+              const spd = Math.hypot(p.vx, p.vy);
+              if (spd > 3) { p.vx = (p.vx / spd) * 3; p.vy = (p.vy / spd) * 3; }
+              
+              p.trail.push({ x: p.x, y: p.y });
+              if (p.trail.length > tLen) p.trail.shift();
+              p.x += p.vx; p.y += p.vy;
+            }
+            
+            // Draw trails
+            ctx.strokeStyle = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.6)`;
+            ctx.lineWidth = 1;
+            for (let i = 0; i < particles.length; i++) {
+              const p = particles[i];
+              if (p.trail && p.trail.length > 1) {
+                ctx.beginPath();
+                ctx.moveTo(p.trail[0].x, p.trail[0].y);
+                for (let j = 1; j < p.trail.length; j++) ctx.lineTo(p.trail[j].x, p.trail[j].y);
+                ctx.stroke();
+              }
+            }
+            
+          } else if (presetId === 'lorenz' || presetId === 'strange-attractor') {
+            // Lorenz/Strange Attractor - chaotic system
+            state.time = (state.time || 0) + 0.01 * speed;
+            const { particles } = state;
+            const tLen = state.trailLength || 20;
+            const sigma = 10, rho = 28, beta = 8/3;
+            const dt = 0.005 * speed;
+            
+            ctx.fillStyle = bgColor;
+            ctx.fillRect(0, 0, width, height);
+            
+            for (let i = 0; i < particles.length; i++) {
+              const p = particles[i];
+              if (!p.lx) { p.lx = (Math.random() - 0.5) * 20; p.ly = (Math.random() - 0.5) * 20; p.lz = Math.random() * 30; }
+              
+              // Lorenz equations
+              const dx = sigma * (p.ly - p.lx) * dt * breathingCycle;
+              const dy = (p.lx * (rho - p.lz) - p.ly) * dt * breathingCycle;
+              const dz = (p.lx * p.ly - beta * p.lz) * dt * breathingCycle;
+              p.lx += dx; p.ly += dy; p.lz += dz;
+              
+              // Map to screen with breathing return
+              const targetX = width/2 + p.lx * 8;
+              const targetY = height/2 + p.ly * 8;
+              p.x += (targetX - p.x) * 0.3 + (p.origX - p.x) * returnStrength * 0.1;
+              p.y += (targetY - p.y) * 0.3 + (p.origY - p.y) * returnStrength * 0.1;
+              
+              if (!p.trail) p.trail = [];
+              p.trail.push({ x: p.x, y: p.y });
+              if (p.trail.length > tLen) p.trail.shift();
+            }
+            
+            ctx.strokeStyle = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.6)`;
+            ctx.lineWidth = 1;
+            for (let i = 0; i < particles.length; i++) {
+              const p = particles[i];
+              if (p.trail && p.trail.length > 1) {
+                ctx.beginPath();
+                ctx.moveTo(p.trail[0].x, p.trail[0].y);
+                for (let j = 1; j < p.trail.length; j++) ctx.lineTo(p.trail[j].x, p.trail[j].y);
+                ctx.stroke();
+              }
+            }
+            
+          } else if (presetId === 'magnetic-field' || presetId === 'electric-field') {
+            // Field lines visualization
+            state.time = (state.time || 0) + 0.02 * speed;
+            const { particles } = state;
+            const tLen = state.trailLength || 20;
+            
+            ctx.fillStyle = bgColor;
+            ctx.fillRect(0, 0, width, height);
+            
+            // Field sources at text points
+            const sources = points.filter((_, i) => i % 50 === 0).slice(0, 20);
+            
+            for (let i = 0; i < particles.length; i++) {
+              const p = particles[i];
+              let fx = 0, fy = 0;
+              
+              for (let j = 0; j < sources.length; j++) {
+                const s = sources[j];
+                const dx = s.x - p.x, dy = s.y - p.y;
+                const dist = Math.max(10, Math.hypot(dx, dy));
+                const force = (j % 2 === 0 ? 1 : -1) * 500 / (dist * dist);
+                fx += (dx / dist) * force;
+                fy += (dy / dist) * force;
+              }
+              
+              p.x += fx * speed * breathingCycle * 0.5;
+              p.y += fy * speed * breathingCycle * 0.5;
+              p.x += (p.origX - p.x) * returnStrength * 0.08;
+              p.y += (p.origY - p.y) * returnStrength * 0.08;
+              
+              if (!p.trail) p.trail = [];
+              p.trail.push({ x: p.x, y: p.y });
+              if (p.trail.length > tLen) p.trail.shift();
+            }
+            
+            ctx.strokeStyle = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.5)`;
+            ctx.lineWidth = 1;
+            for (let i = 0; i < particles.length; i++) {
+              const p = particles[i];
+              if (p.trail && p.trail.length > 1) {
+                ctx.beginPath();
+                ctx.moveTo(p.trail[0].x, p.trail[0].y);
+                for (let j = 1; j < p.trail.length; j++) ctx.lineTo(p.trail[j].x, p.trail[j].y);
+                ctx.stroke();
+              }
+            }
+            
+          } else if (presetId === 'wave-interference') {
+            // Wave interference pattern
+            state.time = (state.time || 0) + 0.05 * speed;
+            const { particles } = state;
+            const tLen = state.trailLength || 20;
+            
+            ctx.fillStyle = bgColor;
+            ctx.fillRect(0, 0, width, height);
+            
+            const waveSources = [{ x: width * 0.3, y: height * 0.5 }, { x: width * 0.7, y: height * 0.5 }];
+            
+            for (let i = 0; i < particles.length; i++) {
+              const p = particles[i];
+              let totalWave = 0;
+              
+              for (let j = 0; j < waveSources.length; j++) {
+                const dist = Math.hypot(p.origX - waveSources[j].x, p.origY - waveSources[j].y);
+                totalWave += Math.sin(dist * 0.05 - state.time * 2);
+              }
+              
+              const offset = totalWave * 15 * breathingCycle;
+              p.x = p.origX + offset * (1 - returnStrength);
+              p.y = p.origY + Math.sin(state.time + i * 0.1) * 5 * breathingCycle * (1 - returnStrength);
+              
+              if (!p.trail) p.trail = [];
+              p.trail.push({ x: p.x, y: p.y });
+              if (p.trail.length > tLen) p.trail.shift();
+            }
+            
+            ctx.strokeStyle = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.4)`;
+            ctx.lineWidth = 1;
+            for (let i = 0; i < particles.length; i++) {
+              const p = particles[i];
+              if (p.trail && p.trail.length > 1) {
+                ctx.beginPath();
+                ctx.moveTo(p.trail[0].x, p.trail[0].y);
+                for (let j = 1; j < p.trail.length; j++) ctx.lineTo(p.trail[j].x, p.trail[j].y);
+                ctx.stroke();
+              }
+            }
+            
+          } else if (presetId === 'lissajous') {
+            // Lissajous curves
+            state.time = (state.time || 0) + 0.02 * speed;
+            const { particles } = state;
+            const tLen = state.trailLength || 20;
+            
+            ctx.fillStyle = bgColor;
+            ctx.fillRect(0, 0, width, height);
+            
+            for (let i = 0; i < particles.length; i++) {
+              const p = particles[i];
+              const freqX = 3 + (i % 5) * 0.5;
+              const freqY = 2 + (i % 7) * 0.3;
+              const phase = i * 0.1;
+              
+              const lissX = Math.sin(state.time * freqX + phase) * 40 * breathingCycle;
+              const lissY = Math.cos(state.time * freqY + phase) * 30 * breathingCycle;
+              
+              p.x = p.origX + lissX * (1 - returnStrength);
+              p.y = p.origY + lissY * (1 - returnStrength);
+              
+              if (!p.trail) p.trail = [];
+              p.trail.push({ x: p.x, y: p.y });
+              if (p.trail.length > tLen) p.trail.shift();
+            }
+            
+            ctx.strokeStyle = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.5)`;
+            ctx.lineWidth = 1;
+            for (let i = 0; i < particles.length; i++) {
+              const p = particles[i];
+              if (p.trail && p.trail.length > 1) {
+                ctx.beginPath();
+                ctx.moveTo(p.trail[0].x, p.trail[0].y);
+                for (let j = 1; j < p.trail.length; j++) ctx.lineTo(p.trail[j].x, p.trail[j].y);
+                ctx.stroke();
+              }
+            }
+            
+          } else if (presetId === 'spirograph') {
+            // Spirograph patterns
+            state.time = (state.time || 0) + 0.03 * speed;
+            const { particles } = state;
+            const tLen = state.trailLength || 20;
+            
+            ctx.fillStyle = bgColor;
+            ctx.fillRect(0, 0, width, height);
+            
+            for (let i = 0; i < particles.length; i++) {
+              const p = particles[i];
+              const R = 30, r = 10 + (i % 10), d = 15 + (i % 8);
+              const t = state.time + i * 0.05;
+              
+              const spiroX = ((R - r) * Math.cos(t) + d * Math.cos((R - r) / r * t)) * breathingCycle;
+              const spiroY = ((R - r) * Math.sin(t) - d * Math.sin((R - r) / r * t)) * breathingCycle;
+              
+              p.x = p.origX + spiroX * (1 - returnStrength);
+              p.y = p.origY + spiroY * (1 - returnStrength);
+              
+              if (!p.trail) p.trail = [];
+              p.trail.push({ x: p.x, y: p.y });
+              if (p.trail.length > tLen) p.trail.shift();
+            }
+            
+            ctx.strokeStyle = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.5)`;
+            ctx.lineWidth = 1;
+            for (let i = 0; i < particles.length; i++) {
+              const p = particles[i];
+              if (p.trail && p.trail.length > 1) {
+                ctx.beginPath();
+                ctx.moveTo(p.trail[0].x, p.trail[0].y);
+                for (let j = 1; j < p.trail.length; j++) ctx.lineTo(p.trail[j].x, p.trail[j].y);
+                ctx.stroke();
+              }
+            }
+            
+          } else if (presetId === 'brownian-tree' || presetId === 'dla') {
+            // Diffusion Limited Aggregation / Brownian Tree
+            const { particles } = state;
+            const tLen = state.trailLength || 20;
+            
+            ctx.fillStyle = bgColor;
+            ctx.fillRect(0, 0, width, height);
+            
+            for (let i = 0; i < particles.length; i++) {
+              const p = particles[i];
+              
+              // Random walk with return to origin
+              p.x += (Math.random() - 0.5) * 4 * speed * breathingCycle;
+              p.y += (Math.random() - 0.5) * 4 * speed * breathingCycle;
+              p.x += (p.origX - p.x) * (0.02 + returnStrength * 0.1);
+              p.y += (p.origY - p.y) * (0.02 + returnStrength * 0.1);
+              
+              if (!p.trail) p.trail = [];
+              p.trail.push({ x: p.x, y: p.y });
+              if (p.trail.length > tLen) p.trail.shift();
+            }
+            
+            ctx.strokeStyle = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.5)`;
+            ctx.lineWidth = 1;
+            for (let i = 0; i < particles.length; i++) {
+              const p = particles[i];
+              if (p.trail && p.trail.length > 1) {
+                ctx.beginPath();
+                ctx.moveTo(p.trail[0].x, p.trail[0].y);
+                for (let j = 1; j < p.trail.length; j++) ctx.lineTo(p.trail[j].x, p.trail[j].y);
+                ctx.stroke();
+              }
+            }
+            
+          } else if (presetId === 'neural-network') {
+            // Neural network visualization
+            state.time = (state.time || 0) + 0.02 * speed;
+            const { particles } = state;
+            const tLen = state.trailLength || 20;
+            
+            ctx.fillStyle = bgColor;
+            ctx.fillRect(0, 0, width, height);
+            
+            // Pulsing nodes
+            for (let i = 0; i < particles.length; i++) {
+              const p = particles[i];
+              const pulse = Math.sin(state.time * 3 + i * 0.5) * 0.5 + 0.5;
+              const neighborPull = { x: 0, y: 0 };
+              let neighbors = 0;
+              
+              // Connect to nearby particles
+              for (let j = 0; j < particles.length; j++) {
+                if (i === j) continue;
+                const dist = Math.hypot(p.origX - particles[j].origX, p.origY - particles[j].origY);
+                if (dist < 50) {
+                  neighborPull.x += (particles[j].x - p.x) * 0.01 * pulse;
+                  neighborPull.y += (particles[j].y - p.y) * 0.01 * pulse;
+                  neighbors++;
+                }
+              }
+              
+              p.x += neighborPull.x * breathingCycle;
+              p.y += neighborPull.y * breathingCycle;
+              p.x += (p.origX - p.x) * (0.05 + returnStrength * 0.1);
+              p.y += (p.origY - p.y) * (0.05 + returnStrength * 0.1);
+              
+              if (!p.trail) p.trail = [];
+              p.trail.push({ x: p.x, y: p.y });
+              if (p.trail.length > tLen) p.trail.shift();
+            }
+            
+            // Draw connections
+            ctx.strokeStyle = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.15)`;
+            ctx.lineWidth = 0.5;
+            for (let i = 0; i < particles.length; i++) {
+              const p = particles[i];
+              for (let j = i + 1; j < particles.length; j++) {
+                const dist = Math.hypot(p.x - particles[j].x, p.y - particles[j].y);
+                if (dist < 40) {
+                  ctx.beginPath();
+                  ctx.moveTo(p.x, p.y);
+                  ctx.lineTo(particles[j].x, particles[j].y);
+                  ctx.stroke();
+                }
+              }
+            }
+            
+            // Draw nodes
+            ctx.fillStyle = textColor;
+            for (let i = 0; i < particles.length; i++) {
+              const p = particles[i];
+              ctx.beginPath();
+              ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
+              ctx.fill();
+            }
+            
+          } else if (presetId === 'voronoi') {
+            // Voronoi diagram
+            state.time = (state.time || 0) + 0.01 * speed;
+            const { particles } = state;
+            
+            ctx.fillStyle = bgColor;
+            ctx.fillRect(0, 0, width, height);
+            
+            // Move particles with breathing
+            for (let i = 0; i < particles.length; i++) {
+              const p = particles[i];
+              const angle = state.time + i * 0.5;
+              p.x = p.origX + Math.sin(angle) * 20 * breathingCycle * (1 - returnStrength);
+              p.y = p.origY + Math.cos(angle * 0.7) * 15 * breathingCycle * (1 - returnStrength);
+            }
+            
+            // Draw Voronoi-like pattern using nearest neighbor connections
+            ctx.strokeStyle = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.3)`;
+            ctx.lineWidth = 1;
+            for (let i = 0; i < particles.length; i++) {
+              const p = particles[i];
+              let nearest = null, nearestDist = Infinity;
+              for (let j = 0; j < particles.length; j++) {
+                if (i === j) continue;
+                const dist = Math.hypot(p.x - particles[j].x, p.y - particles[j].y);
+                if (dist < nearestDist && dist < 60) {
+                  nearestDist = dist;
+                  nearest = particles[j];
+                }
+              }
+              if (nearest) {
+                ctx.beginPath();
+                ctx.moveTo(p.x, p.y);
+                ctx.lineTo(nearest.x, nearest.y);
+                ctx.stroke();
+              }
+            }
+            
+            ctx.fillStyle = textColor;
+            for (let i = 0; i < particles.length; i++) {
+              const p = particles[i];
+              ctx.beginPath();
+              ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
+              ctx.fill();
+            }
+            
+          } else if (presetId === 'cellular-automata' || presetId === 'game-of-life' || presetId === 'langtons-ant') {
+            // Cellular automata style
+            state.time = (state.time || 0) + 0.05 * speed;
+            const { particles } = state;
+            
+            ctx.fillStyle = bgColor;
+            ctx.fillRect(0, 0, width, height);
+            
+            for (let i = 0; i < particles.length; i++) {
+              const p = particles[i];
+              // Grid-like movement
+              const gridX = Math.round(p.origX / 10) * 10;
+              const gridY = Math.round(p.origY / 10) * 10;
+              const phase = Math.floor(state.time + i * 0.1) % 4;
+              
+              const offsets = [[5, 0], [0, 5], [-5, 0], [0, -5]];
+              const offset = offsets[phase];
+              
+              p.x = gridX + offset[0] * breathingCycle * (1 - returnStrength);
+              p.y = gridY + offset[1] * breathingCycle * (1 - returnStrength);
+              p.x += (p.origX - p.x) * returnStrength * 0.5;
+              p.y += (p.origY - p.y) * returnStrength * 0.5;
+            }
+            
+            ctx.fillStyle = textColor;
+            for (let i = 0; i < particles.length; i++) {
+              const p = particles[i];
+              ctx.fillRect(p.x - 2, p.y - 2, 4, 4);
+            }
+            
+          } else if (presetId === 'reaction-diffusion') {
+            // Reaction-diffusion like patterns
+            state.time = (state.time || 0) + 0.02 * speed;
+            const { particles } = state;
+            const tLen = state.trailLength || 20;
+            
+            ctx.fillStyle = bgColor;
+            ctx.fillRect(0, 0, width, height);
+            
+            for (let i = 0; i < particles.length; i++) {
+              const p = particles[i];
+              
+              // Reaction-diffusion inspired motion
+              let reaction = 0;
+              for (let j = 0; j < particles.length; j++) {
+                if (i === j) continue;
+                const dist = Math.hypot(p.x - particles[j].x, p.y - particles[j].y);
+                if (dist < 30 && dist > 5) reaction += Math.sin(dist * 0.3 - state.time);
+              }
+              
+              p.x += Math.cos(reaction) * 2 * speed * breathingCycle;
+              p.y += Math.sin(reaction) * 2 * speed * breathingCycle;
+              p.x += (p.origX - p.x) * (0.03 + returnStrength * 0.1);
+              p.y += (p.origY - p.y) * (0.03 + returnStrength * 0.1);
+              
+              if (!p.trail) p.trail = [];
+              p.trail.push({ x: p.x, y: p.y });
+              if (p.trail.length > tLen) p.trail.shift();
+            }
+            
+            ctx.strokeStyle = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.4)`;
+            ctx.lineWidth = 1;
+            for (let i = 0; i < particles.length; i++) {
+              const p = particles[i];
+              if (p.trail && p.trail.length > 1) {
+                ctx.beginPath();
+                ctx.moveTo(p.trail[0].x, p.trail[0].y);
+                for (let j = 1; j < p.trail.length; j++) ctx.lineTo(p.trail[j].x, p.trail[j].y);
+                ctx.stroke();
+              }
+            }
+            
+          } else {
+            // Default: clean particle system
+            state.time = (state.time || 0) + 0.01 * speed;
+            const { particles, noise } = state;
+            const tLen = state.trailLength || 20;
+            
+            ctx.fillStyle = bgColor;
+            ctx.fillRect(0, 0, width, height);
+            
+            for (let i = 0; i < particles.length; i++) {
+              const p = particles[i];
+              const angle = noise ? noise(p.x * 0.005, p.y * 0.005, state.time) * Math.PI * 4 : state.time + i * 0.1;
+              
+              p.x += Math.cos(angle) * speed * breathingCycle;
+              p.y += Math.sin(angle) * speed * breathingCycle;
+              p.x += (p.origX - p.x) * (0.05 + returnStrength * 0.1);
+              p.y += (p.origY - p.y) * (0.05 + returnStrength * 0.1);
+              
+              if (!p.trail) p.trail = [];
+              p.trail.push({ x: p.x, y: p.y });
+              if (p.trail.length > tLen) p.trail.shift();
+            }
+            
+            ctx.strokeStyle = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.5)`;
+            ctx.lineWidth = 1;
+            for (let i = 0; i < particles.length; i++) {
+              const p = particles[i];
+              if (p.trail && p.trail.length > 1) {
+                ctx.beginPath();
+                ctx.moveTo(p.trail[0].x, p.trail[0].y);
+                for (let j = 1; j < p.trail.length; j++) ctx.lineTo(p.trail[j].x, p.trail[j].y);
+                ctx.stroke();
+              }
+            }
+          }
+          
+          animationRef.current = requestAnimationFrame(animate);
+        };
+        
+        animate();
+        
+        return () => {
+          if (animationRef.current) cancelAnimationFrame(animationRef.current);
+        };
+      }, [presetId, displayText, fontSize, fontWeight, kerning, speed, intensity, particleCount, trailLength, textColor, bgColor, hexToRgb, createTextMask, getTextPoints, createNoise]);
+      
+      return (
+        <div className="preset-card">
+          <div className="preset-header">
+            <div className="preset-name-row">
+              <span className="preset-name">{presetName}</span>
+              <StarIcon active={starred} onClick={() => setStarred(!starred)} />
+            </div>
+            <div className="preset-style-controls">
+              <div className="slider-control">
+                <div className="slider-header">
+                  <span className="slider-label">Size</span>
+                  <span className="slider-value">{fontSize}px</span>
+                </div>
+                <input 
+                  type="range"
+                  className="slider-input"
+                  min="60"
+                  max="200"
+                  step="10"
+                  value={fontSize}
+                  onChange={(e) => setFontSize(parseInt(e.target.value))}
+                />
+              </div>
+              <div className="slider-control">
+                <div className="slider-header">
+                  <span className="slider-label">Weight</span>
+                  <span className="slider-value">{fontWeight}</span>
+                </div>
+                <input 
+                  type="range"
+                  className="slider-input"
+                  min="100"
+                  max="900"
+                  step="100"
+                  value={fontWeight}
+                  onChange={(e) => setFontWeight(parseInt(e.target.value))}
+                />
+              </div>
+              <div className="slider-control">
+                <div className="slider-header">
+                  <span className="slider-label">Kerning</span>
+                  <span className="slider-value">{kerning.toFixed(2)}em</span>
+                </div>
+                <input 
+                  type="range"
+                  className="slider-input"
+                  min="-0.1"
+                  max="0.5"
+                  step="0.01"
+                  value={kerning}
+                  onChange={(e) => setKerning(parseFloat(e.target.value))}
+                />
+              </div>
+            </div>
+          </div>
+          
+          <div className="animation-display">
+            <canvas ref={textCanvasRef} style={{ display: 'none' }} />
+            <canvas 
+              ref={canvasRef} 
+              style={{ 
+                width: '100%', 
+                height: '100%',
+                position: 'absolute',
+                top: 0,
+                left: 0
+              }} 
+            />
+          </div>
+          
+          <div className="preset-footer">
+            <div className="preset-text-control">
+              <label className="preset-text-label">Display Text</label>
+              <input 
+                type="text"
+                className="preset-text-input"
+                value={displayText}
+                onChange={(e) => setDisplayText(e.target.value)}
+              />
+            </div>
+            
+            <div className="preset-controls">
+              <div className="slider-control">
+                <div className="slider-header">
+                  <span className="slider-label">Speed</span>
+                  <span className="slider-value">{speed.toFixed(1)}x</span>
+                </div>
+                <input 
+                  type="range"
+                  className="slider-input"
+                  min="0.25"
+                  max="3"
+                  step="0.25"
+                  value={speed}
+                  onChange={(e) => setSpeed(parseFloat(e.target.value))}
+                />
+              </div>
+              <div className="slider-control">
+                <div className="slider-header">
+                  <span className="slider-label">Intensity</span>
+                  <span className="slider-value">{intensity.toFixed(1)}x</span>
+                </div>
+                <input 
+                  type="range"
+                  className="slider-input"
+                  min="0.25"
+                  max="3"
+                  step="0.25"
+                  value={intensity}
+                  onChange={(e) => setIntensity(parseFloat(e.target.value))}
+                />
+              </div>
+              <div className="slider-control">
+                <div className="slider-header">
+                  <span className="slider-label">Particles</span>
+                  <span className="slider-value">{particleCount}</span>
+                </div>
+                <input 
+                  type="range"
+                  className="slider-input"
+                  min="200"
+                  max="2000"
+                  step="100"
+                  value={particleCount}
+                  onChange={(e) => setParticleCount(parseInt(e.target.value))}
+                />
+              </div>
+              <div className="slider-control">
+                <div className="slider-header">
+                  <span className="slider-label">Trail</span>
+                  <span className="slider-value">{trailLength}</span>
+                </div>
+                <input 
+                  type="range"
+                  className="slider-input"
+                  min="5"
+                  max="50"
+                  step="1"
+                  value={trailLength}
+                  onChange={(e) => setTrailLength(parseInt(e.target.value))}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+    
+    // 3D Kinetic Depth Card
+    function Kinetic3DCard({ presetName, index, isDark, totalCount }) {
+      const containerRef = useRef(null);
+      const requestRef = useRef(null);
+      const [rotation, setRotation] = useState(0);
+      const [starred, setStarred] = useState(false);
+      
+      const [displayText, setDisplayText] = useState(presetName.toUpperCase().replace(/\s+/g, ' '));
+      const [fontSize, setFontSize] = useState(24);
+      const [speed, setSpeed] = useState(0.5);
+      const [radius, setRadius] = useState(150);
+      const [copies, setCopies] = useState(8);
+      const [tiltX, setTiltX] = useState(20);
+      const [tiltY, setTiltY] = useState(-20);
+      
+      const presetId = presetName.toLowerCase().replace(/\s+/g, '-');
+      const textColor = isDark ? '#f5f0e8' : '#0d0f0d';
+      const bgColor = isDark ? '#0d0f0d' : '#f5f0e8';
+      
+      // Create character array
+      const characters = useMemo(() => {
+        const chars = [];
+        const singleText = displayText + " "; 
+        for (let i = 0; i < copies; i++) {
+          singleText.split('').forEach((char) => chars.push(char));
+        }
+        return chars;
+      }, [displayText, copies]);
+      
+      // Animation loop
+      useEffect(() => {
+        const animate = () => {
+          setRotation(prev => prev + speed);
+          requestRef.current = requestAnimationFrame(animate);
+        };
+        requestRef.current = requestAnimationFrame(animate);
+        return () => cancelAnimationFrame(requestRef.current);
+      }, [speed]);
+      
+      const getTransform = useCallback((index, total) => {
+        const p = index / total;
+        const angle = p * Math.PI * 2;
+        const time = (rotation * Math.PI) / 180;
+        const deg = 180 / Math.PI;
+        let t = { x: 0, y: 0, z: 0, rx: 0, ry: 0, rz: 0 };
+        
+        switch (presetId) {
+          case 'iso-grid-float': {
+            const cols = Math.ceil(Math.sqrt(total));
+            const row = Math.floor(index / cols);
+            const col = index % cols;
+            const gridSpace = fontSize * 1.5;
+            t.x = (col - cols/2) * gridSpace;
+            t.z = (row - cols/2) * gridSpace;
+            const dist = Math.sqrt(t.x*t.x + t.z*t.z);
+            t.y = Math.sin(dist * 0.05 - time * 2) * 30;
+            break;
+          }
+          case 'iso-staircase': {
+            const stepHeight = 20;
+            const stepDepth = 20;
+            t.y = index * stepHeight - (total * stepHeight / 2);
+            t.z = index * stepDepth - (total * stepDepth / 2);
+            t.x = Math.sin(time + index * 0.1) * 50; 
+            break;
+          }
+          case 'iso-layers': {
+            const layerCount = 5;
+            const layerIdx = index % layerCount;
+            const perLayer = Math.floor(total / layerCount);
+            const itemIdx = Math.floor(index / layerCount);
+            t.y = (layerIdx - layerCount/2) * 40;
+            const layerAngle = (itemIdx / perLayer) * Math.PI * 2 + time * (layerIdx % 2 === 0 ? 1 : -1);
+            t.x = Math.cos(layerAngle) * radius;
+            t.z = Math.sin(layerAngle) * radius;
+            t.ry = layerAngle * deg - 90;
+            break;
+          }
+          case 'iso-cross-axis': {
+            const axis = index % 2;
+            const caAngle = (index / total) * Math.PI * 2 * 2 + time; 
+            if (axis === 0) {
+              t.x = Math.cos(caAngle) * radius;
+              t.y = Math.sin(caAngle) * radius;
+              t.rz = caAngle * deg + 90;
+            } else {
+              t.z = Math.cos(caAngle) * radius;
+              t.y = Math.sin(caAngle) * radius;
+              t.rx = caAngle * deg;
+            }
+            break;
+          }
+          case 'iso-cube-surface': {
+            const face = index % 6;
+            if (face < 2) { t.x = Math.sin(angle+time)*radius; t.y = Math.cos(angle+time)*radius; t.z = radius; }
+            else if (face < 4) { t.x = radius; t.y = Math.sin(angle+time)*radius; t.z = Math.cos(angle+time)*radius; t.ry = 90; }
+            else { t.x = Math.sin(angle+time)*radius; t.y = radius; t.z = Math.cos(angle+time)*radius; t.rx = 90; }
+            break;
+          }
+          case 'depth-tunnel': {
+            const tZ = (index * 50 + rotation * 5) % 2000 - 1000;
+            const tR = radius * 0.5;
+            const tA = index * 0.5; 
+            t.x = Math.cos(tA) * tR;
+            t.y = Math.sin(tA) * tR;
+            t.z = tZ;
+            t.rz = tA * deg + 90;
+            break;
+          }
+          case 'z-wave': {
+            t.x = (index - total/2) * (fontSize * 0.8);
+            t.z = Math.sin(index * 0.1 + time) * radius;
+            t.y = Math.cos(index * 0.1 + time) * 20;
+            t.ry = Math.cos(index * 0.1 + time) * 45; 
+            break;
+          }
+          case 'z-accordion': {
+            t.x = (index - total/2) * (fontSize * 0.8);
+            const stretch = Math.sin(time) * 100;
+            t.z = (index % 2 === 0 ? 1 : -1) * stretch;
+            t.ry = (index % 2 === 0 ? 45 : -45);
+            break;
+          }
+          case 'infinite-shaft': {
+            t.y = (index * 40 + rotation * 5) % 1000 - 500;
+            t.x = Math.cos(index) * radius;
+            t.z = Math.sin(index) * radius;
+            t.ry = index * deg - 90; 
+            break;
+          }
+          case 'camera-flyover': {
+            t.x = (index % 10 - 5) * 100;
+            t.z = (Math.floor(index / 10) * 100 + rotation * 10) % 2000 - 1000;
+            t.rx = -90; 
+            break;
+          }
+          case 'cube-volume': {
+            const seeds = [Math.sin(index), Math.cos(index), Math.tan(index)];
+            t.x = seeds[0] * radius;
+            t.y = seeds[1] * radius;
+            t.z = seeds[2] * radius;
+            const tempX = t.x * Math.cos(time) - t.z * Math.sin(time);
+            t.z = t.x * Math.sin(time) + t.z * Math.cos(time);
+            t.x = tempX;
+            break;
+          }
+          case 'sphere-layers': {
+            const sLayers = 5;
+            const sLayer = index % sLayers;
+            const sRadius = (sLayer + 1) * (radius / sLayers);
+            const sPhi = Math.acos(-1 + (2 * (index/sLayers)) / (total/sLayers));
+            const sTheta = Math.sqrt((total/sLayers) * Math.PI) * sPhi + time * (sLayer % 2 ? 1 : -1);
+            t.x = sRadius * Math.cos(sTheta) * Math.sin(sPhi);
+            t.y = sRadius * Math.sin(sTheta) * Math.sin(sPhi);
+            t.z = sRadius * Math.cos(sPhi);
+            t.ry = sTheta * deg;
+            t.rx = sPhi * deg - 90;
+            break;
+          }
+          case 'thick-torus': {
+            const tubeR = 40;
+            const majorR = radius;
+            const torA = angle + time;
+            const tubeA = angle * 10;
+            t.x = (majorR + tubeR * Math.cos(tubeA)) * Math.cos(torA);
+            t.y = (majorR + tubeR * Math.cos(tubeA)) * Math.sin(torA);
+            t.z = tubeR * Math.sin(tubeA);
+            t.rz = torA * deg + 90;
+            t.rx = tubeA * deg;
+            break;
+          }
+          case 'pyramid-solid': {
+            const pyrH = radius * 2;
+            const levels = 10;
+            const level = Math.floor(index / (total/levels));
+            const lvlY = (level / levels) * pyrH - pyrH/2;
+            const lvlR = (1 - level/levels) * radius;
+            const lvlA = angle * levels + time;
+            t.y = lvlY;
+            t.x = Math.cos(lvlA) * lvlR;
+            t.z = Math.sin(lvlA) * lvlR;
+            t.ry = lvlA * deg - 90;
+            break;
+          }
+          case 'cylinder-solid': {
+            const cylRings = 4;
+            const cRing = index % cylRings;
+            const cRad = (cRing + 1) * (radius / cylRings);
+            const cAng = angle + time * (cRing + 1) * 0.5;
+            t.y = (Math.floor(index/cylRings) / (total/cylRings) - 0.5) * radius * 3;
+            t.x = Math.cos(cAng) * cRad;
+            t.z = Math.sin(cAng) * cRad;
+            t.ry = cAng * deg - 90;
+            break;
+          }
+          case 'twisted-tower': {
+            const twH = (index / total - 0.5) * 400;
+            const twA = angle * 2 + time; 
+            let sqX = Math.cos(twA), sqZ = Math.sin(twA);
+            if (Math.abs(sqX) > Math.abs(sqZ)) { sqX = Math.sign(sqX); sqZ = sqZ * (1/Math.abs(Math.cos(twA))); }
+            else { sqZ = Math.sign(sqZ); sqX = sqX * (1/Math.abs(Math.sin(twA))); }
+            t.x = sqX * radius * 0.5;
+            t.z = sqZ * radius * 0.5;
+            t.y = twH;
+            t.ry = twA * deg;
+            break;
+          }
+          case 'colosseum-tiers': {
+            const tiers = 3;
+            const tier = Math.floor(index / (total/tiers));
+            const tRad = radius + (tier * 40);
+            const tAng = angle * tiers + time;
+            t.x = Math.cos(tAng) * tRad;
+            t.z = Math.sin(tAng) * tRad * 0.5; 
+            t.y = tier * 40;
+            t.ry = tAng * deg - 90;
+            break;
+          }
+          case 'spiral-staircase': {
+            const ssA = angle * 4 + time;
+            t.x = Math.cos(ssA) * radius;
+            t.z = Math.sin(ssA) * radius;
+            t.y = (index - total/2) * 10;
+            t.ry = ssA * deg;
+            t.rx = -10;
+            break;
+          }
+          case 'bridge-arch': {
+            t.x = (index - total/2) * 20;
+            const normX = t.x / 300;
+            t.y = -(1 - normX * normX) * 150; 
+            t.z = Math.sin(time + normX * Math.PI) * 20;
+            t.rz = normX * 45; 
+            break;
+          }
+          case 'stadium-seating': {
+            const seatRow = Math.floor(index / 20);
+            const seatCol = index % 20;
+            const sAng = (seatCol / 20) * Math.PI - Math.PI/2;
+            const sRad = radius + seatRow * 30;
+            t.x = Math.sin(sAng) * sRad;
+            t.z = Math.cos(sAng) * sRad - radius; 
+            t.y = -seatRow * 20;
+            t.ry = sAng * deg;
+            t.rx = -15; 
+            break;
+          }
+          case 'trefoil-knot-thick': {
+            const k = angle * 2 + time;
+            const rK = radius * 0.6;
+            t.x = (Math.sin(k) + 2 * Math.sin(2 * k)) * rK;
+            t.y = (Math.cos(k) - 2 * Math.cos(2 * k)) * rK;
+            t.z = -Math.sin(3 * k) * rK;
+            t.rx = time * deg; t.ry = time * deg;
+            break;
+          }
+          case 'super-toroid': {
+            const stT = angle + time;
+            const stP = index * 0.5; 
+            const R = radius, r = radius * 0.3;
+            const cT = Math.cos(stT), sT = Math.sin(stT);
+            t.x = (R + r * Math.cos(stP)) * Math.sign(cT) * Math.pow(Math.abs(cT), 0.5);
+            t.y = (R + r * Math.cos(stP)) * Math.sign(sT) * Math.pow(Math.abs(sT), 0.5);
+            t.z = r * Math.sin(stP);
+            break;
+          }
+          case 'hyperboloid': {
+            const hA = angle + time;
+            const hH = (index/total - 0.5) * 2;
+            const hR = radius * Math.sqrt(1 + hH*hH);
+            t.x = hR * Math.cos(hA);
+            t.z = hR * Math.sin(hA);
+            t.y = hH * 200;
+            t.ry = hA * deg - 90;
+            t.rx = Math.atan(hH) * deg;
+            break;
+          }
+          case 'helicoid-ramp': {
+            const heA = angle * 3 + time;
+            const heR = (index % 10) * (radius/10); 
+            t.x = heR * Math.cos(heA);
+            t.z = heR * Math.sin(heA);
+            t.y = (angle) * 50 - 200;
+            t.ry = heA * deg;
+            t.rx = -90; 
+            break;
+          }
+          case 'klein-loop': {
+            const u = angle + time;
+            const v = (index % 10) * 0.5; 
+            t.x = Math.cos(u) * (radius + Math.cos(u/2) * v);
+            t.y = Math.sin(u) * (radius + Math.cos(u/2) * v);
+            t.z = Math.sin(u/2) * v + Math.sin(u * 2) * 50; 
+            break;
+          }
+          case 'asteroid-belt': {
+            const asA = angle + time;
+            const asR = radius + (Math.sin(index * 13.37) - 0.5) * 50; 
+            t.x = Math.cos(asA) * asR;
+            t.z = Math.sin(asA) * asR;
+            t.y = (Math.cos(index * 7.13) - 0.5) * 40; 
+            t.ry = asA * deg - 90;
+            t.rx = Math.sin(index * 11.11) * 360; 
+            break;
+          }
+          case 'voxel-cloud': {
+            const voxS = 40;
+            t.x = Math.round((Math.sin(index)*radius)/voxS)*voxS;
+            t.y = Math.round((Math.cos(index)*radius)/voxS)*voxS;
+            t.z = Math.round((Math.sin(index*2)*radius)/voxS)*voxS;
+            const vx = t.x * Math.cos(time) - t.z * Math.sin(time);
+            t.z = t.x * Math.sin(time) + t.z * Math.cos(time);
+            t.x = vx;
+            break;
+          }
+          case 'matrix-rain-3d': {
+            const col = index % 10;
+            t.x = (col - 5) * 40;
+            t.z = (Math.floor(index/10) % 5) * 40; 
+            t.y = (Math.floor(index/50) * 40 + rotation * 20) % 1000 - 500;
+            break;
+          }
+          case 'explosion-freeze': {
+            const expT = (Math.sin(time) + 1) * 2; 
+            const dirX = Math.sin(index) * radius;
+            const dirY = Math.cos(index) * radius;
+            const dirZ = Math.sin(index * 2) * radius;
+            t.x = dirX * expT;
+            t.y = dirY * expT;
+            t.z = dirZ * expT;
+            t.rx = time * 100;
+            break;
+          }
+          case 'gravity-well': {
+            const gwR = (index / total) * radius * 2; 
+            const gwA = angle * 5 + time * (5 - (index/total)*4); 
+            t.x = Math.cos(gwA) * gwR;
+            t.z = Math.sin(gwA) * gwR;
+            t.y = -200 / (gwR/50 + 0.1); 
+            t.ry = gwA * deg - 90;
+            t.rx = 45; 
+            break;
+          }
+          default: {
+            // Default helix
+            t.x = Math.cos(angle + time) * radius;
+            t.z = Math.sin(angle + time) * radius;
+            t.y = (index - total/2) * 10;
+            t.ry = (angle + time) * deg - 90;
+          }
+        }
+        return `translate3d(${t.x}px, ${t.y}px, ${t.z}px) rotateX(${t.rx}deg) rotateY(${t.ry}deg) rotateZ(${t.rz}deg)`;
+      }, [rotation, presetId, fontSize, radius]);
+      
+      return (
+        <div className="preset-card kinetic3d-card" ref={containerRef}>
+          <div className="preset-header">
+            <div className="preset-name-row">
+              <span className="preset-name">{presetName}</span>
+              <StarIcon active={starred} onClick={() => setStarred(!starred)} />
+            </div>
+            <div className="preset-style-controls">
+              <div className="slider-control">
+                <div className="slider-header">
+                  <span className="slider-label">SIZE</span>
+                  <span className="slider-value">{fontSize}px</span>
+                </div>
+                <input 
+                  type="range"
+                  className="slider-input"
+                  min="12"
+                  max="48"
+                  step="2"
+                  value={fontSize}
+                  onChange={(e) => setFontSize(parseInt(e.target.value))}
+                />
+              </div>
+            </div>
+          </div>
+          
+          <div 
+            className="animation-display kinetic3d-display"
+            style={{
+              backgroundColor: bgColor,
+              perspective: '1000px',
+              minHeight: '500px',
+              position: 'relative',
+              overflow: 'hidden'
+            }}
+          >
+            <div style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transformStyle: 'preserve-3d',
+              transform: `translate(-50%, -50%) rotateX(${tiltX}deg) rotateY(${tiltY}deg)`
+            }}>
+              {characters.map((char, i) => (
+                <div key={i} style={{
+                  position: 'absolute',
+                  transformStyle: 'preserve-3d',
+                  transform: getTransform(i, characters.length),
+                  color: textColor,
+                  fontSize: `${fontSize}px`,
+                  fontWeight: 700,
+                  fontFamily: 'Inter, system-ui, sans-serif',
+                  whiteSpace: 'pre',
+                  textAlign: 'center',
+                  lineHeight: 1,
+                  marginTop: `-${fontSize/2}px`,
+                  marginLeft: `-${fontSize/2}px`,
+                  width: `${fontSize}px`,
+                  height: `${fontSize}px`
+                }}>
+                  {char}
+                </div>
+              ))}
+            </div>
+          </div>
+          
+          <div className="preset-footer">
+            <div className="preset-text-control">
+              <label className="preset-text-label">DISPLAY TEXT</label>
+              <input
+                type="text"
+                className="preset-text-input"
+                value={displayText}
+                onChange={(e) => setDisplayText(e.target.value)}
+              />
+            </div>
+            
+            <div className="preset-controls">
+              <div className="slider-control">
+                <div className="slider-header">
+                  <span className="slider-label">Speed</span>
+                  <span className="slider-value">{speed.toFixed(1)}x</span>
+                </div>
+                <input 
+                  type="range"
+                  className="slider-input"
+                  min="0.1"
+                  max="2"
+                  step="0.1"
+                  value={speed}
+                  onChange={(e) => setSpeed(parseFloat(e.target.value))}
+                />
+              </div>
+              <div className="slider-control">
+                <div className="slider-header">
+                  <span className="slider-label">Radius</span>
+                  <span className="slider-value">{radius}px</span>
+                </div>
+                <input 
+                  type="range"
+                  className="slider-input"
+                  min="50"
+                  max="300"
+                  step="10"
+                  value={radius}
+                  onChange={(e) => setRadius(parseInt(e.target.value))}
+                />
+              </div>
+              <div className="slider-control">
+                <div className="slider-header">
+                  <span className="slider-label">Density</span>
+                  <span className="slider-value">{copies}</span>
+                </div>
+                <input 
+                  type="range"
+                  className="slider-input"
+                  min="4"
+                  max="32"
+                  step="4"
+                  value={copies}
+                  onChange={(e) => setCopies(parseInt(e.target.value))}
+                />
+              </div>
+              <div className="slider-control">
+                <div className="slider-header">
+                  <span className="slider-label">Tilt X</span>
+                  <span className="slider-value">{tiltX}°</span>
+                </div>
+                <input 
+                  type="range"
+                  className="slider-input"
+                  min="-90"
+                  max="90"
+                  step="5"
+                  value={tiltX}
+                  onChange={(e) => setTiltX(parseInt(e.target.value))}
+                />
+              </div>
+              <div className="slider-control">
+                <div className="slider-header">
+                  <span className="slider-label">Tilt Y</span>
+                  <span className="slider-value">{tiltY}°</span>
+                </div>
+                <input 
+                  type="range"
+                  className="slider-input"
+                  min="-90"
+                  max="90"
+                  step="5"
+                  value={tiltY}
+                  onChange={(e) => setTiltY(parseInt(e.target.value))}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+    
+    // Main App
+    function App() {
+      const [activeTab, setActiveTab] = useState('loop');
+      const [isDark, setIsDark] = useState(true);
+      
+      return (
+        <div className={isDark ? '' : 'light-theme'}>
+          <nav className="nav">
+            <div className="nav-left">
+              <div className="nav-logo">
+                <GlitchStaticLogo text="Yaniv Orion" isDark={isDark} />
+                <span className="logo-divider">|</span>
+                <span className="nav-title">Text Animation Presets</span>
+              </div>
+              <div className="nav-tabs">
+                <button 
+                  className={`nav-tab ${activeTab === 'loop' ? 'active' : ''}`} 
+                  onClick={() => setActiveTab('loop')}
+                >
+                  Loop
+                </button>
+                <button 
+                  className={`nav-tab ${activeTab === 'entrance' ? 'active' : ''}`} 
+                  onClick={() => setActiveTab('entrance')}
+                >
+                  Entrance
+                </button>
+                <button 
+                  className={`nav-tab ${activeTab === 'scroll' ? 'active' : ''}`} 
+                  onClick={() => setActiveTab('scroll')}
+                >
+                  Scroll
+                </button>
+                <button 
+                  className={`nav-tab ${activeTab === 'hover' ? 'active' : ''}`} 
+                  onClick={() => setActiveTab('hover')}
+                >
+                  Hover
+                </button>
+                <button 
+                  className={`nav-tab ${activeTab === 'generative' ? 'active' : ''}`} 
+                  onClick={() => setActiveTab('generative')}
+                >
+                  Generative
+                </button>
+                <button 
+                  className={`nav-tab ${activeTab === 'kinetic3d' ? 'active' : ''}`} 
+                  onClick={() => setActiveTab('kinetic3d')}
+                >
+                  3D Kinetic
+                </button>
+              </div>
+            </div>
+            
+            <button 
+              className="theme-toggle" 
+              onClick={() => setIsDark(!isDark)}
+              title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+            >
+              {isDark ? <SunIcon color="rgba(245,240,232,0.5)" /> : <MoonIcon color="rgba(13,15,13,0.5)" />}
+            </button>
+          </nav>
+          
+          <main className="main">
+            {activeTab === 'loop' && LOOP_PRESETS.map((preset, i) => (
+              <LoopCard 
+                key={preset} 
+                presetName={preset} 
+                index={i} 
+                isDark={isDark}
+                totalCount={LOOP_PRESETS.length}
+              />
+            ))}
+            
+            {activeTab === 'entrance' && ENTRANCE_PRESETS.map((preset, i) => (
+              <EntranceCard 
+                key={preset} 
+                presetName={preset} 
+                index={i} 
+                isDark={isDark}
+                totalCount={ENTRANCE_PRESETS.length}
+              />
+            ))}
+            
+            {activeTab === 'scroll' && (
+              <>
+                <div className="scroll-hero">
+                  <h1 className="scroll-hero-title">Scroll Animations</h1>
+                  <div className="scroll-indicator">
+                    <span className="scroll-indicator-text">Scroll Down</span>
+                    <svg className="scroll-indicator-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M12 5v14M19 12l-7 7-7-7"/>
+                    </svg>
+                  </div>
+                </div>
+                {SCROLL_PRESETS.map((preset, i) => (
+                  <ScrollCard 
+                    key={preset} 
+                    presetName={preset} 
+                    index={i} 
+                    isDark={isDark}
+                    totalCount={SCROLL_PRESETS.length}
+                  />
+                ))}
+              </>
+            )}
+            
+            {activeTab === 'hover' && HOVER_PRESETS.map((preset, i) => (
+              preset === 'Variable Font' ? (
+                <VariableFontCard 
+                  key={preset} 
+                  isDark={isDark}
+                />
+              ) : (
+                <HoverCard 
+                  key={preset} 
+                  presetName={preset} 
+                  index={i} 
+                  isDark={isDark}
+                  totalCount={HOVER_PRESETS.length}
+                />
+              )
+            ))}
+            
+            {activeTab === 'generative' && GENERATIVE_PRESETS.map((preset, i) => (
+              <GenerativeCard 
+                key={preset} 
+                presetName={preset} 
+                index={i} 
+                isDark={isDark}
+                totalCount={GENERATIVE_PRESETS.length}
+              />
+            ))}
+            
+            {activeTab === 'kinetic3d' && KINETIC_3D_PRESETS.map((preset, i) => (
+              <Kinetic3DCard 
+                key={preset} 
+                presetName={preset} 
+                index={i} 
+                isDark={isDark}
+                totalCount={KINETIC_3D_PRESETS.length}
+              />
+            ))}
+          </main>
+        </div>
+      );
+    }
+    
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
