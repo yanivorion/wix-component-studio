@@ -511,9 +511,13 @@ class ComponentErrorBoundary extends React.Component {
  * Browses the built-in component library. The index carries metadata only;
  * a category's source is fetched the first time that category is opened.
  */
-function BuiltInLibraryView({ categories, categoryNames, theme, loadingCategory, onPrefetch, onPick }) {
+function BuiltInLibraryView({ categories, categoryNames, theme, loadingCategory, onPrefetch, onPick, businessMap }) {
   const [openCategory, setOpenCategory] = useState(null);
   const [query, setQuery] = useState('');
+  const [business, setBusiness] = useState('');
+
+  const NEED_LABEL = { 3: 'Essential', 2: 'Recommended', 1: 'Situational', 0: 'Rarely needed' };
+  const NEED_COLOR = { 3: '#A33B21', 2: '#B0722C', 1: theme.text3, 0: theme.text3 };
 
   const all = useMemo(
     () => categoryNames.flatMap(c => Object.values(categories[c] || {}).flat()),
@@ -528,6 +532,20 @@ function BuiltInLibraryView({ categories, categoryNames, theme, loadingCategory,
         .toLowerCase().includes(q)
     );
   }, [all, q]);
+
+  // when a business is selected the library regroups by how much that sector needs each role
+  const ranked = useMemo(() => {
+    if (!business || !businessMap) return null;
+    const biz = businessMap.businesses[business];
+    if (!biz) return null;
+    const buckets = { 3: [], 2: [], 1: [], 0: [] };
+    all.forEach(c => {
+      const role = businessMap.componentRoles[c.type];
+      const need = role ? (biz.needs[role] || 0) : 0;
+      buckets[need].push({ comp: c, role });
+    });
+    return { biz, buckets };
+  }, [business, businessMap, all]);
 
   const toggle = (cat) => {
     const next = openCategory === cat ? null : cat;
@@ -582,7 +600,63 @@ function BuiltInLibraryView({ categories, categoryNames, theme, loadingCategory,
         }}
       />
 
-      {matches ? (
+      {businessMap ? (
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap', marginBottom: '16px' }}>
+          <label htmlFor="library-business" style={{ fontSize: '13px', color: theme.text3 }}>
+            Building for
+          </label>
+          <select
+            id="library-business"
+            value={business}
+            onChange={(e) => setBusiness(e.target.value)}
+            style={{
+              font: 'inherit', fontSize: '13.5px', padding: '8px 10px', borderRadius: '6px',
+              color: theme.text1, backgroundColor: theme.base2,
+              border: `1px solid ${business ? '#A33B21' : theme.border}`
+            }}
+          >
+            <option value="">Any business type</option>
+            {Object.keys(businessMap.businesses).map(k => (
+              <option key={k} value={k}>{businessMap.businesses[k].label}</option>
+            ))}
+          </select>
+          {ranked && (
+            <span style={{ fontSize: '12.5px', color: theme.text3 }}>
+              {ranked.biz.goal} · CTA: {ranked.biz.cta}
+            </span>
+          )}
+        </div>
+      ) : null}
+
+      {(ranked && !matches) ? (
+        [3, 2, 1, 0].map(need => {
+          const items = ranked.buckets[need];
+          if (!items.length) return null;
+          const roleNames = {};
+          items.forEach(x => { roleNames[x.role] = (roleNames[x.role] || 0) + 1; });
+          return (
+            <details key={need} open={need >= 2} style={{ borderBottom: `1px solid ${theme.border}` }}>
+              <summary style={{
+                listStyle: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center',
+                gap: '10px', padding: '14px 2px', color: theme.text1
+              }}>
+                <span style={{
+                  fontSize: '10px', letterSpacing: '0.07em', textTransform: 'uppercase',
+                  padding: '3px 8px', borderRadius: '3px', whiteSpace: 'nowrap',
+                  backgroundColor: need === 3 ? NEED_COLOR[3] : 'transparent',
+                  color: need === 3 ? '#FFF' : NEED_COLOR[need],
+                  boxShadow: need === 2 ? `inset 0 0 0 1px ${NEED_COLOR[2]}` : 'none'
+                }}>{NEED_LABEL[need]}</span>
+                <span style={{ flex: 1, fontSize: '13px', color: theme.text3 }}>
+                  {Object.keys(roleNames).map(r => businessMap.roles[r]).join(' · ')}
+                </span>
+                <span style={{ fontSize: '12px', color: theme.text3 }}>{items.length}</span>
+              </summary>
+              <div style={{ padding: '4px 0 18px' }}>{grid(items.map(x => x.comp))}</div>
+            </details>
+          );
+        })
+      ) : matches ? (
         matches.length === 0
           ? <p style={{ color: theme.text3, fontSize: '14px', padding: '40px 0', textAlign: 'center' }}>
               No components match “{query}”
@@ -636,7 +710,7 @@ function AppContent() {
   const [dragOverTabId, setDragOverTabId] = useState(null);
   const {builtInComponents, componentCategories, categoryNames: libraryCategoryNames,
          isLoading: libraryLoading, loadingCategory, loadCategoryCode,
-         getComponentCode} = useComponentLibrary();
+         getComponentCode, businessMap} = useComponentLibrary();
   const [componentThumbnails, setComponentThumbnails] = useState({});
 
   const [activeTabId, setActiveTabId] = useState(1);
@@ -2733,6 +2807,7 @@ function Component({ config = {} }) {
                       loadingCategory={loadingCategory}
                       onPrefetch={loadCategoryCode}
                       onPick={handleLoadFromBuiltIn}
+                      businessMap={businessMap}
                     />
                   )
                 ) : savedComponents.length === 0 ? (

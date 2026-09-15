@@ -22,6 +22,24 @@ export function useComponentLibrary() {
   // category slug -> { id: code }, cached for the session
   const codeCache = useRef({});
 
+  // business-type -> section-role need map, used to rank the library for a sector
+  const [businessMap, setBusinessMap] = useState(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch(`${BASE}/business-map.json`);
+        if (!res.ok) throw new Error(`business-map.json: ${res.status}`);
+        const map = await res.json();
+        if (!cancelled) setBusinessMap(map);
+      } catch (err) {
+        console.error('Failed to load business map:', err);   // library still works without it
+      }
+    })();
+    return () => { cancelled = true; };
+  }, []);
+
   useEffect(() => {
     let cancelled = false;
 
@@ -97,6 +115,7 @@ export function useComponentLibrary() {
   }, [loadCategoryCode]);
 
   return {
+    businessMap,
     builtInComponents,
     componentCategories,
     categoryNames,
