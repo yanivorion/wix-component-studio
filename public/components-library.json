@@ -432,18 +432,6 @@
   "file": "library/cards-tiles.json"
  },
  {
-  "id": "loading-skeletoncards",
-  "name": "SkeletonCards",
-  "displayName": "Skeleton Loading",
-  "description": "Loading skeleton cards with animated shimmer effect",
-  "category": "Cards & Tiles",
-  "subcategory": "Loading",
-  "type": "Loading.SkeletonCards",
-  "props": 14,
-  "thumbnail": null,
-  "file": "library/cards-tiles.json"
- },
- {
   "id": "page-aboutfloatingcards",
   "name": "AboutFloatingCards",
   "displayName": "About Page - Floating Cards",
@@ -3540,6 +3528,42 @@
   "file": "library/heroes-ctas-banners.json"
  },
  {
+  "id": "feed-infinitescrollpreloader",
+  "name": "InfiniteScrollPreloader",
+  "displayName": "Infinite Scroll Preloader",
+  "description": "Infinite scroll feed with intelligent preloading, lazy loading, scroll depth analytics, and memory-efficient off-screen cleanup",
+  "category": "Loaders & Skeletons",
+  "subcategory": "Feed",
+  "type": "Feed.InfiniteScrollPreloader",
+  "props": 24,
+  "thumbnail": null,
+  "file": "library/loaders-skeletons.json"
+ },
+ {
+  "id": "loading-entrypreloader",
+  "name": "EntryPreloader",
+  "displayName": "Entry Preloader",
+  "description": "Counting entry preloader with a wordmark and a wipe reveal. A craft signal for studio and portfolio sites — skipped entirely under reduced motion.",
+  "category": "Loaders & Skeletons",
+  "subcategory": "Loading",
+  "type": "Loading.EntryPreloader",
+  "props": 15,
+  "thumbnail": null,
+  "file": "library/loaders-skeletons.json"
+ },
+ {
+  "id": "loading-skeletoncards",
+  "name": "SkeletonCards",
+  "displayName": "Skeleton Loading",
+  "description": "Loading skeleton cards with animated shimmer effect",
+  "category": "Loaders & Skeletons",
+  "subcategory": "Loading",
+  "type": "Loading.SkeletonCards",
+  "props": 14,
+  "thumbnail": null,
+  "file": "library/loaders-skeletons.json"
+ },
+ {
   "id": "effects-mousefollowingimagereveal",
   "name": "MouseFollowingImageReveal",
   "displayName": "Mouse Following Image Reveal",
@@ -4224,6 +4248,18 @@
   "file": "library/page-sections-layout.json"
  },
  {
+  "id": "location-maphours",
+  "name": "MapHours",
+  "displayName": "Map, Hours & Directions",
+  "description": "Address, opening hours and an embedded map in one block. The section local businesses close on.",
+  "category": "Page Sections & Layout",
+  "subcategory": "Location",
+  "type": "Location.MapHours",
+  "props": 23,
+  "thumbnail": null,
+  "file": "library/page-sections-layout.json"
+ },
+ {
   "id": "navigation0",
   "name": "Navigation0",
   "displayName": "Award-Winning Scroll Indicator",
@@ -4632,6 +4668,18 @@
   "file": "library/page-sections-layout.json"
  },
  {
+  "id": "team-profilegrid",
+  "name": "ProfileGrid",
+  "displayName": "Team & Practitioner Grid",
+  "description": "Named practitioners with roles and credentials. The trust section clinics, salons, firms and schools are judged on.",
+  "category": "Page Sections & Layout",
+  "subcategory": "Team",
+  "type": "Team.ProfileGrid",
+  "props": 17,
+  "thumbnail": null,
+  "file": "library/page-sections-layout.json"
+ },
+ {
   "id": "animation-rollingtextreplica",
   "name": "RollingTextReplica",
   "displayName": "Rolling Text Replica",
@@ -4664,18 +4712,6 @@
   "subcategory": "Experience",
   "type": "Experience.ParallaxDepth",
   "props": 21,
-  "thumbnail": null,
-  "file": "library/scroll-motion-experiences.json"
- },
- {
-  "id": "feed-infinitescrollpreloader",
-  "name": "InfiniteScrollPreloader",
-  "displayName": "Infinite Scroll Preloader",
-  "description": "Infinite scroll feed with intelligent preloading, lazy loading, scroll depth analytics, and memory-efficient off-screen cleanup",
-  "category": "Scroll & Motion Experiences",
-  "subcategory": "Feed",
-  "type": "Feed.InfiniteScrollPreloader",
-  "props": 24,
   "thumbnail": null,
   "file": "library/scroll-motion-experiences.json"
  },
@@ -4762,6 +4798,18 @@
   "props": 3,
   "thumbnail": null,
   "file": "library/scroll-motion-experiences.json"
+ },
+ {
+  "id": "social-reviewrail",
+  "name": "ReviewRail",
+  "displayName": "Review Rail",
+  "description": "Continuous marquee of customer reviews with star ratings and an aggregate score. Pauses on hover, drag to scrub.",
+  "category": "Social Proof & Feeds",
+  "subcategory": "Social",
+  "type": "Social.ReviewRail",
+  "props": 19,
+  "thumbnail": null,
+  "file": "library/social-proof-feeds.json"
  },
  {
   "id": "social-storyviewer",
