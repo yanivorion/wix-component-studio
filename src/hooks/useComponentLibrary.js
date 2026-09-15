@@ -16,8 +16,13 @@ export function useComponentLibrary() {
   useEffect(() => {
     const loadComponents = async () => {
       try {
-        // Load from public folder
-        const response = await fetch('/components-library.json');
+        // Load from the public folder. PUBLIC_URL is required: the app is served
+        // from /wix-component-studio/ on GitHub Pages, so a root-absolute path
+        // would resolve against the domain root and 404. It is '' in dev.
+        const response = await fetch(`${process.env.PUBLIC_URL}/components-library.json`);
+        if (!response.ok) {
+          throw new Error(`components-library.json: ${response.status} ${response.statusText}`);
+        }
         const data = await response.json();
         
         // Organize into categories
