@@ -716,7 +716,9 @@ function AppContent() {
   const [activeTabId, setActiveTabId] = useState(1);
   const [nextTabId, setNextTabId] = useState(2);
   const [canvasSize, setCanvasSize] = useState({ width: 1280, height: 'auto' });
-  const [showEditor, setShowEditor] = useState(true);
+  // Closed on load: the studio opens on the canvas, not on an empty editor.
+  // Reopen with the toolbar button or ⌘E.
+  const [showEditor, setShowEditor] = useState(false);
   const [error, setError] = useState(null);
   const [viewportMode, setViewportMode] = useState('desktop');
   const [zoomLevel, setZoomLevel] = useState(100);
