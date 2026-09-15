@@ -4800,6 +4800,18 @@
   "file": "library/scroll-motion-experiences.json"
  },
  {
+  "id": "social-instagramgrid",
+  "name": "InstagramGrid",
+  "displayName": "Instagram / UGC Grid",
+  "description": "Instagram-style social/UGC grid with a follow header, hover captions, engagement counts and optional shoppable tags. Takes image URLs directly, so it needs no API key or feed plugin.",
+  "category": "Social Proof & Feeds",
+  "subcategory": "Social",
+  "type": "Social.InstagramGrid",
+  "props": 23,
+  "thumbnail": null,
+  "file": "library/social-proof-feeds.json"
+ },
+ {
   "id": "social-reviewrail",
   "name": "ReviewRail",
   "displayName": "Review Rail",
