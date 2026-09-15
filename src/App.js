@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import './App.css';
 import { useComponentLibrary } from './hooks/useComponentLibrary';
 import { ThemeProvider, useTheme } from './ThemeSwitcher';
@@ -506,6 +506,123 @@ class ComponentErrorBoundary extends React.Component {
   }
 }
 
+
+/**
+ * Browses the built-in component library. The index carries metadata only;
+ * a category's source is fetched the first time that category is opened.
+ */
+function BuiltInLibraryView({ categories, categoryNames, theme, loadingCategory, onPrefetch, onPick }) {
+  const [openCategory, setOpenCategory] = useState(null);
+  const [query, setQuery] = useState('');
+
+  const all = useMemo(
+    () => categoryNames.flatMap(c => Object.values(categories[c] || {}).flat()),
+    [categories, categoryNames]
+  );
+
+  const q = query.trim().toLowerCase();
+  const matches = useMemo(() => {
+    if (!q) return null;
+    return all.filter(c =>
+      `${c.displayName} ${c.name} ${c.type} ${c.description} ${c.category} ${c.subcategory}`
+        .toLowerCase().includes(q)
+    );
+  }, [all, q]);
+
+  const toggle = (cat) => {
+    const next = openCategory === cat ? null : cat;
+    setOpenCategory(next);
+    if (next) {
+      const first = Object.values(categories[next] || {}).flat()[0];
+      if (first && onPrefetch) onPrefetch(first.file);
+    }
+  };
+
+  const card = (c) => (
+    <button
+      key={c.id}
+      onClick={() => onPick(c)}
+      title={c.description || c.type}
+      style={{
+        textAlign: 'left', cursor: 'pointer', padding: '12px 14px',
+        backgroundColor: theme.base2, border: `1px solid ${theme.border}`,
+        borderRadius: '8px', display: 'flex', flexDirection: 'column', gap: '4px',
+        transition: 'all 150ms ease-out', font: 'inherit'
+      }}
+      onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = theme.shade1; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+      onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = theme.base2; e.currentTarget.style.transform = 'translateY(0)'; }}
+    >
+      <span style={{ fontSize: '13px', fontWeight: 500, color: theme.text1 }}>{c.displayName}</span>
+      <span style={{ fontSize: '11px', color: theme.text3, fontFamily: 'monospace' }}>{c.type}</span>
+      {c.props > 0 && (
+        <span style={{ fontSize: '11px', color: theme.text3 }}>{c.props} props</span>
+      )}
+    </button>
+  );
+
+  const grid = (items) => (
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '12px' }}>
+      {items.map(card)}
+    </div>
+  );
+
+  return (
+    <div>
+      <input
+        id="builtin-library-search"
+        type="search"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        placeholder={`Search ${all.length} components…`}
+        style={{
+          width: '100%', boxSizing: 'border-box', marginBottom: '16px',
+          padding: '10px 12px', fontSize: '14px', font: 'inherit',
+          color: theme.text1, backgroundColor: theme.base2,
+          border: `1px solid ${theme.border}`, borderRadius: '8px'
+        }}
+      />
+
+      {matches ? (
+        matches.length === 0
+          ? <p style={{ color: theme.text3, fontSize: '14px', padding: '40px 0', textAlign: 'center' }}>
+              No components match “{query}”
+            </p>
+          : <>
+              <p style={{ color: theme.text3, fontSize: '12px', marginBottom: '12px' }}>
+                {matches.length} result{matches.length !== 1 ? 's' : ''}
+              </p>
+              {grid(matches)}
+            </>
+      ) : (
+        categoryNames.map(cat => {
+          const items = Object.values(categories[cat] || {}).flat();
+          const isOpen = openCategory === cat;
+          const busy = isOpen && loadingCategory && items[0] && loadingCategory === items[0].file;
+          return (
+            <div key={cat} style={{ borderBottom: `1px solid ${theme.border}` }}>
+              <button
+                onClick={() => toggle(cat)}
+                style={{
+                  width: '100%', display: 'flex', alignItems: 'center', gap: '10px',
+                  padding: '14px 2px', background: 'none', border: 'none', cursor: 'pointer',
+                  color: theme.text1, font: 'inherit', textAlign: 'left'
+                }}
+              >
+                <span style={{ color: theme.text3, fontSize: '12px', width: '12px' }}>{isOpen ? '\u2212' : '+'}</span>
+                <span style={{ flex: 1, fontSize: '14px', fontWeight: 500 }}>{cat}</span>
+                <span style={{ fontSize: '12px', color: theme.text3 }}>
+                  {busy ? 'loading\u2026' : items.length}
+                </span>
+              </button>
+              {isOpen && <div style={{ padding: '4px 0 18px' }}>{grid(items)}</div>}
+            </div>
+          );
+        })
+      )}
+    </div>
+  );
+}
+
 function AppContent() {
   const { theme } = useTheme();
   
@@ -517,7 +634,9 @@ function AppContent() {
   const [deleteTargetId, setDeleteTargetId] = useState(null);
   const [draggedTabId, setDraggedTabId] = useState(null);
   const [dragOverTabId, setDragOverTabId] = useState(null);
-  const {builtInComponents, componentCategories, isLoading: libraryLoading} = useComponentLibrary();
+  const {builtInComponents, componentCategories, categoryNames: libraryCategoryNames,
+         isLoading: libraryLoading, loadingCategory, loadCategoryCode,
+         getComponentCode} = useComponentLibrary();
   const [componentThumbnails, setComponentThumbnails] = useState({});
 
   const [activeTabId, setActiveTabId] = useState(1);
@@ -533,6 +652,7 @@ function AppContent() {
   const [designBrief, setDesignBrief] = useState('');
   
   const [showLibrary, setShowLibrary] = useState(false);
+  const [librarySource, setLibrarySource] = useState('builtin');
   const [history, setHistory] = useState([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
   const [showGrid, setShowGrid] = useState(false);
@@ -923,6 +1043,48 @@ function Component({ config = {} }) {
     setShowLibrary(false);
     showToast(`Loaded: ${component.name}`, 'success');
   }, [tabs, nextTabId, addToHistory, showToast]);
+
+  const handleLoadFromBuiltIn = useCallback(async (component) => {
+    const code = await getComponentCode(component);
+    if (!code) {
+      showToast(`Could not load ${component.displayName}`, 'error');
+      return;
+    }
+
+    let manifest = null;
+    let config = {};
+    try {
+      const match = code.match(/const\s+MANIFEST\s*=\s*({[\s\S]*?});/);
+      if (match) {
+        // eslint-disable-next-line no-eval
+        manifest = eval('(' + match[1] + ')');
+        const data = (manifest.editorElement && manifest.editorElement.data) || {};
+        Object.keys(data).forEach(key => { config[key] = data[key].defaultValue; });
+      }
+    } catch (err) {
+      console.error('Could not parse MANIFEST for', component.id, err);
+    }
+
+    const newTab = {
+      id: nextTabId,
+      name: component.displayName || component.name,
+      code,
+      manifest,
+      config,
+      thumbnail: null,
+      projectName,
+      prompt: '',
+      designBrief: ''
+    };
+
+    const newTabs = [...tabs, newTab];
+    setTabs(newTabs);
+    setActiveTabId(nextTabId);
+    setNextTabId(nextTabId + 1);
+    addToHistory({ tabs: newTabs, activeTabId: nextTabId });
+    setShowLibrary(false);
+    showToast(`Loaded: ${newTab.name}`, 'success');
+  }, [getComponentCode, tabs, nextTabId, projectName, addToHistory, showToast]);
 
   const handleDeleteFromLibrary = useCallback((componentId) => {
     const updatedLibrary = savedComponents.filter(c => c.id !== componentId);
@@ -2499,7 +2661,9 @@ function Component({ config = {} }) {
                   color: theme.text3,
                   margin: 0
                 }}>
-                  {savedComponents.length} saved component{savedComponents.length !== 1 ? 's' : ''}
+                  {librarySource === 'builtin'
+                    ? `${builtInComponents.length} built-in component${builtInComponents.length !== 1 ? 's' : ''} in ${libraryCategoryNames.length} categories`
+                    : `${savedComponents.length} saved component${savedComponents.length !== 1 ? 's' : ''}`}
                 </p>
               </div>
               <button 
@@ -2538,9 +2702,40 @@ function Component({ config = {} }) {
                   letterSpacing: '0.05em',
                   textTransform: 'uppercase',
                   marginBottom: '16px'
-                }}>My Components</h3>
+                }}>{librarySource === 'builtin' ? 'Built-in Library' : 'My Components'}</h3>
+
+                <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
+                  {[['builtin', `Built-in (${builtInComponents.length})`],
+                    ['saved', `Saved (${savedComponents.length})`]].map(([key, label]) => (
+                    <button
+                      key={key}
+                      onClick={() => setLibrarySource(key)}
+                      style={{
+                        padding: '7px 14px', fontSize: '13px', font: 'inherit', cursor: 'pointer',
+                        borderRadius: '6px', border: `1px solid ${theme.border}`,
+                        backgroundColor: librarySource === key ? theme.text1 : 'transparent',
+                        color: librarySource === key ? theme.base1 : theme.text2
+                      }}
+                    >{label}</button>
+                  ))}
+                </div>
                 
-                {savedComponents.length === 0 ? (
+                {librarySource === 'builtin' ? (
+                  libraryLoading ? (
+                    <p style={{ color: theme.text3, fontSize: '14px', padding: '40px 0', textAlign: 'center' }}>
+                      Loading library\u2026
+                    </p>
+                  ) : (
+                    <BuiltInLibraryView
+                      categories={componentCategories}
+                      categoryNames={libraryCategoryNames}
+                      theme={theme}
+                      loadingCategory={loadingCategory}
+                      onPrefetch={loadCategoryCode}
+                      onPick={handleLoadFromBuiltIn}
+                    />
+                  )
+                ) : savedComponents.length === 0 ? (
                   <div style={{
                     padding: '60px 20px',
                     textAlign: 'center',
