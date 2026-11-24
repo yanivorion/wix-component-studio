@@ -1,23 +1,23 @@
 {
   "files": {
     "main.css": "/wix-component-studio/static/css/main.551816ac.css",
-    "main.js": "/wix-component-studio/static/js/main.9963fb5f.js",
+    "main.js": "/wix-component-studio/static/js/main.519e6adf.js",
     "static/js/871.d3f443ef.chunk.js": "/wix-component-studio/static/js/871.d3f443ef.chunk.js",
     "static/css/111.36704eb7.chunk.css": "/wix-component-studio/static/css/111.36704eb7.chunk.css",
-    "static/js/111.d09882c2.chunk.js": "/wix-component-studio/static/js/111.d09882c2.chunk.js",
+    "static/js/111.bf2c8b17.chunk.js": "/wix-component-studio/static/js/111.bf2c8b17.chunk.js",
     "static/js/453.b27533df.chunk.js": "/wix-component-studio/static/js/453.b27533df.chunk.js",
     "static/js/239.efe0af06.chunk.js": "/wix-component-studio/static/js/239.efe0af06.chunk.js",
     "index.html": "/wix-component-studio/index.html",
     "main.551816ac.css.map": "/wix-component-studio/static/css/main.551816ac.css.map",
-    "main.9963fb5f.js.map": "/wix-component-studio/static/js/main.9963fb5f.js.map",
+    "main.519e6adf.js.map": "/wix-component-studio/static/js/main.519e6adf.js.map",
     "871.d3f443ef.chunk.js.map": "/wix-component-studio/static/js/871.d3f443ef.chunk.js.map",
     "111.36704eb7.chunk.css.map": "/wix-component-studio/static/css/111.36704eb7.chunk.css.map",
-    "111.d09882c2.chunk.js.map": "/wix-component-studio/static/js/111.d09882c2.chunk.js.map",
+    "111.bf2c8b17.chunk.js.map": "/wix-component-studio/static/js/111.bf2c8b17.chunk.js.map",
     "453.b27533df.chunk.js.map": "/wix-component-studio/static/js/453.b27533df.chunk.js.map",
     "239.efe0af06.chunk.js.map": "/wix-component-studio/static/js/239.efe0af06.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.551816ac.css",
-    "static/js/main.9963fb5f.js"
+    "static/js/main.519e6adf.js"
   ]
 }

@@ -5724,6 +5724,456 @@
   "file": "library/utilities-calculators.json"
  },
  {
+  "id": "new-hero-cursorreveal",
+  "name": "CursorReveal",
+  "displayName": "Cursor Reveal",
+  "description": "Full-bleed photo hero where the pointer carries a soft, speed-reactive circular lens revealing a second treatment underneath, trailed by smaller echo circles; click floods the reveal outward from the click point. Drifts on a slow lissajous path when idle",
+  "category": "Heroes, CTAs & Banners",
+  "subcategory": "Heroes",
+  "type": "Hero.CursorReveal",
+  "props": 30,
+  "thumbnail": null,
+  "file": "library/new-collection.json",
+  "isNew": true,
+  "collection": "Heroes",
+  "wave": 2
+ },
+ {
+  "id": "new-hero-gridtofullscreen",
+  "name": "GridToFullscreen",
+  "displayName": "Grid To Fullscreen",
+  "description": "Opening hero that starts as an editorial photo collage; one tile performs a shared-element expansion to full-bleed while the others scatter away, and the headline re-sets as a huge masked title. Back to index reverses it, arrows wipe between projects",
+  "category": "Heroes, CTAs & Banners",
+  "subcategory": "Heroes",
+  "type": "Hero.GridToFullscreen",
+  "props": 29,
+  "thumbnail": null,
+  "file": "library/new-collection.json",
+  "isNew": true,
+  "collection": "Heroes",
+  "wave": 2
+ },
+ {
+  "id": "new-hero-splitcurtain",
+  "name": "SplitCurtain",
+  "displayName": "Split Curtain",
+  "description": "Opening hero whose photo splits into panels that part like curtains with an eased stagger, revealing a headline layer behind; the panels then converge into one half of the frame while the headline glides across, so the opening transition resolves into the final split-screen layout",
+  "category": "Heroes, CTAs & Banners",
+  "subcategory": "Heroes",
+  "type": "Hero.SplitCurtain",
+  "props": 32,
+  "thumbnail": null,
+  "file": "library/new-collection.json",
+  "isNew": true,
+  "collection": "Heroes",
+  "wave": 2
+ },
+ {
+  "id": "new-hero-storyreel",
+  "name": "StoryReel",
+  "displayName": "Story Reel",
+  "description": "Stories-style full-bleed hero: segmented progress bars fill per slide, each photo drifts in a slow Ken Burns, titles rise line by line through a mask, and the next image wipes in through an inset clip while scaling down into frame as the outgoing one darkens. Tap sides to skip, press and hold to pause",
+  "category": "Heroes, CTAs & Banners",
+  "subcategory": "Heroes",
+  "type": "Hero.StoryReel",
+  "props": 26,
+  "thumbnail": null,
+  "file": "library/new-collection.json",
+  "isNew": true,
+  "collection": "Heroes",
+  "wave": 2
+ },
+ {
+  "id": "new-hero-wordmorph",
+  "name": "WordMorph",
+  "displayName": "Word Morph",
+  "description": "Type-led hero where one word of the sentence cycles with a masked vertical slide and blur while its slot springs to the new word's measured width, so the line reflows smoothly; a matching photo wipes into an inset rounded frame for every word",
+  "category": "Heroes, CTAs & Banners",
+  "subcategory": "Heroes",
+  "type": "Hero.WordMorph",
+  "props": 28,
+  "thumbnail": null,
+  "file": "library/new-collection.json",
+  "isNew": true,
+  "collection": "Heroes",
+  "wave": 2
+ },
+ {
+  "id": "new-scrub-pinnedhorizontalgallery",
+  "name": "PinnedHorizontalGallery",
+  "displayName": "Pinned Horizontal Gallery",
+  "description": "Vertical scroll drives a pinned horizontal track of large framed photographs and title cards, with inner image parallax, velocity-aware skew that relaxes to rest, captions that slide in as each frame reaches centre, a rolling counter and a hairline progress bar",
+  "category": "Scroll & Motion Experiences",
+  "subcategory": "Scroll Scrub",
+  "type": "Scrub.PinnedHorizontalGallery",
+  "props": 27,
+  "thumbnail": null,
+  "file": "library/new-collection.json",
+  "isNew": true,
+  "collection": "Scroll Scrub",
+  "wave": 2
+ },
+ {
+  "id": "new-scrub-stackedpanels",
+  "name": "StackedPanels",
+  "displayName": "Stacked Panels",
+  "description": "Scroll-scrubbed deck of full-stage photo panels: each new panel slides up over the last while the covered panel recedes into a rounded, dimmed, softly blurred card stack and the title lines rise as their panel arrives",
+  "category": "Scroll & Motion Experiences",
+  "subcategory": "Scroll Scrub",
+  "type": "Scrub.StackedPanels",
+  "props": 41,
+  "thumbnail": null,
+  "file": "library/new-collection.json",
+  "isNew": true,
+  "collection": "Scroll Scrub",
+  "wave": 2
+ },
+ {
+  "id": "new-scrub-stickychapters",
+  "name": "StickyChapters",
+  "displayName": "Sticky Chapters",
+  "description": "Split-screen scroll story: chapter texts scroll past a sticky photo stage that wipes in each new image (inset, circle or diagonal clip) with a scale-down settle, while inactive chapters dim and a ticked progress rail fills",
+  "category": "Scroll & Motion Experiences",
+  "subcategory": "Scroll Scrub",
+  "type": "Scrub.StickyChapters",
+  "props": 35,
+  "thumbnail": null,
+  "file": "library/new-collection.json",
+  "isNew": true,
+  "collection": "Scroll Scrub",
+  "wave": 2
+ },
+ {
+  "id": "new-scrub-textmaskzoom",
+  "name": "TextMaskZoom",
+  "displayName": "Text Mask Zoom",
+  "description": "A giant word filled with a photograph scales up enormously around a chosen point inside one letter until the photo fills the stage, cross-fading seamlessly from masked type to a full-bleed image before the overlay copy rises in",
+  "category": "Scroll & Motion Experiences",
+  "subcategory": "Scroll Scrub",
+  "type": "Scrub.TextMaskZoom",
+  "props": 27,
+  "thumbnail": null,
+  "file": "library/new-collection.json",
+  "isNew": true,
+  "collection": "Scroll Scrub",
+  "wave": 2
+ },
+ {
+  "id": "new-scrub-wordfillparagraph",
+  "name": "WordFillParagraph",
+  "displayName": "Word Fill Paragraph",
+  "description": "A large manifesto paragraph that fills from pale grey to ink word by word as you scroll; bracketed words carry inline photo pills that open into larger rounded images when reached, then settle back as the reading continues, ending on a quiet sign-off",
+  "category": "Scroll & Motion Experiences",
+  "subcategory": "Scroll Scrub",
+  "type": "Scrub.WordFillParagraph",
+  "props": 24,
+  "thumbnail": null,
+  "file": "library/new-collection.json",
+  "isNew": true,
+  "collection": "Scroll Scrub",
+  "wave": 2
+ },
+ {
+  "id": "new-scrub-zoomintogrid",
+  "name": "ZoomIntoGrid",
+  "displayName": "Zoom Into Grid",
+  "description": "Scroll-scrubbed camera push into an editorial photo grid: the centre frame grows to full-bleed while the surrounding photographs fly outward at their own parallax rates, then a huge title rises from a line mask as the image settles",
+  "category": "Scroll & Motion Experiences",
+  "subcategory": "Scroll Scrub",
+  "type": "Scrub.ZoomIntoGrid",
+  "props": 28,
+  "thumbnail": null,
+  "file": "library/new-collection.json",
+  "isNew": true,
+  "collection": "Scroll Scrub",
+  "wave": 2
+ },
+ {
+  "id": "new-reveal-lineriseeditorial",
+  "name": "LineRiseEditorial",
+  "displayName": "Line Rise Editorial",
+  "description": "Editorial feature opener that assembles on reveal: the headline is measured into real rendered lines that rise from behind masks in a stagger, a tall photograph unclips with an inner 1.25 to 1 scale, a rule draws and kicker, byline and lede slide in",
+  "category": "Scroll & Motion Experiences",
+  "subcategory": "Scroll Reveals",
+  "type": "Reveal.LineRiseEditorial",
+  "props": 29,
+  "thumbnail": null,
+  "file": "library/new-collection.json",
+  "isNew": true,
+  "collection": "Scroll Reveals",
+  "wave": 2
+ },
+ {
+  "id": "new-reveal-mosaicassemble",
+  "name": "MosaicAssemble",
+  "displayName": "Mosaic Assemble",
+  "description": "Asymmetric bento photo mosaic that assembles on reveal in a diagonal wave: each tile unclips from a direction tied to its position while the photo pulls focus from blur and scales into its frame; captions slide in from the side the pointer entered, and a click flies the photo into a FLIP lightbox",
+  "category": "Scroll & Motion Experiences",
+  "subcategory": "Scroll Reveals",
+  "type": "Reveal.MosaicAssemble",
+  "props": 26,
+  "thumbnail": null,
+  "file": "library/new-collection.json",
+  "isNew": true,
+  "collection": "Scroll Reveals",
+  "wave": 2
+ },
+ {
+  "id": "new-reveal-odometerstats",
+  "name": "OdometerStats",
+  "displayName": "Odometer Stats",
+  "description": "Statement section with key figures that roll like a mechanical odometer on reveal: each digit is a drum of 0-9 spinning with its own revolutions, stagger and overshoot settle, while units, labels and a fine progress underline follow",
+  "category": "Scroll & Motion Experiences",
+  "subcategory": "Scroll Reveals",
+  "type": "Reveal.OdometerStats",
+  "props": 39,
+  "thumbnail": null,
+  "file": "library/new-collection.json",
+  "isNew": true,
+  "collection": "Scroll Reveals",
+  "wave": 2
+ },
+ {
+  "id": "new-reveal-velocitymarquee",
+  "name": "VelocityMarquee",
+  "displayName": "Velocity Marquee",
+  "description": "Stacked marquee rows of large words separated by rounded photo pills; rows rise in on reveal, run in alternating directions, accelerate and skew with scroll velocity before relaxing, flip direction with scroll direction and slow down under the cursor",
+  "category": "Scroll & Motion Experiences",
+  "subcategory": "Scroll Reveals",
+  "type": "Reveal.VelocityMarquee",
+  "props": 29,
+  "thumbnail": null,
+  "file": "library/new-collection.json",
+  "isNew": true,
+  "collection": "Scroll Reveals",
+  "wave": 2
+ },
+ {
+  "id": "new-gallery-coverflow",
+  "name": "CoverFlow",
+  "displayName": "Cover Flow",
+  "description": "A refined, museum-lit cover flow: the centre image hangs flat and large while its neighbours turn away in depth over a soft floor reflection. Drag with momentum that snaps to each work, use the wheel or arrow keys; the title swaps through a vertical mask, and clicking the centre opens it full-bleed with a smooth scale-up",
+  "category": "Galleries, Carousels & Slideshows",
+  "subcategory": "Galleries",
+  "type": "Gallery.CoverFlow",
+  "props": 28,
+  "thumbnail": null,
+  "file": "library/new-collection.json",
+  "isNew": true,
+  "collection": "Galleries",
+  "wave": 2
+ },
+ {
+  "id": "new-gallery-expandingpanels",
+  "name": "ExpandingPanels",
+  "displayName": "Expanding Panels",
+  "description": "A row of tall photographic panels that spring open on hover or tap: the active panel widens while the others compress, its vertical label swings upright and rises into a large title, and its number and story fade in. Stacks vertically on mobile, with optional auto-advance",
+  "category": "Galleries, Carousels & Slideshows",
+  "subcategory": "Galleries",
+  "type": "Gallery.ExpandingPanels",
+  "props": 30,
+  "thumbnail": null,
+  "file": "library/new-collection.json",
+  "isNew": true,
+  "collection": "Galleries",
+  "wave": 2
+ },
+ {
+  "id": "new-gallery-hoverpreviewlist",
+  "name": "HoverPreviewList",
+  "displayName": "Hover Preview List",
+  "description": "An editorial project index in large type with hairline rows. Hovering a row summons a floating preview that trails the cursor and tilts with its speed; moving between rows swaps the image with a direction-aware vertical clip inside the same frame while the row text eases inward. Click and the preview grows into a full-bleed project view",
+  "category": "Galleries, Carousels & Slideshows",
+  "subcategory": "Galleries",
+  "type": "Gallery.HoverPreviewList",
+  "props": 30,
+  "thumbnail": null,
+  "file": "library/new-collection.json",
+  "isNew": true,
+  "collection": "Galleries",
+  "wave": 2
+ },
+ {
+  "id": "new-gallery-infinitecanvas",
+  "name": "InfiniteCanvas",
+  "displayName": "Infinite Canvas",
+  "description": "An endless, draggable field of photographs that repeats seamlessly in every direction, with inertia, rubbery smoothing, a lens that swells tiles toward the centre and dims the edges, and velocity skew. Click a tile and it lifts into a focused view with its story; Escape sets it back in its exact spot. Drifts slowly when idle",
+  "category": "Galleries, Carousels & Slideshows",
+  "subcategory": "Galleries",
+  "type": "Gallery.InfiniteCanvas",
+  "props": 29,
+  "thumbnail": null,
+  "file": "library/new-collection.json",
+  "isNew": true,
+  "collection": "Galleries",
+  "wave": 2
+ },
+ {
+  "id": "new-gallery-masonrylightbox",
+  "name": "MasonryLightbox",
+  "displayName": "Masonry Lightbox",
+  "description": "A responsive masonry that reveals in a staggered rise; clicking a photo flies it out of its exact grid slot into a blurred-backdrop lightbox with direction-aware swipe, double-click zoom and keyboard navigation, then flies it back into place — even after scrolling. Filter chips re-flow the grid with FLIP motion",
+  "category": "Galleries, Carousels & Slideshows",
+  "subcategory": "Galleries",
+  "type": "Gallery.MasonryLightbox",
+  "props": 29,
+  "thumbnail": null,
+  "file": "library/new-collection.json",
+  "isNew": true,
+  "collection": "Galleries",
+  "wave": 2
+ },
+ {
+  "id": "new-section-bentomorph",
+  "name": "BentoMorph",
+  "displayName": "Bento Morph",
+  "description": "Bento feature grid of photographs, big numbers and short statements: tiles tilt in 3D with a light sheen that follows the pointer, and a click morphs the tile into the whole grid area (clip-path FLIP with the photo gliding into a new frame and the number scaling into place) while its neighbours shrink and fade; close reverses it",
+  "category": "Page Sections & Layout",
+  "subcategory": "Sections",
+  "type": "Section.BentoMorph",
+  "props": 43,
+  "thumbnail": null,
+  "file": "library/new-collection.json",
+  "isNew": true,
+  "collection": "Sections",
+  "wave": 2
+ },
+ {
+  "id": "new-section-featureshowcase",
+  "name": "FeatureShowcase",
+  "displayName": "Feature Showcase",
+  "description": "Feature list beside a large rounded media frame: the active feature expands with a filling progress bar while its photograph arrives through a soft blur crossfade and slow zoom, and a floating stat card springs to a new position with its figure sliding through a mask; auto-advance, click and keys, media on top on mobile",
+  "category": "Page Sections & Layout",
+  "subcategory": "Sections",
+  "type": "Section.FeatureShowcase",
+  "props": 38,
+  "thumbnail": null,
+  "file": "library/new-collection.json",
+  "isNew": true,
+  "collection": "Sections",
+  "wave": 2
+ },
+ {
+  "id": "new-section-processsteps",
+  "name": "ProcessSteps",
+  "displayName": "Process Steps",
+  "description": "Calm how-it-works section: steps sit on a track where a spring-driven ring travels to the active step, its number fills and a per-step progress line runs while the photo morphs in from a pill-shaped clip and the description rises line by line; auto-advance, click and arrow keys",
+  "category": "Page Sections & Layout",
+  "subcategory": "Sections",
+  "type": "Section.ProcessSteps",
+  "props": 33,
+  "thumbnail": null,
+  "file": "library/new-collection.json",
+  "isNew": true,
+  "collection": "Sections",
+  "wave": 2
+ },
+ {
+  "id": "new-interaction-magneticcta",
+  "name": "MagneticCTA",
+  "displayName": "Magnetic CTA",
+  "description": "Call-to-action band with four hand-tuned buttons: magnetic pull toward the cursor with spring overshoot on release, a colour flood that grows from the exact point the cursor entered and drains toward where it left, labels that roll up into a duplicate and arrows that exit right and re-enter from the left",
+  "category": "Backgrounds, Cursors & Buttons",
+  "subcategory": "Interactions",
+  "type": "Interaction.MagneticCTA",
+  "props": 28,
+  "thumbnail": null,
+  "file": "library/new-collection.json",
+  "isNew": true,
+  "collection": "Interactions",
+  "wave": 2
+ },
+ {
+  "id": "new-interaction-menuoverlay",
+  "name": "MenuOverlay",
+  "displayName": "Menu Overlay",
+  "description": "Site header whose menu button blooms a full-stage overlay with a circular clip (or curtain): huge stacked links rise through line masks and roll letter-by-letter into italics on hover, while a side preview cross-clips between matching photographs; the hamburger morphs to an X and everything reverses on close",
+  "category": "Backgrounds, Cursors & Buttons",
+  "subcategory": "Interactions",
+  "type": "Interaction.MenuOverlay",
+  "props": 31,
+  "thumbnail": null,
+  "file": "library/new-collection.json",
+  "isNew": true,
+  "collection": "Interactions",
+  "wave": 2
+ },
+ {
+  "id": "new-interaction-morphtabs",
+  "name": "MorphTabs",
+  "displayName": "Morph Tabs",
+  "description": "Feature tabs whose pill indicator springs between tabs while panels slide in from the direction of travel through an 8px blur; the photo frame morphs its silhouette (arch, landscape, circle, portrait) as images wipe in, with an optional autoplay line inside the active tab",
+  "category": "Backgrounds, Cursors & Buttons",
+  "subcategory": "Interactions",
+  "type": "Interaction.MorphTabs",
+  "props": 38,
+  "thumbnail": null,
+  "file": "library/new-collection.json",
+  "isNew": true,
+  "collection": "Interactions",
+  "wave": 2
+ },
+ {
+  "id": "new-interaction-pricingtoggle",
+  "name": "PricingToggle",
+  "displayName": "Pricing Toggle",
+  "description": "Three-plan pricing section with a sliding monthly/yearly pill and a savings tag that pops; every price digit rolls like an odometer when billing changes, a highlight ring springs between cards on hover while the active card lifts, and feature checks draw in with a stagger",
+  "category": "Backgrounds, Cursors & Buttons",
+  "subcategory": "Interactions",
+  "type": "Interaction.PricingToggle",
+  "props": 37,
+  "thumbnail": null,
+  "file": "library/new-collection.json",
+  "isNew": true,
+  "collection": "Interactions",
+  "wave": 2
+ },
+ {
+  "id": "new-type-letterrolllist",
+  "name": "LetterRollList",
+  "displayName": "Letter Roll List",
+  "description": "Huge typographic index list: hovering or focusing a row rolls every letter up to a duplicate with a staggered wave, slides its number and category, and opens a rounded photo inline beside the word while the other rows dim",
+  "category": "Typography & Text Effects",
+  "subcategory": "Typography",
+  "type": "Type.LetterRollList",
+  "props": 31,
+  "thumbnail": null,
+  "file": "library/new-collection.json",
+  "isNew": true,
+  "collection": "Typography",
+  "wave": 2
+ },
+ {
+  "id": "new-type-outlinesweep",
+  "name": "OutlineSweep",
+  "displayName": "Outline Sweep",
+  "description": "Poster of giant uppercase outline words that fill solid with a horizontal clip sweep as each row enters view, alternating direction; rows drift sideways with scroll, and hovering a row sweeps its fill back out while the letters part to reveal a small photograph",
+  "category": "Typography & Text Effects",
+  "subcategory": "Typography",
+  "type": "Type.OutlineSweep",
+  "props": 26,
+  "thumbnail": null,
+  "file": "library/new-collection.json",
+  "isNew": true,
+  "collection": "Typography",
+  "wave": 2
+ },
+ {
+  "id": "new-type-quotecarousel",
+  "name": "QuoteCarousel",
+  "displayName": "Quote Carousel",
+  "description": "Testimonial carousel set as large serif quotes: words blur out and drift away one by one while the next quote focuses in from below, the avatar morphs through a circular clip and the name and role swap behind a mask; segmented progress, arrows, keys, swipe and autoplay that pauses on hover",
+  "category": "Typography & Text Effects",
+  "subcategory": "Typography",
+  "type": "Type.QuoteCarousel",
+  "props": 34,
+  "thumbnail": null,
+  "file": "library/new-collection.json",
+  "isNew": true,
+  "collection": "Typography",
+  "wave": 2
+ },
+ {
   "id": "new-scrub-apertureiris",
   "name": "ApertureIris",
   "displayName": "Aperture Iris",
@@ -5735,7 +6185,8 @@
   "thumbnail": null,
   "file": "library/new-collection.json",
   "isNew": true,
-  "collection": "Scroll Scrub"
+  "collection": "Scroll Scrub",
+  "wave": 1
  },
  {
   "id": "new-scrub-chronograph",
@@ -5749,7 +6200,8 @@
   "thumbnail": null,
   "file": "library/new-collection.json",
   "isNew": true,
-  "collection": "Scroll Scrub"
+  "collection": "Scroll Scrub",
+  "wave": 1
  },
  {
   "id": "new-scrub-crosssection",
@@ -5763,7 +6215,8 @@
   "thumbnail": null,
   "file": "library/new-collection.json",
   "isNew": true,
-  "collection": "Scroll Scrub"
+  "collection": "Scroll Scrub",
+  "wave": 1
  },
  {
   "id": "new-scrub-explodedanatomy",
@@ -5777,7 +6230,8 @@
   "thumbnail": null,
   "file": "library/new-collection.json",
   "isNew": true,
-  "collection": "Scroll Scrub"
+  "collection": "Scroll Scrub",
+  "wave": 1
  },
  {
   "id": "new-scrub-filmstrip",
@@ -5791,7 +6245,8 @@
   "thumbnail": null,
   "file": "library/new-collection.json",
   "isNew": true,
-  "collection": "Scroll Scrub"
+  "collection": "Scroll Scrub",
+  "wave": 1
  },
  {
   "id": "new-scrub-horizontalpanorama",
@@ -5805,7 +6260,8 @@
   "thumbnail": null,
   "file": "library/new-collection.json",
   "isNew": true,
-  "collection": "Scroll Scrub"
+  "collection": "Scroll Scrub",
+  "wave": 1
  },
  {
   "id": "new-scrub-manuscriptassembly",
@@ -5819,7 +6275,8 @@
   "thumbnail": null,
   "file": "library/new-collection.json",
   "isNew": true,
-  "collection": "Scroll Scrub"
+  "collection": "Scroll Scrub",
+  "wave": 1
  },
  {
   "id": "new-scrub-orbitaltime",
@@ -5833,7 +6290,8 @@
   "thumbnail": null,
   "file": "library/new-collection.json",
   "isNew": true,
-  "collection": "Scroll Scrub"
+  "collection": "Scroll Scrub",
+  "wave": 1
  },
  {
   "id": "new-scrub-paperfold",
@@ -5847,7 +6305,8 @@
   "thumbnail": null,
   "file": "library/new-collection.json",
   "isNew": true,
-  "collection": "Scroll Scrub"
+  "collection": "Scroll Scrub",
+  "wave": 1
  },
  {
   "id": "new-scrub-typetunnel",
@@ -5861,7 +6320,8 @@
   "thumbnail": null,
   "file": "library/new-collection.json",
   "isNew": true,
-  "collection": "Scroll Scrub"
+  "collection": "Scroll Scrub",
+  "wave": 1
  },
  {
   "id": "new-compose-blueprint",
@@ -5875,7 +6335,8 @@
   "thumbnail": null,
   "file": "library/new-collection.json",
   "isNew": true,
-  "collection": "Scroll Compositions"
+  "collection": "Scroll Compositions",
+  "wave": 1
  },
  {
   "id": "new-compose-constellation",
@@ -5889,7 +6350,8 @@
   "thumbnail": null,
   "file": "library/new-collection.json",
   "isNew": true,
-  "collection": "Scroll Compositions"
+  "collection": "Scroll Compositions",
+  "wave": 1
  },
  {
   "id": "new-compose-datastory",
@@ -5903,7 +6365,8 @@
   "thumbnail": null,
   "file": "library/new-collection.json",
   "isNew": true,
-  "collection": "Scroll Compositions"
+  "collection": "Scroll Compositions",
+  "wave": 1
  },
  {
   "id": "new-compose-masthead",
@@ -5917,7 +6380,8 @@
   "thumbnail": null,
   "file": "library/new-collection.json",
   "isNew": true,
-  "collection": "Scroll Compositions"
+  "collection": "Scroll Compositions",
+  "wave": 1
  },
  {
   "id": "new-compose-swissposter",
@@ -5931,63 +6395,8 @@
   "thumbnail": null,
   "file": "library/new-collection.json",
   "isNew": true,
-  "collection": "Scroll Compositions"
- },
- {
-  "id": "new-accordion-bookspines",
-  "name": "BookSpines",
-  "displayName": "Book Spines Accordion",
-  "description": "A horizontal accordion of books on a shelf: tonal spines with vertical titles pull forward and open into a cover and page spread while the others compress",
-  "category": "Accordions & FAQ",
-  "subcategory": "Accordions",
-  "type": "Accordion.BookSpines",
-  "props": 30,
-  "thumbnail": null,
-  "file": "library/new-collection.json",
-  "isNew": true,
-  "collection": "Accordions"
- },
- {
-  "id": "new-accordion-foldingmap",
-  "name": "FoldingMap",
-  "displayName": "Folding Map Accordion",
-  "description": "An editorial accordion whose panels unfold like a paper map: hinged strips rotate open in sequence with shaded creases, and refold on close",
-  "category": "Accordions & FAQ",
-  "subcategory": "Accordions",
-  "type": "Accordion.FoldingMap",
-  "props": 25,
-  "thumbnail": null,
-  "file": "library/new-collection.json",
-  "isNew": true,
-  "collection": "Accordions"
- },
- {
-  "id": "new-accordion-indexcards",
-  "name": "IndexCards",
-  "displayName": "Index Cards Accordion",
-  "description": "A card-catalogue drawer as an accordion: staggered lettered tabs lift a ruled, typewritten index card out of the drawer and lay it on top while the others slide back down",
-  "category": "Accordions & FAQ",
-  "subcategory": "Accordions",
-  "type": "Accordion.IndexCards",
-  "props": 28,
-  "thumbnail": null,
-  "file": "library/new-collection.json",
-  "isNew": true,
-  "collection": "Accordions"
- },
- {
-  "id": "new-accordion-numberedledger",
-  "name": "NumberedLedger",
-  "displayName": "Numbered Ledger FAQ",
-  "description": "A luxurious FAQ ledger: giant outlined numerals fill solid as their row opens, hairlines draw across, answers reveal word by word, with a running counter and live search",
-  "category": "Accordions & FAQ",
-  "subcategory": "Accordions",
-  "type": "Accordion.NumberedLedger",
-  "props": 25,
-  "thumbnail": null,
-  "file": "library/new-collection.json",
-  "isNew": true,
-  "collection": "Accordions"
+  "collection": "Scroll Compositions",
+  "wave": 1
  },
  {
   "id": "new-gallery-carddeck",
@@ -6001,7 +6410,8 @@
   "thumbnail": null,
   "file": "library/new-collection.json",
   "isNew": true,
-  "collection": "Galleries"
+  "collection": "Galleries",
+  "wave": 1
  },
  {
   "id": "new-gallery-contactsheet",
@@ -6015,7 +6425,8 @@
   "thumbnail": null,
   "file": "library/new-collection.json",
   "isNew": true,
-  "collection": "Galleries"
+  "collection": "Galleries",
+  "wave": 1
  },
  {
   "id": "new-gallery-helix",
@@ -6029,7 +6440,8 @@
   "thumbnail": null,
   "file": "library/new-collection.json",
   "isNew": true,
-  "collection": "Galleries"
+  "collection": "Galleries",
+  "wave": 1
  },
  {
   "id": "new-gallery-lighttable",
@@ -6043,7 +6455,8 @@
   "thumbnail": null,
   "file": "library/new-collection.json",
   "isNew": true,
-  "collection": "Galleries"
+  "collection": "Galleries",
+  "wave": 1
  },
  {
   "id": "new-gallery-museumwall",
@@ -6057,7 +6470,8 @@
   "thumbnail": null,
   "file": "library/new-collection.json",
   "isNew": true,
-  "collection": "Galleries"
+  "collection": "Galleries",
+  "wave": 1
  },
  {
   "id": "new-gallery-sliceshow",
@@ -6071,7 +6485,68 @@
   "thumbnail": null,
   "file": "library/new-collection.json",
   "isNew": true,
-  "collection": "Galleries"
+  "collection": "Galleries",
+  "wave": 1
+ },
+ {
+  "id": "new-accordion-bookspines",
+  "name": "BookSpines",
+  "displayName": "Book Spines Accordion",
+  "description": "A horizontal accordion of books on a shelf: tonal spines with vertical titles pull forward and open into a cover and page spread while the others compress",
+  "category": "Accordions & FAQ",
+  "subcategory": "Accordions",
+  "type": "Accordion.BookSpines",
+  "props": 30,
+  "thumbnail": null,
+  "file": "library/new-collection.json",
+  "isNew": true,
+  "collection": "Accordions",
+  "wave": 1
+ },
+ {
+  "id": "new-accordion-foldingmap",
+  "name": "FoldingMap",
+  "displayName": "Folding Map Accordion",
+  "description": "An editorial accordion whose panels unfold like a paper map: hinged strips rotate open in sequence with shaded creases, and refold on close",
+  "category": "Accordions & FAQ",
+  "subcategory": "Accordions",
+  "type": "Accordion.FoldingMap",
+  "props": 25,
+  "thumbnail": null,
+  "file": "library/new-collection.json",
+  "isNew": true,
+  "collection": "Accordions",
+  "wave": 1
+ },
+ {
+  "id": "new-accordion-indexcards",
+  "name": "IndexCards",
+  "displayName": "Index Cards Accordion",
+  "description": "A card-catalogue drawer as an accordion: staggered lettered tabs lift a ruled, typewritten index card out of the drawer and lay it on top while the others slide back down",
+  "category": "Accordions & FAQ",
+  "subcategory": "Accordions",
+  "type": "Accordion.IndexCards",
+  "props": 28,
+  "thumbnail": null,
+  "file": "library/new-collection.json",
+  "isNew": true,
+  "collection": "Accordions",
+  "wave": 1
+ },
+ {
+  "id": "new-accordion-numberedledger",
+  "name": "NumberedLedger",
+  "displayName": "Numbered Ledger FAQ",
+  "description": "A luxurious FAQ ledger: giant outlined numerals fill solid as their row opens, hairlines draw across, answers reveal word by word, with a running counter and live search",
+  "category": "Accordions & FAQ",
+  "subcategory": "Accordions",
+  "type": "Accordion.NumberedLedger",
+  "props": 25,
+  "thumbnail": null,
+  "file": "library/new-collection.json",
+  "isNew": true,
+  "collection": "Accordions",
+  "wave": 1
  },
  {
   "id": "new-type-gravityletters",
@@ -6085,7 +6560,8 @@
   "thumbnail": null,
   "file": "library/new-collection.json",
   "isNew": true,
-  "collection": "Typography"
+  "collection": "Typography",
+  "wave": 1
  },
  {
   "id": "new-type-specimenmetrics",
@@ -6099,7 +6575,8 @@
   "thumbnail": null,
   "file": "library/new-collection.json",
   "isNew": true,
-  "collection": "Typography"
+  "collection": "Typography",
+  "wave": 1
  },
  {
   "id": "new-type-splitflap",
@@ -6113,7 +6590,8 @@
   "thumbnail": null,
   "file": "library/new-collection.json",
   "isNew": true,
-  "collection": "Typography"
+  "collection": "Typography",
+  "wave": 1
  },
  {
   "id": "new-type-variableproximity",
@@ -6127,7 +6605,8 @@
   "thumbnail": null,
   "file": "library/new-collection.json",
   "isNew": true,
-  "collection": "Typography"
+  "collection": "Typography",
+  "wave": 1
  },
  {
   "id": "new-creative-shadowbox",
@@ -6141,6 +6620,7 @@
   "thumbnail": null,
   "file": "library/new-collection.json",
   "isNew": true,
-  "collection": "Creative"
+  "collection": "Creative",
+  "wave": 1
  }
 ]
