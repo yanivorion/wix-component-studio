@@ -570,6 +570,14 @@ function BuiltInLibraryView({ categories, categoryNames, theme, loadingCategory,
       onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = theme.shade1; e.currentTarget.style.transform = 'translateY(-2px)'; }}
       onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = theme.base2; e.currentTarget.style.transform = 'translateY(0)'; }}
     >
+      {c.thumbnail && (
+        <img
+          src={`${process.env.PUBLIC_URL || ''}/${c.thumbnail}`}
+          alt=""
+          loading="lazy"
+          style={{ width: '100%', aspectRatio: '16 / 10', objectFit: 'cover', borderRadius: '5px', marginBottom: '6px', backgroundColor: theme.shade1 }}
+        />
+      )}
       <span style={{ fontSize: '13px', fontWeight: 500, color: theme.text1 }}>{c.displayName}</span>
       <span style={{ fontSize: '11px', color: theme.text3, fontFamily: 'monospace' }}>{c.type}</span>
       {c.props > 0 && (
@@ -697,6 +705,142 @@ function BuiltInLibraryView({ categories, categoryNames, theme, loadingCategory,
   );
 }
 
+/**
+ * "New" library tab: recently added components, shown as a thumbnail gallery with
+ * category filter chips, search and sort.
+ */
+function NewLibraryView({ items, theme, loadingCategory, onPrefetch, onPick }) {
+  const [filter, setFilter] = useState('All');
+  const [query, setQuery] = useState('');
+  const [sort, setSort] = useState('order');
+
+  useEffect(() => {
+    const files = [...new Set(items.map(c => c.file).filter(Boolean))];
+    files.forEach(f => onPrefetch && onPrefetch(f));
+  }, [items, onPrefetch]);
+
+  const counts = useMemo(() => {
+    const m = {};
+    items.forEach(c => { const k = c.subcategory || c.category || 'Other'; m[k] = (m[k] || 0) + 1; });
+    return m;
+  }, [items]);
+
+  const q = query.trim().toLowerCase();
+  const shown = useMemo(() => {
+    let list = items.filter(c => filter === 'All' || (c.subcategory || c.category) === filter);
+    if (q) list = list.filter(c => `${c.displayName} ${c.type} ${c.description} ${c.category} ${c.subcategory}`.toLowerCase().includes(q));
+    if (sort === 'az') list = [...list].sort((a, b) => a.displayName.localeCompare(b.displayName));
+    else list = [...list].sort((a, b) => (a.order || 0) - (b.order || 0));
+    return list;
+  }, [items, filter, q, sort]);
+
+  const chip = (label, count) => {
+    const active = filter === label;
+    return (
+      <button
+        key={label}
+        type="button"
+        aria-pressed={active}
+        onClick={() => setFilter(label)}
+        style={{
+          padding: '6px 12px', fontSize: '12.5px', font: 'inherit', cursor: 'pointer', borderRadius: '999px',
+          border: `1px solid ${active ? theme.text1 : theme.border}`,
+          backgroundColor: active ? theme.text1 : 'transparent',
+          color: active ? theme.base1 : theme.text2, whiteSpace: 'nowrap',
+          transition: 'background-color 150ms ease-out, color 150ms ease-out'
+        }}
+      >{label} <span style={{ opacity: 0.6, marginLeft: '4px' }}>{count}</span></button>
+    );
+  };
+
+  if (!items.length) {
+    return <p style={{ color: theme.text3, fontSize: '14px', padding: '40px 0', textAlign: 'center' }}>No new components yet</p>;
+  }
+
+  return (
+    <div>
+      <div style={{ display: 'flex', gap: '10px', marginBottom: '14px', flexWrap: 'wrap' }}>
+        <input
+          type="search"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder={`Search ${items.length} new components…`}
+          aria-label="Search new components"
+          style={{
+            flex: '1 1 220px', boxSizing: 'border-box', padding: '10px 12px', fontSize: '14px', font: 'inherit',
+            color: theme.text1, backgroundColor: theme.base2, border: `1px solid ${theme.border}`, borderRadius: '8px'
+          }}
+        />
+        <select
+          value={sort}
+          onChange={(e) => setSort(e.target.value)}
+          aria-label="Sort new components"
+          style={{ font: 'inherit', fontSize: '13px', padding: '8px 10px', borderRadius: '8px', color: theme.text1, backgroundColor: theme.base2, border: `1px solid ${theme.border}` }}
+        >
+          <option value="order">Collection order</option>
+          <option value="az">A–Z</option>
+        </select>
+      </div>
+
+      <div role="group" aria-label="Filter by category" style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '18px' }}>
+        {chip('All', items.length)}
+        {Object.keys(counts).map(k => chip(k, counts[k]))}
+      </div>
+
+      {shown.length === 0 ? (
+        <p style={{ color: theme.text3, fontSize: '14px', padding: '40px 0', textAlign: 'center' }}>No new components match “{query}”</p>
+      ) : (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '14px' }}>
+          {shown.map(c => (
+            <button
+              key={c.id}
+              type="button"
+              onClick={() => onPick(c)}
+              title={c.description || c.type}
+              style={{
+                textAlign: 'left', cursor: 'pointer', padding: 0, overflow: 'hidden', font: 'inherit',
+                backgroundColor: theme.base2, border: `1px solid ${theme.border}`, borderRadius: '10px',
+                display: 'flex', flexDirection: 'column', transition: 'transform 150ms ease-out, box-shadow 150ms ease-out'
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 18px rgba(0,0,0,0.10)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
+            >
+              <div style={{ position: 'relative', width: '100%', aspectRatio: '16 / 10', backgroundColor: theme.shade1, borderBottom: `1px solid ${theme.border}` }}>
+                {c.thumbnail && (
+                  <img
+                    src={`${process.env.PUBLIC_URL || ''}/${c.thumbnail}`}
+                    alt={`${c.displayName} preview`}
+                    loading="lazy"
+                    style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                  />
+                )}
+                <span style={{
+                  position: 'absolute', top: '8px', left: '8px', fontSize: '10px', letterSpacing: '0.08em', textTransform: 'uppercase',
+                  padding: '3px 7px', borderRadius: '4px', backgroundColor: 'rgba(24,24,27,0.85)', color: '#FAFAFA'
+                }}>New</span>
+                {c.order ? (
+                  <span style={{
+                    position: 'absolute', top: '8px', right: '8px', fontSize: '11px', fontVariantNumeric: 'tabular-nums',
+                    padding: '2px 7px', borderRadius: '4px', backgroundColor: 'rgba(250,250,250,0.9)', color: '#18181B'
+                  }}>{String(c.order).padStart(2, '0')}</span>
+                ) : null}
+              </div>
+              <div style={{ padding: '10px 12px 12px', display: 'flex', flexDirection: 'column', gap: '3px' }}>
+                <span style={{ fontSize: '13.5px', fontWeight: 500, color: theme.text1 }}>{c.displayName}</span>
+                <span style={{ fontSize: '11px', color: theme.text3, fontFamily: 'monospace' }}>{c.type}</span>
+                <span style={{ fontSize: '11px', color: theme.text3 }}>
+                  {(c.subcategory || c.category)}{c.props > 0 ? ` · ${c.props} props` : ''}
+                  {loadingCategory && loadingCategory === c.file ? ' · loading…' : ''}
+                </span>
+              </div>
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function AppContent() {
   const { theme } = useTheme();
   
@@ -708,7 +852,7 @@ function AppContent() {
   const [deleteTargetId, setDeleteTargetId] = useState(null);
   const [draggedTabId, setDraggedTabId] = useState(null);
   const [dragOverTabId, setDragOverTabId] = useState(null);
-  const {builtInComponents, componentCategories, categoryNames: libraryCategoryNames,
+  const {builtInComponents, newComponents, componentCategories, categoryNames: libraryCategoryNames,
          isLoading: libraryLoading, loadingCategory, loadCategoryCode,
          getComponentCode, businessMap} = useComponentLibrary();
   const [componentThumbnails, setComponentThumbnails] = useState({});
@@ -2739,6 +2883,8 @@ function Component({ config = {} }) {
                 }}>
                   {librarySource === 'builtin'
                     ? `${builtInComponents.length} built-in component${builtInComponents.length !== 1 ? 's' : ''} in ${libraryCategoryNames.length} categories`
+                    : librarySource === 'new'
+                    ? `${newComponents.length} new component${newComponents.length !== 1 ? 's' : ''}`
                     : `${savedComponents.length} saved component${savedComponents.length !== 1 ? 's' : ''}`}
                 </p>
               </div>
@@ -2778,10 +2924,11 @@ function Component({ config = {} }) {
                   letterSpacing: '0.05em',
                   textTransform: 'uppercase',
                   marginBottom: '16px'
-                }}>{librarySource === 'builtin' ? 'Built-in Library' : 'My Components'}</h3>
+                }}>{librarySource === 'builtin' ? 'Built-in Library' : librarySource === 'new' ? 'New Components' : 'My Components'}</h3>
 
                 <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
                   {[['builtin', `Built-in (${builtInComponents.length})`],
+                    ['new', `New (${newComponents.length})`],
                     ['saved', `Saved (${savedComponents.length})`]].map(([key, label]) => (
                     <button
                       key={key}
@@ -2796,7 +2943,21 @@ function Component({ config = {} }) {
                   ))}
                 </div>
                 
-                {librarySource === 'builtin' ? (
+                {librarySource === 'new' ? (
+                  libraryLoading ? (
+                    <p style={{ color: theme.text3, fontSize: '14px', padding: '40px 0', textAlign: 'center' }}>
+                      Loading library\u2026
+                    </p>
+                  ) : (
+                    <NewLibraryView
+                      items={newComponents}
+                      theme={theme}
+                      loadingCategory={loadingCategory}
+                      onPrefetch={loadCategoryCode}
+                      onPick={handleLoadFromBuiltIn}
+                    />
+                  )
+                ) : librarySource === 'builtin' ? (
                   libraryLoading ? (
                     <p style={{ color: theme.text3, fontSize: '14px', padding: '40px 0', textAlign: 'center' }}>
                       Loading library\u2026

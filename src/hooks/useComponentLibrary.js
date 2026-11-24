@@ -66,10 +66,18 @@ export function useComponentLibrary() {
     return () => { cancelled = true; };
   }, []);
 
+  // Components flagged `isNew` get their own "New" tab and stay out of the classic categories.
+  const newComponents = useMemo(
+    () => builtInComponents.filter(c => c.isNew)
+      .sort((a, b) => String(b.addedAt || '').localeCompare(String(a.addedAt || '')) || (a.order || 0) - (b.order || 0)),
+    [builtInComponents]
+  );
+  const classicComponents = useMemo(() => builtInComponents.filter(c => !c.isNew), [builtInComponents]);
+
   // { [category]: { [subcategory]: Component[] } }
   const componentCategories = useMemo(() => {
     const grouped = {};
-    for (const comp of builtInComponents) {
+    for (const comp of classicComponents) {
       const cat = comp.category || 'Uncategorized';
       const sub = comp.subcategory || 'General';
       if (!grouped[cat]) grouped[cat] = {};
@@ -77,7 +85,7 @@ export function useComponentLibrary() {
       grouped[cat][sub].push(comp);
     }
     return grouped;
-  }, [builtInComponents]);
+  }, [classicComponents]);
 
   const categoryNames = useMemo(
     () => Object.keys(componentCategories).sort(
@@ -116,7 +124,8 @@ export function useComponentLibrary() {
 
   return {
     businessMap,
-    builtInComponents,
+    builtInComponents: classicComponents,
+    newComponents,
     componentCategories,
     categoryNames,
     isLoading,
