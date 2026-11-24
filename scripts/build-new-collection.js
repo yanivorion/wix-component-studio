@@ -14,6 +14,7 @@ const INDEX = path.join(ROOT, 'public', 'components-library.json');
 const WAVES = [
   { wave: 1, dir: path.join(ROOT, 'library-src', 'new-collection') },
   { wave: 2, dir: path.join(ROOT, 'library-src', 'new-collection-2') },
+  { wave: 3, dir: path.join(ROOT, 'library-src', 'new-collection-3') },
 ];
 
 const PREFIX = {
