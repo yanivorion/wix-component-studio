@@ -647,7 +647,9 @@ function LibraryCard({ c, theme, onPick }) {
   );
 }
 
-const NEW_COLLECTION_ORDER = ['Scroll Scrub', 'Scroll Compositions', 'Accordions', 'Galleries', 'Typography', 'Creative'];
+const NEW_COLLECTION_ORDER = ['Heroes', 'Scroll Scrub', 'Scroll Reveals', 'Scroll Compositions', 'Galleries', 'Sections',
+  'Interactions', 'Accordions', 'Typography', 'Creative'];
+const LATEST = '__latest';
 
 /**
  * Browses the built-in component library. The index carries metadata only;
@@ -729,7 +731,11 @@ function BuiltInLibraryView({ categories, categoryNames, theme, loadingCategory,
   );
 
   if (onlyNew) {
-    const shown = collection ? newGroups.filter(g => g.name === collection) : newGroups;
+    const latestWave = Math.max(1, ...all.map(c => c.wave || 1));
+    const inLatest = (c) => (c.wave || 1) === latestWave;
+    const shown = collection === LATEST
+      ? newGroups.map(g => ({ ...g, items: g.items.filter(inLatest) })).filter(g => g.items.length)
+      : collection ? newGroups.filter(g => g.name === collection) : newGroups;
     const list = matches || null;
     return (
       <div>
@@ -747,6 +753,7 @@ function BuiltInLibraryView({ categories, categoryNames, theme, loadingCategory,
         />
         <div role="group" aria-label="Filter new components" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '20px' }}>
           {chip('', 'All', all.length)}
+          {latestWave > 1 && chip(LATEST, 'Latest', all.filter(inLatest).length)}
           {newGroups.map(g => chip(g.name, g.name, g.items.length))}
         </div>
         {all.length === 0 ? (
