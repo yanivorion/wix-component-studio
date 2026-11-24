@@ -12,10 +12,10 @@ const getScrollContainer = () => {
   const container = document.querySelector('[data-scroll-container="true"]');
   if (container && container.parentElement) {
     let scrollParent = container;
-    while (scrollParent && !scrollParent.classList.contains('canvas-wrapper')) {
+    while (scrollParent && !scrollParent.hasAttribute('data-canvas-scroller')) {
       scrollParent = scrollParent.parentElement;
     }
-    return scrollParent;
+    return scrollParent || window;
   }
   return window;
 };
@@ -507,22 +507,172 @@ class ComponentErrorBoundary extends React.Component {
 }
 
 
+// Live thumbnails render each component in an iframe (?thumb=<id>, see ThumbRenderer).
+// Booting one is a full page load, so only a few may load at once; the rest wait their turn.
+const THUMB_W = 1280;
+const THUMB_H = 800;
+const thumbSlots = { active: 0, max: 4, waiting: [] };
+
+function acquireThumbSlot(start) {
+  if (thumbSlots.active < thumbSlots.max) { thumbSlots.active++; start(); return () => {}; }
+  thumbSlots.waiting.push(start);
+  return () => { thumbSlots.waiting = thumbSlots.waiting.filter(f => f !== start); };
+}
+
+function releaseThumbSlot() {
+  thumbSlots.active = Math.max(0, thumbSlots.active - 1);
+  const next = thumbSlots.waiting.shift();
+  if (next) { thumbSlots.active++; next(); }
+}
+
+function LiveThumb({ id, hovered, theme }) {
+  const boxRef = useRef(null);
+  const frameRef = useRef(null);
+  const [visible, setVisible] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [status, setStatus] = useState('idle');
+  const [scale, setScale] = useState(0.2);
+
+  useEffect(() => {
+    const el = boxRef.current;
+    if (!el) return undefined;
+    const io = new IntersectionObserver(([e]) => setVisible(e.isIntersecting), { rootMargin: '300px 0px' });
+    io.observe(el);
+    const ro = new ResizeObserver(() => setScale(el.clientWidth / THUMB_W));
+    ro.observe(el);
+    return () => { io.disconnect(); ro.disconnect(); };
+  }, []);
+
+  // take a load slot while visible; hand it back once the frame reports ready, fails or leaves view
+  useEffect(() => {
+    if (!visible) { setMounted(false); setStatus('idle'); return undefined; }
+    let holding = false;
+    let done = false;
+    const finish = (s) => {
+      if (done) return;
+      done = true;
+      setStatus(s);
+      if (holding) { holding = false; releaseThumbSlot(); }
+    };
+    const onMsg = (e) => {
+      if (!frameRef.current || e.source !== frameRef.current.contentWindow || !e.data) return;
+      if (e.data.type === 'thumb-ready') finish('ready');
+      if (e.data.type === 'thumb-error') finish('error');
+    };
+    window.addEventListener('message', onMsg);
+    let timer = null;
+    const cancel = acquireThumbSlot(() => {
+      holding = true;
+      setStatus('loading');
+      setMounted(true);
+      timer = setTimeout(() => finish('ready'), 12000);
+    });
+    return () => {
+      cancel();
+      clearTimeout(timer);
+      window.removeEventListener('message', onMsg);
+      if (holding) releaseThumbSlot();
+    };
+  }, [visible]);
+
+  useEffect(() => {
+    const w = frameRef.current && frameRef.current.contentWindow;
+    if (w && status === 'ready') w.postMessage({ type: 'thumb-autoscroll', on: hovered }, '*');
+  }, [hovered, status]);
+
+  return (
+    <div ref={boxRef} aria-hidden="true" style={{
+      position: 'relative', width: '100%', aspectRatio: `${THUMB_W} / ${THUMB_H}`, overflow: 'hidden',
+      borderRadius: '6px', backgroundColor: theme.shade1, border: `1px solid ${theme.shade2}`
+    }}>
+      {status !== 'ready' && (
+        <div style={{
+          position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
+          fontSize: '11px', color: theme.text3, letterSpacing: '0.04em'
+        }}>
+          {status === 'error' ? 'Preview unavailable' : status === 'loading' ? 'Rendering…' : ''}
+        </div>
+      )}
+      {mounted && (
+        <iframe
+          ref={frameRef}
+          title={`${id} preview`}
+          src={`${window.location.pathname}?thumb=${encodeURIComponent(id)}`}
+          tabIndex={-1}
+          scrolling="no"
+          style={{
+            position: 'absolute', top: 0, left: 0, width: THUMB_W, height: THUMB_H, border: 0,
+            transform: `scale(${scale})`, transformOrigin: '0 0', pointerEvents: 'none',
+            opacity: status === 'ready' ? 1 : 0, transition: 'opacity 400ms ease-out'
+          }}
+        />
+      )}
+    </div>
+  );
+}
+
+function LibraryCard({ c, theme, onPick }) {
+  const [hovered, setHovered] = useState(false);
+  return (
+    <button
+      onClick={() => onPick(c)}
+      title={c.description || c.type}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      onFocus={() => setHovered(true)}
+      onBlur={() => setHovered(false)}
+      style={{
+        textAlign: 'left', cursor: 'pointer', padding: '10px',
+        backgroundColor: hovered ? theme.shade1 : theme.base2, border: `1px solid ${theme.border}`,
+        borderRadius: '10px', display: 'flex', flexDirection: 'column', gap: '4px',
+        transform: hovered ? 'translateY(-2px)' : 'none',
+        transition: 'background-color 150ms ease-out, transform 150ms ease-out', font: 'inherit'
+      }}
+    >
+      <LiveThumb id={c.id} hovered={hovered} theme={theme} />
+      <span style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '8px' }}>
+        <span style={{ flex: 1, fontSize: '13px', fontWeight: 500, color: theme.text1 }}>{c.displayName}</span>
+        {c.isNew && (
+          <span style={{
+            fontSize: '9.5px', letterSpacing: '0.08em', textTransform: 'uppercase', padding: '2px 6px',
+            borderRadius: '3px', backgroundColor: theme.text1, color: theme.base1
+          }}>New</span>
+        )}
+      </span>
+      <span style={{ fontSize: '11px', color: theme.text3, fontFamily: 'monospace' }}>{c.type}</span>
+      {c.props > 0 && (
+        <span style={{ fontSize: '11px', color: theme.text3 }}>{c.props} props</span>
+      )}
+    </button>
+  );
+}
+
+const NEW_COLLECTION_ORDER = ['Scroll Scrub', 'Scroll Compositions', 'Accordions', 'Galleries', 'Typography', 'Creative'];
+
 /**
  * Browses the built-in component library. The index carries metadata only;
  * a category's source is fetched the first time that category is opened.
  */
-function BuiltInLibraryView({ categories, categoryNames, theme, loadingCategory, onPrefetch, onPick, businessMap }) {
+function BuiltInLibraryView({ categories, categoryNames, theme, loadingCategory, onPrefetch, onPick, businessMap, onlyNew = false }) {
   const [openCategory, setOpenCategory] = useState(null);
   const [query, setQuery] = useState('');
   const [business, setBusiness] = useState('');
+  const [collection, setCollection] = useState('');
 
   const NEED_LABEL = { 3: 'Essential', 2: 'Recommended', 1: 'Situational', 0: 'Rarely needed' };
   const NEED_COLOR = { 3: '#A33B21', 2: '#B0722C', 1: theme.text3, 0: theme.text3 };
 
-  const all = useMemo(
-    () => categoryNames.flatMap(c => Object.values(categories[c] || {}).flat()),
-    [categories, categoryNames]
-  );
+  const all = useMemo(() => {
+    const list = categoryNames.flatMap(c => Object.values(categories[c] || {}).flat());
+    return onlyNew ? list.filter(c => c.isNew) : list;
+  }, [categories, categoryNames, onlyNew]);
+
+  const newGroups = useMemo(() => {
+    if (!onlyNew) return [];
+    const names = [...new Set(all.map(c => c.collection))]
+      .sort((a, b) => NEW_COLLECTION_ORDER.indexOf(a) - NEW_COLLECTION_ORDER.indexOf(b));
+    return names.map(name => ({ name, items: all.filter(c => c.collection === name) }));
+  }, [all, onlyNew]);
 
   const q = query.trim().toLowerCase();
   const matches = useMemo(() => {
@@ -556,33 +706,67 @@ function BuiltInLibraryView({ categories, categoryNames, theme, loadingCategory,
     }
   };
 
-  const card = (c) => (
-    <button
-      key={c.id}
-      onClick={() => onPick(c)}
-      title={c.description || c.type}
-      style={{
-        textAlign: 'left', cursor: 'pointer', padding: '12px 14px',
-        backgroundColor: theme.base2, border: `1px solid ${theme.border}`,
-        borderRadius: '8px', display: 'flex', flexDirection: 'column', gap: '4px',
-        transition: 'all 150ms ease-out', font: 'inherit'
-      }}
-      onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = theme.shade1; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-      onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = theme.base2; e.currentTarget.style.transform = 'translateY(0)'; }}
-    >
-      <span style={{ fontSize: '13px', fontWeight: 500, color: theme.text1 }}>{c.displayName}</span>
-      <span style={{ fontSize: '11px', color: theme.text3, fontFamily: 'monospace' }}>{c.type}</span>
-      {c.props > 0 && (
-        <span style={{ fontSize: '11px', color: theme.text3 }}>{c.props} props</span>
-      )}
-    </button>
-  );
+  const card = (c) => <LibraryCard key={c.id} c={c} theme={theme} onPick={onPick} />;
 
   const grid = (items) => (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '12px' }}>
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '14px' }}>
       {items.map(card)}
     </div>
   );
+
+  const chip = (value, label, count) => (
+    <button
+      key={value || 'all'}
+      onClick={() => setCollection(value)}
+      aria-pressed={collection === value}
+      style={{
+        padding: '6px 12px', fontSize: '12.5px', font: 'inherit', cursor: 'pointer', borderRadius: '999px',
+        border: `1px solid ${collection === value ? theme.text1 : theme.border}`,
+        backgroundColor: collection === value ? theme.text1 : 'transparent',
+        color: collection === value ? theme.base1 : theme.text2
+      }}
+    >{label} <span style={{ opacity: 0.6 }}>{count}</span></button>
+  );
+
+  if (onlyNew) {
+    const shown = collection ? newGroups.filter(g => g.name === collection) : newGroups;
+    const list = matches || null;
+    return (
+      <div>
+        <input
+          type="search"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder={`Search ${all.length} new components…`}
+          style={{
+            width: '100%', boxSizing: 'border-box', marginBottom: '14px',
+            padding: '10px 12px', fontSize: '14px', font: 'inherit',
+            color: theme.text1, backgroundColor: theme.base2,
+            border: `1px solid ${theme.border}`, borderRadius: '8px'
+          }}
+        />
+        <div role="group" aria-label="Filter new components" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '20px' }}>
+          {chip('', 'All', all.length)}
+          {newGroups.map(g => chip(g.name, g.name, g.items.length))}
+        </div>
+        {all.length === 0 ? (
+          <p style={{ color: theme.text3, fontSize: '14px', padding: '40px 0', textAlign: 'center' }}>No new components yet</p>
+        ) : list ? (
+          list.length ? grid(list) : (
+            <p style={{ color: theme.text3, fontSize: '14px', padding: '40px 0', textAlign: 'center' }}>No new components match “{query}”</p>
+          )
+        ) : shown.map(g => (
+          <div key={g.name} style={{ marginBottom: '28px' }}>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px', marginBottom: '12px' }}>
+              <h4 style={{ margin: 0, fontSize: '14px', fontWeight: 500, color: theme.text1 }}>{g.name}</h4>
+              <span style={{ fontSize: '12px', color: theme.text3 }}>{g.items.length}</span>
+            </div>
+            {grid(g.items)}
+          </div>
+        ))}
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -728,7 +912,8 @@ function AppContent() {
   const [designBrief, setDesignBrief] = useState('');
   
   const [showLibrary, setShowLibrary] = useState(false);
-  const [librarySource, setLibrarySource] = useState('builtin');
+  const [librarySource, setLibrarySource] = useState('new');
+  const newComponentCount = useMemo(() => builtInComponents.filter(c => c.isNew).length, [builtInComponents]);
   const [history, setHistory] = useState([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
   const [showGrid, setShowGrid] = useState(false);
@@ -2706,7 +2891,7 @@ function Component({ config = {} }) {
               left: '50%',
               transform: 'translate(-50%, -50%)',
               width: '90vw',
-              maxWidth: '1000px',
+              maxWidth: '1240px',
               height: '85vh',
               backgroundColor: theme.base1,
               border: `1px solid ${theme.border}`,
@@ -2737,7 +2922,9 @@ function Component({ config = {} }) {
                   color: theme.text3,
                   margin: 0
                 }}>
-                  {librarySource === 'builtin'
+                  {librarySource === 'new'
+                    ? `${newComponentCount} new signature components`
+                    : librarySource === 'builtin'
                     ? `${builtInComponents.length} built-in component${builtInComponents.length !== 1 ? 's' : ''} in ${libraryCategoryNames.length} categories`
                     : `${savedComponents.length} saved component${savedComponents.length !== 1 ? 's' : ''}`}
                 </p>
@@ -2778,10 +2965,11 @@ function Component({ config = {} }) {
                   letterSpacing: '0.05em',
                   textTransform: 'uppercase',
                   marginBottom: '16px'
-                }}>{librarySource === 'builtin' ? 'Built-in Library' : 'My Components'}</h3>
+                }}>{librarySource === 'new' ? 'New' : librarySource === 'builtin' ? 'Built-in Library' : 'My Components'}</h3>
 
                 <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
-                  {[['builtin', `Built-in (${builtInComponents.length})`],
+                  {[['new', `New (${newComponentCount})`],
+                    ['builtin', `Built-in (${builtInComponents.length})`],
                     ['saved', `Saved (${savedComponents.length})`]].map(([key, label]) => (
                     <button
                       key={key}
@@ -2796,13 +2984,15 @@ function Component({ config = {} }) {
                   ))}
                 </div>
                 
-                {librarySource === 'builtin' ? (
+                {librarySource === 'builtin' || librarySource === 'new' ? (
                   libraryLoading ? (
                     <p style={{ color: theme.text3, fontSize: '14px', padding: '40px 0', textAlign: 'center' }}>
                       Loading library\u2026
                     </p>
                   ) : (
                     <BuiltInLibraryView
+                      key={librarySource}
+                      onlyNew={librarySource === 'new'}
                       categories={componentCategories}
                       categoryNames={libraryCategoryNames}
                       theme={theme}
@@ -5043,6 +5233,7 @@ function Component({ config = {} }) {
           {/* Canvas Content */}
           <div
             ref={canvasWrapperRef}
+            data-canvas-scroller="true"
             style={{
               width: `${canvasSize.width}px`,
               minWidth: `${canvasSize.width}px`,  // Ensure canvas grows beyond 1280px
@@ -5098,7 +5289,7 @@ function Component({ config = {} }) {
                       cursor: 'pointer',
                       transition: 'outline 200ms ease-out',
                       overflowY: 'visible',
-                      overflowX: 'hidden',
+                      overflowX: 'clip',
                       padding: section.padding || '0px',
                       boxSizing: 'border-box'
                     }}
@@ -5226,7 +5417,7 @@ function Component({ config = {} }) {
                       position: 'relative',
                       isolation: 'isolate',
                       overflowY: 'visible',
-                      overflowX: 'hidden',
+                      overflowX: 'clip',
                       padding: section.padding || '0px',
                       boxSizing: 'border-box'
                     }}
