@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import * as Motion from 'framer-motion';
 import './index.css';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 // Expose React and Framer Motion as globals for studio-authored components.
@@ -26,13 +25,13 @@ window.useMotionTemplate = Motion.useMotionTemplate;
 window.useVelocity = Motion.useVelocity;
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+// Library thumbnails load this same page in an iframe with ?thumb=<id>; that path
+// gets a chunk with only the renderer, not the studio and its database clients.
+const isThumb = new URLSearchParams(window.location.search).has('thumb');
+
+(isThumb ? import('./ThumbRenderer') : import('./App')).then(({ default: Root }) => {
+  root.render(isThumb ? <Root /> : <React.StrictMode><Root /></React.StrictMode>);
+});
+
+if (!isThumb) reportWebVitals();
